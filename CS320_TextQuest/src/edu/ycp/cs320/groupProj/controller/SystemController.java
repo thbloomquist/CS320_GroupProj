@@ -14,4 +14,7 @@ public class SystemController {
 	public void setMove() {
 		model.setMovement();
 	}
+	public void setMovement(Boolean t) {
+		model.indicateMove(t);
+	}
 }

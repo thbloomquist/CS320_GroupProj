@@ -32,6 +32,7 @@ public class ConsoleServlet extends HttpServlet {
 		System.out.println("AddNumbers Servlet: doPost");
 		SystemModel model = new SystemModel();
 		SystemController controller = new SystemController();
+		controller.setModel(model);
 		
 		controller.setModel(model);
 		// holds the error message text, if there is any
@@ -52,13 +53,16 @@ public class ConsoleServlet extends HttpServlet {
 				if(action.toLowerCase().compareTo("north") == 0 || action.toLowerCase().compareTo("west") == 0 || 
 						action.toLowerCase().compareTo("south") == 0 || action.toLowerCase().compareTo("east") == 0) {
 					result = "You moved " + action;
-					movement = false;
+					controller.setMovement(false);
+					movement = model.getMovement();
 				} else {
 					result = "That is not a valid direction.";
-					movement = false;
+					controller.setMovement(false);
+					movement = model.getMovement();
 				}
 			}else if(action.toLowerCase().compareTo("move") == 0) {
-				movement = true;
+				controller.setMovement(true);
+				movement = model.getMovement();
 				result = "Enter a direction you'd like to move.";
 			} 
 			// otherwise, data is good, do the calculation
