@@ -1,12 +1,10 @@
 package edu.ycp.cs320.groupProj.model;
 
-// model class for GuessingGame
-// only the controller should be allowed to call the set methods
-// the JSP will call the "get" and "is" methods implicitly
-// when the JSP specifies game.min, that gets converted to
-//    a call to model.getMin()
-// when the JSP specifies if(game.done), that gets converted to
-//    a call to model.isDone()
+// System model class for TextQuest  
+// indicates whether a prompt is needed for "move" or "grab" etc.
+
+ 
+
 public class SystemModel {
 	public Boolean movement;
 	

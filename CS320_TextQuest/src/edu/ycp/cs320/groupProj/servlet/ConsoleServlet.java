@@ -9,11 +9,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.ycp.cs320.groupProj.controller.SystemController;
 import edu.ycp.cs320.groupProj.model.SystemModel;
+import edu.ycp.cs320.groupProj.model.DirectionsModel;
 
 public class ConsoleServlet extends HttpServlet {
 	Boolean movement = false;
 	int hp = 100;
 	private static final long serialVersionUID = 1L;
+	SystemModel model = new SystemModel();
+	DirectionsModel dModel = new DirectionsModel();
+	Boolean dCheck = false;
+	
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -30,45 +35,67 @@ public class ConsoleServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		System.out.println("AddNumbers Servlet: doPost");
-		SystemModel model = new SystemModel();
 		SystemController controller = new SystemController();
 		controller.setModel(model);
 		
-		controller.setModel(model);
-		// holds the error message text, if there is any
+		//
 		String errorMessage = null;
-		// result of calculation goes here
+		// 
 		String result = null;
-		
-		// decode POSTed form parameters and dispatch to controller
+		// FIND SOME WAY TO KEEP TRACK OF NORTH, SOUTH, EAST, AND WEST VALUES IN MODEL CLASS!!!!
 		try {
 			String action = getStringFromParameter(req.getParameter("action"));
 
 			// check for errors in the form data before using is in a calculation
 			if (action == null) {
 				errorMessage = "Please specify an action or type 'help' for a list of commands.";
-			} else if (action.toLowerCase().compareTo("help") == 0) {
+			} 
+			else if(action.toLowerCase().compareTo("direction") == 0) {
+				result = "North == " + dModel.getNorth() + " South == " + dModel.getSouth() + 
+						" East == " + dModel.getEast() + " West == " + dModel.getWest();
+			}
+			else if(action.toLowerCase().compareTo("totals") == 0) {
+				result = "UpTotal== " + dModel.getUp() + " SideTotal== " + dModel.getSide();
+			}
+			else if (action.toLowerCase().compareTo("help") == 0) {
 				result = "LOL!";
-			} else if(movement) {
+			} 
+			else if(movement) {
 				if(action.toLowerCase().compareTo("north") == 0 || action.toLowerCase().compareTo("west") == 0 || 
 						action.toLowerCase().compareTo("south") == 0 || action.toLowerCase().compareTo("east") == 0) {
-					result = "You moved " + action;
-					controller.setMovement(false);
-					movement = model.getMovement();
+					
+					if(action.toLowerCase().compareTo("north") == 0) {
+						dModel.moveNorth();
+						result = "You moved " + action;
+						controller.setMovement(false);
+						movement = model.getMovement();
+					} else if(action.toLowerCase().compareTo("south") == 0) {
+						dModel.moveSouth();
+						result = "You moved " + action;
+						controller.setMovement(false);
+						movement = model.getMovement();
+					} else if(action.toLowerCase().compareTo("east") == 0) {
+						dModel.moveEast();
+						result = "You moved " + action;
+						controller.setMovement(false);
+						movement = model.getMovement();
+					} else if(action.toLowerCase().compareTo("west") == 0) {
+						dModel.moveWest();
+						result = "You moved " + action;
+						controller.setMovement(false);
+						movement = model.getMovement();
+					} 
 				} else {
 					result = "That is not a valid direction.";
 					controller.setMovement(false);
 					movement = model.getMovement();
 				}
-			}else if(action.toLowerCase().compareTo("move") == 0) {
+			} 
+			else if(action.toLowerCase().compareTo("move") == 0) {
 				controller.setMovement(true);
 				movement = model.getMovement();
 				result = "Enter a direction you'd like to move.";
 			} 
-			// otherwise, data is good, do the calculation
-			// must create the controller each time, since it doesn't persist between POSTs
-			// the view does not alter data, only controller methods should be used for that
-			// thus, always call a controller method to operate on the data
 			else {
 				result = action;
 			}
