@@ -25,22 +25,22 @@ public class DirectionsModel {
 	}
 	
 	public void moveNorth() {
-		northMove += 1;
+		northMove++;
 		calcUp();
 	}
 	
 	public void moveSouth() {
-		southMove += 1;
+		southMove++;
 		calcUp();
 	}
 	
 	public void moveEast() {
-		eastMove += 1;
+		eastMove++;
 		calcSide();
 	}
 	
 	public void moveWest() {
-		westMove += 1;
+		westMove++;
 		calcSide();
 	}
 	

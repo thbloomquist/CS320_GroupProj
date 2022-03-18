@@ -54,6 +54,7 @@ public class ConsoleServlet extends HttpServlet {
 				result = "North == " + dModel.getNorth() + " South == " + dModel.getSouth() + 
 						" East == " + dModel.getEast() + " West == " + dModel.getWest();
 			}
+			
 			else if(action.toLowerCase().compareTo("totals") == 0) {
 				result = "UpTotal== " + dModel.getUp() + " SideTotal== " + dModel.getSide();
 			}
