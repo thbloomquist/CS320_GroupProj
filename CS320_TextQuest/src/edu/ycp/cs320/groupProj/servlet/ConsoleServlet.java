@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.ycp.cs320.groupProj.controller.SystemController;
-import edu.ycp.cs320.groupProj.model.SystemModel;
 import edu.ycp.cs320.groupProj.model.DirectionsModel;
+import edu.ycp.cs320.groupProj.model.SystemModel;
 
 public class ConsoleServlet extends HttpServlet {
 	Boolean movement = false;

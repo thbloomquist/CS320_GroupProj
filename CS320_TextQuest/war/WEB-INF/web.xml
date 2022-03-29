@@ -22,16 +22,6 @@
   <servlet-name>DeadServlet</servlet-name>
   <servlet-class>edu.ycp.cs320.groupProj.servlet.DeadServlet</servlet-class>
   </servlet>
-  
-  <!-- AJAX servlets. -->
-  <servlet>
-    <servlet-name>AddNumbersAjaxServlet</servlet-name>
-    <servlet-class>edu.ycp.cs320.lab02.servlet.ajax.AddNumbersAjaxServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>NextGuessAjaxServlet</servlet-name>
-    <servlet-class>edu.ycp.cs320.lab02.servlet.ajax.NextGuessAjaxServlet</servlet-class>
-  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -50,18 +40,8 @@
   <servlet-name>DeadServlet</servlet-name>
   <url-pattern>/dead</url-pattern>
   </servlet-mapping>
-  
-  <!--  AJAX servlet mappings. -->
-  <servlet-mapping>
-    <servlet-name>AddNumbersAjaxServlet</servlet-name>
-    <url-pattern>/ajax/addNumbers</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>NextGuessAjaxServlet</servlet-name>
-    <url-pattern>/ajax/nextGuess</url-pattern>
-  </servlet-mapping>
 
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
 </web-app>

@@ -5,22 +5,22 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ycp.cs320.groupProj.controller.GuessingGameController;
+//import edu.ycp.cs320.groupProj.controller.GuessingGameController;
 import edu.ycp.cs320.groupProj.model.SystemModel;
 
 public class SystemControllerTest {
 	private SystemModel model;
-	private GuessingGameController controller;
+//	private GuessingGameController controller;
 	
 	@Before
 	public void setUp() {
 		model = new SystemModel();
-		controller = new GuessingGameController();
-		
-		//model.setMin(1);
-		//model.setMax(100);
-		
-		controller.setModel(model);
+//		controller = new GuessingGameController();
+//		
+//		//model.setMin(1);
+//		//model.setMax(100);
+//		
+//		controller.setModel(model);
 	}
 	
 	//@Test

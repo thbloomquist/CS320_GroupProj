@@ -5,8 +5,8 @@ import edu.ycp.cs320.groupProj.model.SystemModel;
 public class SystemController {
 	private SystemModel model;
 	
-	public void setModel(SystemModel nModel) {
-		this.model = nModel;
+	public void setModel(SystemModel model) {
+		this.model = model;
 	}
 	public Boolean getMove() {
 		return model.getMovement();
@@ -16,5 +16,6 @@ public class SystemController {
 	}
 	public void setMovement(Boolean t) {
 		model.indicateMove(t);
+		
 	}
 }
