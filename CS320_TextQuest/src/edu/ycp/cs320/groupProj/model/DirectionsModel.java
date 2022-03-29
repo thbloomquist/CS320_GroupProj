@@ -25,32 +25,32 @@ public class DirectionsModel {
 	}
 	
 	public void moveNorth() {
-		northMove += 1;
+		northMove++;
 		calcUp();
 	}
 	
 	public void moveSouth() {
-		southMove += 1;
+		southMove++;
 		calcUp();
-	}
+	} //doesnt this need to be model.calc or something like that? idk
 	
 	public void moveEast() {
-		eastMove += 1;
+		eastMove++;
 		calcSide();
 	}
 	
 	public void moveWest() {
-		westMove += 1;
+		westMove++;
 		calcSide();
 	}
 	
 	public void calcUp() {
 		totalUp = (northMove-southMove);
-	}
+	} //could change to calcVert and make abs(northMove - soutMove) to get total vertical movement
 	
 	public void calcSide() {
 		totalSide = (eastMove-westMove);
-	}
+	} //should change to abs(eastMove - westMove) to calculate if movement west is greater
 	
 	public void setMovements(int NORTH, int SOUTH, int EAST, int WEST) {
 		northMove = NORTH;

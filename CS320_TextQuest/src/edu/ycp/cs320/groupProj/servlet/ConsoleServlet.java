@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.ycp.cs320.groupProj.controller.SystemController;
-import edu.ycp.cs320.groupProj.model.SystemModel;
 import edu.ycp.cs320.groupProj.model.DirectionsModel;
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
@@ -16,6 +15,7 @@ import edu.ycp.cs320.groupProj.controller.ObjectController;
 import edu.ycp.cs320.groupProj.model.NameTag;
 import edu.ycp.cs320.groupProj.model.Map;
 import edu.ycp.cs320.groupProj.model.Room;
+import edu.ycp.cs320.groupProj.model.SystemModel;
 
 public class ConsoleServlet extends HttpServlet {
 	Boolean movement = false;
@@ -30,8 +30,9 @@ public class ConsoleServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		System.out.println("AddNumbers Servlet: doGet");
 
+		System.out.println("Console: doGet");	
+		
 		// call JSP to generate empty form
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
 	}
@@ -107,6 +108,13 @@ public class ConsoleServlet extends HttpServlet {
 				result = "North == " + dModel.getNorth() + " South == " + dModel.getSouth() + " East == "
 						+ dModel.getEast() + " West == " + dModel.getWest();
 			} else if (action.toLowerCase().compareTo("totals") == 0) {
+			} 
+			else if(action.toLowerCase().compareTo("direction") == 0) {
+				result = "North == " + dModel.getNorth() + " South == " + dModel.getSouth() + 
+						" East == " + dModel.getEast() + " West == " + dModel.getWest();
+			}
+			
+			else if(action.toLowerCase().compareTo("totals") == 0) {
 				result = "UpTotal== " + dModel.getUp() + " SideTotal== " + dModel.getSide();
 			} else if (action.toLowerCase().compareTo("help") == 0) {
 				result = "Use - Uses an item within your inventory. Grab - grabs an item within the room. Move - Moves"

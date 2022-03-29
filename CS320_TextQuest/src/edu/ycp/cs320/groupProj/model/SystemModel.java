@@ -2,14 +2,12 @@ package edu.ycp.cs320.groupProj.model;
 
 // System model class for TextQuest  
 // indicates whether a prompt is needed for "move" or "grab" etc.
-
- 
-
 public class SystemModel {
 	public Boolean movement;
 	public Boolean use;
 	public Boolean grab;
 	public Boolean inspect;
+	//shouldnt this be private?
 	
 	public SystemModel() {
 		movement = false;

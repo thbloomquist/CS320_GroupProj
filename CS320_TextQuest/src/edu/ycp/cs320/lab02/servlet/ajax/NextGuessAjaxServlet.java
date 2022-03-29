@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.ycp.cs320.groupProj.controller.GuessingGameController;
+import edu.ycp.cs320.groupProj.controller.NotGuessingGameController;
 import edu.ycp.cs320.groupProj.model.SystemModel;
 
 public class NextGuessAjaxServlet extends HttpServlet {
