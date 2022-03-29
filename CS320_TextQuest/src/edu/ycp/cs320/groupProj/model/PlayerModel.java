@@ -11,13 +11,15 @@ public class PlayerModel {
 	public int sideLoc;
 	public ObjectModel[] inventory;
 	int invenIndex = 0;
+	public Room currentRoom;
 	
 	public PlayerModel() {
 		hp = 100;
-		upLoc = 0;
-		sideLoc = 0;
+		upLoc = 1;
+		sideLoc = 2;
 		inventory = new ObjectModel[10];
 		invenIndex = 0;
+		
 	}
 	public void reset() {
 		hp = 100;
@@ -27,6 +29,9 @@ public class PlayerModel {
 			inventory[i] = null;
 		}
 		invenIndex = 0;
+		upLoc = 1;
+		sideLoc = 2;
+		// currently initial starting room is [2][2]
 	}
 	
 	public void setLocation(int up, int side) {
@@ -71,6 +76,12 @@ public class PlayerModel {
 	
 	public ObjectModel[] getInvenFULL() {
 		return inventory;
+	}
+	public void setRoom(Room r) {
+		currentRoom = r;
+	}
+	public Room getRoom() {
+		return currentRoom;
 	}
 	
 	

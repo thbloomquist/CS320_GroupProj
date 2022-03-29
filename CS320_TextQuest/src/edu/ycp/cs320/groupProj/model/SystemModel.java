@@ -9,11 +9,13 @@ public class SystemModel {
 	public Boolean movement;
 	public Boolean use;
 	public Boolean grab;
+	public Boolean inspect;
 	
 	public SystemModel() {
 		movement = false;
 		use = false;
 		grab = false;
+		inspect = false;
 	}
 	
 	public Boolean getMovement() {
@@ -53,6 +55,19 @@ public class SystemModel {
 			grab = false;
 		} else {
 			grab = true;
+		}
+	}
+	public Boolean getInspect() {
+		return inspect;
+	}
+	public void indicateInspect(Boolean t) {
+		inspect = t;
+	}
+	public void setInspect() {
+		if(inspect) {
+			inspect = false;
+		} else {
+			inspect = true;
 		}
 	}
 }

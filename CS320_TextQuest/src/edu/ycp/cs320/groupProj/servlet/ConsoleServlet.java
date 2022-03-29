@@ -13,6 +13,9 @@ import edu.ycp.cs320.groupProj.model.DirectionsModel;
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
 import edu.ycp.cs320.groupProj.controller.ObjectController;
+import edu.ycp.cs320.groupProj.model.NameTag;
+import edu.ycp.cs320.groupProj.model.Map;
+import edu.ycp.cs320.groupProj.model.Room;
 
 public class ConsoleServlet extends HttpServlet {
 	Boolean movement = false;
@@ -22,13 +25,15 @@ public class ConsoleServlet extends HttpServlet {
 	PlayerModel pModel = new PlayerModel();
 	ObjectModel oModel = new ObjectModel();
 	ObjectModel currentObj = null;
+	Map map = new Map();
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		System.out.println("AddNumbers Servlet: doGet");
 
 		// call JSP to generate empty form
-			req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
+		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -40,67 +45,64 @@ public class ConsoleServlet extends HttpServlet {
 		controller.setModel(model);
 		oController.setModel(oModel);
 
-		//
+		// TO DO
+		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
+		// TO DO
 		String errorMessage = null;
 		//
-		String result = null;
+		String result = "";
 		try {
 			String action = getStringFromParameter(req.getParameter("action"));
-
-			// find a way to take the webpage to http://localhost:8081/TextQuest/dead when
-			// their hp reaches 0 or lower
+			Room currentR = map.getRoom(pModel.getUp(), pModel.getSide());
 			if (action == null) {
 				errorMessage = "Please specify an action or type 'help' for a list of commands.";
-			}
-			else if(action.toLowerCase().compareTo("make banana") == 0) {
-				currentObj = oController.banana();
-			}
-			else if(action.toLowerCase().compareTo("inventory") == 0) {
-				boolean rug = false;
-				ObjectModel[] thingy = pModel.getInvenFULL();
-				for(int i = 0; i < 10; i++) {
-					if(thingy[i] != null) {
-						rug = true;
-					}
-				}
-				if(rug) {
-					result = pModel.getiNum() + "x " + pModel.getInventory(0).getDesc();
-				} else {
-					result = "Your inventory is empty";
-				}
-			}
-			else if(action.toLowerCase().compareTo("inspect") == 0) {
-				if(currentObj != null) {
-					result = "There is a banana in the room.";
-				} else {
-					result = "The room is empty.";
-				}
-			}
-			else if(model.getUse()) {
-				if(action.toLowerCase().compareTo("banana") == 0) {
-					ObjectModel[] temp = pModel.getInvenFULL();
-					boolean bla = false;
-					for(int i = 0; i < 10; i++) {
-						if(temp[i] != null) {
-							bla = true;
+			} else if (model.getInspect()) {
+				if (action.toLowerCase().compareTo("room") == 0) {
+					String s = " the room contains: ";
+					for (int i = 0; i < currentR.getInven().length; i++) {
+						if (currentR.getInven()[i] != null) {
+							s += currentR.getInven()[i].getTag().getDesc() + " and ";
 						}
 					}
-					if(bla) {
-						pModel.setiNum(pModel.getiNum()-1);
-						ObjectModel tempp = pModel.getInventory(pModel.getiNum());
-						pModel.removeItem(pModel.getiNum());
-						pModel.setHP(pModel.getHP() + tempp.getThing());
-						result = "You eat the banana, yum.";
-					} else {
-						result = "You don't have any bananas.";
+					if (currentR.hasMonster()) {
+						s += currentR.getMonster().getNameTag().getName() + " and ";
 					}
+					if (s.toLowerCase().compareTo(" the room contains: ") == 0) {
+						result = currentR.getTag().getDesc();
+					} else {
+						s += "that's all";
+						result = currentR.getTag().getDesc() + s;
+					}
+				} else if (action.toLowerCase().compareTo("monster") == 0) {
+					if (map.getRoom(pModel.getUp(), pModel.getSide()).hasMonster()) {
+						result = map.getRoom(pModel.getUp(), pModel.getSide()).getMonster().getNameTag().getDesc();
+					} else {
+						result = "There's no monster in the room, unless you consider yourself evil.";
+					}
+				} else if (action.toLowerCase().compareTo("inventory") == 0) {
+					String s = "You rifle through your pack and find: ";
+					int r = 0;
+					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
+						if (pModel.getInvenFULL()[i] != null) {
+							s += pModel.getInvenFULL()[i].getTag().getDesc() + ", ";
+							r++;
+						}
+					}
+					if (r == 0) {
+						s += "it's empty.";
+					}
+					result = s;
+				} else {
+					result = "Invalid input.";
 				}
+				model.indicateInspect(false);
+			} else if (action.toLowerCase().compareTo("look") == 0) {
+				NameTag n = map.getRoom(pModel.getUp(), pModel.getSide()).getTag();
+				String s = n.getName();
+				result = s;
+			} else if (model.getUse()) {
+
 				model.indicateUse(false);
-			}
-			else if (action.toLowerCase().compareTo("reset") == 0) {
-				pModel.reset();
-				dModel.reset();
-				result = "Everything's back to normal.";
 			} else if (action.toLowerCase().compareTo("direction") == 0) {
 				result = "North == " + dModel.getNorth() + " South == " + dModel.getSouth() + " East == "
 						+ dModel.getEast() + " West == " + dModel.getWest();
@@ -115,23 +117,39 @@ public class ConsoleServlet extends HttpServlet {
 						|| action.toLowerCase().compareTo("east") == 0) {
 
 					if (action.toLowerCase().compareTo("north") == 0) {
-						dModel.moveNorth();
-						result = "You moved " + action;
+						if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
+							pModel.setUpLoc(pModel.getUp() - 1);
+							result = "You moved " + action;
+						} else {
+							result = "The path is blocked.";
+						}
 						controller.setMovement(false);
 						movement = model.getMovement();
 					} else if (action.toLowerCase().compareTo("south") == 0) {
-						dModel.moveSouth();
-						result = "You moved " + action;
+						if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
+							pModel.setUpLoc(pModel.getUp() + 1);
+							result = "You moved " + action;
+						} else {
+							result = "The path is blocked";
+						}
 						controller.setMovement(false);
 						movement = model.getMovement();
 					} else if (action.toLowerCase().compareTo("east") == 0) {
-						dModel.moveEast();
-						result = "You moved " + action;
+						if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
+							pModel.setSideLoc(pModel.getSide() + 1);
+							result = "You moved " + action;
+						} else {
+							result = "The path is blocked";
+						}
 						controller.setMovement(false);
 						movement = model.getMovement();
 					} else if (action.toLowerCase().compareTo("west") == 0) {
-						dModel.moveWest();
-						result = "You moved " + action;
+						if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
+							pModel.setSideLoc(pModel.getSide() - 1);
+							result = "You moved " + action;
+						} else {
+							result = "The path is blocked";
+						}
 						controller.setMovement(false);
 						movement = model.getMovement();
 					}
@@ -140,50 +158,62 @@ public class ConsoleServlet extends HttpServlet {
 					controller.setMovement(false);
 					movement = model.getMovement();
 				}
-			} else if(model.getGrab()) {
-				if(action.toLowerCase().compareTo("banana") == 0) {
-					if(currentObj != null) {
-						pModel.addInventory(currentObj);
-						currentObj = null;
-						model.indicateGrab(false);
-					} else {
-						result = "What banana?";
-						model.indicateGrab(false);
+			} else if (model.getGrab()) {
+				if (currentR.hasMonster()) {
+					result = "The " + currentR.getMonster().getNameTag().getName()
+							+ " blocks your way. You'll have to kill it to loot this room.";
+				} else {
+					ObjectModel[] temp = new ObjectModel[10];
+					int num = 0;
+					for (int i = 0; i < currentR.getInven().length; i++) {
+						if (currentR.getInven()[i] != null) {
+							temp[num] = currentR.getInven()[i];
+							num++;
+						}
+					}
+					Boolean only1 = true;
+					for (int i = 0; i < num; i++) {
+						if (action.toLowerCase().compareTo(temp[i].getTag().getName()) == 0 && only1) {
+							pModel.addInventory(temp[i]);
+							result = "You grabbed the " + temp[i].getTag().getName();
+							temp[i] = null;
+							only1 = false;
+						}
+					}
+					for(int i = 0; i < currentR.getInven().length; i++) {
+						currentR.getInven()[i] = temp[i];
 					}
 				}
-				else {
-					result = "Invalid item.";
-					model.indicateGrab(false);;
-				}
-			}
-			else if (action.toLowerCase().compareTo("move") == 0) {
+				model.indicateGrab(false);
+			} else if (action.toLowerCase().compareTo("move") == 0) {
 				controller.setMovement(true);
 				movement = model.getMovement();
 				result = "Enter a direction you'd like to move.";
-			} else if(action.toLowerCase().compareTo("grab") == 0) {
+			} else if (action.toLowerCase().compareTo("grab") == 0) {
 				model.indicateGrab(true);
 				result = "What would you like to grab?";
-			}
-			else if(action.toLowerCase().compareTo("use") == 0) {
+			} else if (action.toLowerCase().compareTo("use") == 0) {
 				model.indicateUse(true);
 				result = "Use what?";
-			}
-			else if (action.toLowerCase().compareTo("health") == 0) {
+			} else if (action.toLowerCase().compareTo("inspect") == 0) {
+				model.indicateInspect(true);
+				result = "Inspect what?";
+			} else if (action.toLowerCase().compareTo("health") == 0) {
 				result = " " + pModel.getHP();
-			} else if (action.toLowerCase().compareTo("punch") == 0) {
-				pModel.setHP(pModel.getHP() - 5);
-				result = "There were no monsters in the room so you punched yourself.";
-				if(pModel.getHP() <= 0) {
-					pModel.reset();
-					dModel.reset();
-					req.getRequestDispatcher("/_view/dead2.jsp").forward(req, resp);
+			} else if (action.toLowerCase().compareTo("fight") == 0) {
+				if (currentR.hasMonster()) {
+					result = "The " + currentR.getMonster().getNameTag().getName()
+							+ " bites you, but you manage to beat it.";
+					pModel.setHP(pModel.getHP() - currentR.getMonster().getDMG());
+					currentR.deadMonster();
+				} else {
+					result = "You fight yourself, you manage to both lose and win.";
+					pModel.setHP(pModel.getHP() - 25);
 				}
-			} else if (action.toLowerCase().compareTo("kick") == 0) {
-				pModel.setHP(pModel.getHP() - 10);
-				result = "There were no monsters in the room so you kicked yourself.";
-				if(pModel.getHP() <= 0) {
+				if (pModel.getHP() <= 0) {
 					pModel.reset();
 					dModel.reset();
+					map.reset();
 					req.getRequestDispatcher("/_view/dead2.jsp").forward(req, resp);
 				}
 			} else {

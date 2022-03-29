@@ -1,6 +1,7 @@
 package edu.ycp.cs320.groupProj.controller;
 
 import edu.ycp.cs320.groupProj.model.ObjectModel;
+import edu.ycp.cs320.groupProj.model.NameTag;
 
 public class ObjectController {
 	private ObjectModel model;
@@ -14,10 +15,10 @@ public class ObjectController {
 		model.setKey(f);
 	}
 	public ObjectModel banana() {
-		String t = "Banana";
+		NameTag n = new NameTag("Banana", "It's a yellow banana");
 		int num = 5;
 		boolean f = false;
-		ObjectModel thing = new ObjectModel(t, num, f);
+		ObjectModel thing = new ObjectModel(n, num, f);
 		return thing;
 	}
 }
