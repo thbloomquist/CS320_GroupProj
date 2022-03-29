@@ -24,7 +24,7 @@ public class ConsoleServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		System.out.println("AddNumbers Servlet: doGet");	
+		System.out.println("Console: doGet");	
 		
 		// call JSP to generate empty form
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
@@ -54,6 +54,7 @@ public class ConsoleServlet extends HttpServlet {
 				result = "North == " + dModel.getNorth() + " South == " + dModel.getSouth() + 
 						" East == " + dModel.getEast() + " West == " + dModel.getWest();
 			}
+			
 			else if(action.toLowerCase().compareTo("totals") == 0) {
 				result = "UpTotal== " + dModel.getUp() + " SideTotal== " + dModel.getSide();
 			}
