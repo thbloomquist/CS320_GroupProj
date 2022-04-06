@@ -16,6 +16,8 @@ import edu.ycp.cs320.groupProj.model.NameTag;
 import edu.ycp.cs320.groupProj.model.Map;
 import edu.ycp.cs320.groupProj.model.Room;
 import edu.ycp.cs320.groupProj.model.SystemModel;
+import edu.ycp.cs320.groupProj.controller.RoomController;
+import edu.ycp.cs320.groupProj.controller.PlayerController;
 
 public class ConsoleServlet extends HttpServlet {
 	Boolean movement = false;
@@ -30,9 +32,8 @@ public class ConsoleServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+		System.out.println("Console: doGet");
 
-		System.out.println("Console: doGet");	
-		
 		// call JSP to generate empty form
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
 	}
@@ -43,6 +44,9 @@ public class ConsoleServlet extends HttpServlet {
 		System.out.println("AddNumbers Servlet: doPost");
 		SystemController controller = new SystemController();
 		ObjectController oController = new ObjectController();
+		RoomController rController = new RoomController();
+		PlayerController pController = new PlayerController();
+		pController.setModel(pModel);
 		controller.setModel(model);
 		oController.setModel(oModel);
 
@@ -55,6 +59,7 @@ public class ConsoleServlet extends HttpServlet {
 		try {
 			String action = getStringFromParameter(req.getParameter("action"));
 			Room currentR = map.getRoom(pModel.getUp(), pModel.getSide());
+			rController.setModel(currentR);
 			if (action == null) {
 				errorMessage = "Please specify an action or type 'help' for a list of commands.";
 			} else if (model.getInspect()) {
@@ -101,21 +106,63 @@ public class ConsoleServlet extends HttpServlet {
 				NameTag n = map.getRoom(pModel.getUp(), pModel.getSide()).getTag();
 				String s = n.getName();
 				result = s;
+			} else if (model.getPlace()) {
+				if (pController.contains(action)) {
+					ObjectModel tempr = null;
+					Boolean only1 = true;
+					for (int l = 0; l < pModel.getInvenFULL().length; l++) {
+						if (pModel.getInventory(l) != null) {
+							if (pModel.getInventory(l).getTag().getName().toLowerCase().equals(action.toLowerCase())
+									&& only1) {
+								tempr = pModel.getInventory(l);
+								only1 = false;
+								pModel.getInvenFULL()[l] = null;
+								// this should return a reference to the first index of an item that contains
+								// the same name as the input
+							}
+						}
+					}
+					int temp = -1;
+					Boolean firstI = true;
+					for (int i = 0; i < currentR.getInven().length; i++) {
+						if (currentR.getInven()[i] == null & firstI) {
+							temp = i;
+							firstI = false;
+							// this should return the first index that is "open" for an item input
+						}
+					}
+
+					if (temp == -1) {
+						result = "The room is full.";
+					} else {
+						currentR.getInven()[temp] = tempr;
+						result = "You placed the " + action + " on the floor.";
+					}
+				} else {
+					result = "You dont have a " + action;
+				}
+				model.indicatePlace(false);
 			} else if (model.getUse()) {
+				if (pController.contains(action)) {
+					Boolean j1 = true;
+					ObjectModel temp = null;
+					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
+						if (pModel.getInvenFULL()[i] != null) {
+							if (pModel.getInventory(i).getTag().getName().toLowerCase().equals(action.toLowerCase())
+									&& j1) {
+								temp = pModel.getInventory(i);
+								pModel.removeItem(i);
+								j1 = false;
+							}
+						}
+					}
+					pModel.setHP(pModel.getHP() + temp.getThing());
+					result = "You used the " + temp.getTag().getName();
+				} else {
+					result = "You don't have a " + action;
+				}
 
 				model.indicateUse(false);
-			} else if (action.toLowerCase().compareTo("direction") == 0) {
-				result = "North == " + dModel.getNorth() + " South == " + dModel.getSouth() + " East == "
-						+ dModel.getEast() + " West == " + dModel.getWest();
-			} else if (action.toLowerCase().compareTo("totals") == 0) {
-			} 
-			else if(action.toLowerCase().compareTo("direction") == 0) {
-				result = "North == " + dModel.getNorth() + " South == " + dModel.getSouth() + 
-						" East == " + dModel.getEast() + " West == " + dModel.getWest();
-			}
-			
-			else if(action.toLowerCase().compareTo("totals") == 0) {
-				result = "UpTotal== " + dModel.getUp() + " SideTotal== " + dModel.getSide();
 			} else if (action.toLowerCase().compareTo("help") == 0) {
 				result = "Use - Uses an item within your inventory. Grab - grabs an item within the room. Move - Moves"
 						+ " location.  !!!!The rest is Work In Progress.";
@@ -170,7 +217,7 @@ public class ConsoleServlet extends HttpServlet {
 				if (currentR.hasMonster()) {
 					result = "The " + currentR.getMonster().getNameTag().getName()
 							+ " blocks your way. You'll have to kill it to loot this room.";
-				} else {
+				} else if (rController.contains(action)) {
 					ObjectModel[] temp = new ObjectModel[10];
 					int num = 0;
 					for (int i = 0; i < currentR.getInven().length; i++) {
@@ -188,9 +235,11 @@ public class ConsoleServlet extends HttpServlet {
 							only1 = false;
 						}
 					}
-					for(int i = 0; i < currentR.getInven().length; i++) {
+					for (int i = 0; i < currentR.getInven().length; i++) {
 						currentR.getInven()[i] = temp[i];
 					}
+				} else {
+					result = "The room doesn't contain any: " + action;
 				}
 				model.indicateGrab(false);
 			} else if (action.toLowerCase().compareTo("move") == 0) {
@@ -208,6 +257,9 @@ public class ConsoleServlet extends HttpServlet {
 				result = "Inspect what?";
 			} else if (action.toLowerCase().compareTo("health") == 0) {
 				result = " " + pModel.getHP();
+			} else if (action.toLowerCase().compareTo("place") == 0) {
+				model.indicatePlace(true);
+				result = "Place what?";
 			} else if (action.toLowerCase().compareTo("fight") == 0) {
 				if (currentR.hasMonster()) {
 					result = "The " + currentR.getMonster().getNameTag().getName()
@@ -218,6 +270,9 @@ public class ConsoleServlet extends HttpServlet {
 					result = "You fight yourself, you manage to both lose and win.";
 					pModel.setHP(pModel.getHP() - 25);
 				}
+
+				// reset all models & controllers if player health reaches 0.
+				// game can be replayed through hyperlink buttons
 				if (pModel.getHP() <= 0) {
 					pModel.reset();
 					dModel.reset();

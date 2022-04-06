@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.ycp.cs320.groupProj.controller.SystemController;
 
-public class PlayServlet extends HttpServlet {
+public class WinServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -19,7 +19,7 @@ public class PlayServlet extends HttpServlet {
 		System.out.println("AddNumbers Servlet: doGet");	
 		
 		// call JSP to generate empty form
-		req.getRequestDispatcher("/_view/play.jsp").forward(req, resp);
+		req.getRequestDispatcher("/_view/win.jsp").forward(req, resp);
 	}
 	
 	@Override
@@ -70,7 +70,7 @@ public class PlayServlet extends HttpServlet {
 		req.setAttribute("result", result);
 		
 		// Forward to view to render the result HTML document
-		req.getRequestDispatcher("/_view/play.jsp").forward(req, resp);
+		req.getRequestDispatcher("/_view/win.jsp").forward(req, resp);
 	}
 
 	// gets double from the request with attribute named s

@@ -3,10 +3,11 @@ package edu.ycp.cs320.groupProj.model;
 // System model class for TextQuest  
 // indicates whether a prompt is needed for "move" or "grab" etc.
 public class SystemModel {
-	public Boolean movement;
-	public Boolean use;
-	public Boolean grab;
-	public Boolean inspect;
+	private Boolean movement;
+	private Boolean use;
+	private Boolean grab;
+	private Boolean inspect;
+	private Boolean place;
 	//shouldnt this be private?
 	
 	public SystemModel() {
@@ -14,6 +15,7 @@ public class SystemModel {
 		use = false;
 		grab = false;
 		inspect = false;
+		place = false;
 	}
 	
 	public Boolean getMovement() {
@@ -66,6 +68,19 @@ public class SystemModel {
 			inspect = false;
 		} else {
 			inspect = true;
+		}
+	}
+	public Boolean getPlace() {
+		return place;
+	}
+	public void indicatePlace(Boolean t) {
+		place = t;
+	}
+	public void setPlace() {
+		if(place) {
+			place = false;
+		} else {
+			place = true;
 		}
 	}
 }

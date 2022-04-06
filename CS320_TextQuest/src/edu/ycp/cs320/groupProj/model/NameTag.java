@@ -8,7 +8,11 @@ public class NameTag {
 	public NameTag(String name, String desc) {
 		this.name = name;
 		this.desc = desc;
-	}	
+	}
+	public NameTag() {
+		name = "Default tag name";
+		desc = "Default tag desc";
+	}
 	public String getName() {
 		return name;
 	}
