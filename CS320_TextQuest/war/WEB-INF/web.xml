@@ -15,8 +15,8 @@
     <servlet-class>edu.ycp.cs320.groupProj.servlet.ConsoleServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>PlayServlet</servlet-name>
-    <servlet-class>edu.ycp.cs320.groupProj.servlet.PlayServlet</servlet-class>
+    <servlet-name>WinServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.groupProj.servlet.WinServlet</servlet-class>
   </servlet>
   <servlet>
   <servlet-name>DeadServlet</servlet-name>
@@ -33,8 +33,8 @@
     <url-pattern>/main</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>PlayServlet</servlet-name>
-    <url-pattern>/play</url-pattern>
+    <servlet-name>WinServlet</servlet-name>
+    <url-pattern>/win</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   <servlet-name>DeadServlet</servlet-name>

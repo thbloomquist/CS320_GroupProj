@@ -73,7 +73,6 @@ public class PlayerModel {
 	public ObjectModel getInventory(int n) {
 		return inventory[n];
 	}
-	
 	public ObjectModel[] getInvenFULL() {
 		return inventory;
 	}

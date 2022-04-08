@@ -18,4 +18,15 @@ public class PlayerController {
 	public void grab(ObjectModel thing) {
 		model.addInventory(thing);
 	}
+	public Boolean contains(String item) {
+		Boolean t  = false;
+		for(int i = 0; i < model.getInvenFULL().length; i++) {
+			if(model.getInvenFULL()[i] != null) {
+				if(model.getInvenFULL()[i].getTag().getName().equals(item)) {
+					t = true;
+				}
+			}
+		}
+		return t;
+	}
 }

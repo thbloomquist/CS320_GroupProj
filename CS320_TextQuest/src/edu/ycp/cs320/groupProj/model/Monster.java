@@ -43,6 +43,9 @@ public class Monster {
 	public void setAlive(Boolean t) {
 		alive = t;
 	}
+	public Boolean getAlive() {
+		return alive;
+	}
 	public int getDMG() {
 		return damage;
 	}

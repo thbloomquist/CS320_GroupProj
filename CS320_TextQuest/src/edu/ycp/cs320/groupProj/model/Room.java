@@ -1,12 +1,12 @@
 package edu.ycp.cs320.groupProj.model;
 
 public class Room {
-	public boolean canEnter;
-	public NameTag roomDesc;
-	public ObjectModel[] contents = new ObjectModel[10];
-	public Boolean hasMonster;
-	public Monster m;
-	public Boolean empty;
+	private boolean canEnter;
+	private NameTag roomDesc;
+	private ObjectModel[] contents = new ObjectModel[10];
+	private Boolean hasMonster;
+	private Monster m;
+	private Boolean empty;
 	
 	//The boolean value refers to whether or not this room can be entered or not.
 	//If it's true, you can enter this room
@@ -36,10 +36,18 @@ public class Room {
 		
 	}
 	public Boolean hasMonster() {
-		return this.hasMonster;
+		return hasMonster;
 	}
 	public void makeMonster() {
 		m = new Monster();
+		checkMonster();
+	}
+	public void checkMonster() {
+		if(m.getAlive()) {
+			hasMonster = true;
+		} else {
+			hasMonster = false;
+		}
 	}
 	
 	//where does this get called?
