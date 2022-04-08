@@ -6,15 +6,17 @@
 	</head>
 
 	<body>
-		This is the index view jsp
+	
+		<h1 class="display-1">Text Quest!</h1>
+		
 		<br>
 		<a href="/TextQuest/dead">
-		<button> Click me!</button>
+		<button> Dead page tester </button>
 		</a>
 		<br>
 		<br>
 		<a href="/TextQuest/play">
-		<button> WIP! </button>
+		<button> Play tester </button>
 		</a>
 		<br>
 		<br>

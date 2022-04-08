@@ -26,7 +26,7 @@ public class DeadServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		System.out.println("AddNumbers Servlet: doPost");
+		System.out.println("DeadServlet Servlet: doPost");
 		
 
 		// holds the error message text, if there is any

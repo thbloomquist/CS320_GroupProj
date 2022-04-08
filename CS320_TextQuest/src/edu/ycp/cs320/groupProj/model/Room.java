@@ -16,6 +16,9 @@ public class Room {
 		roomDesc = room;
 		this.contents = contents;
 	}
+	
+	//Second boolean is if room has monsters
+	//Third boolean is if room has items
 	public Room(boolean canEnter, NameTag room, ObjectModel[] contents, Boolean t, Boolean f) {
 		this.canEnter = canEnter;
 		roomDesc = room;
@@ -29,6 +32,7 @@ public class Room {
 			createContents1();
 			empty = false;
 		}
+		// if f, room has items in it
 		
 	}
 	public Boolean hasMonster() {
@@ -37,6 +41,8 @@ public class Room {
 	public void makeMonster() {
 		m = new Monster();
 	}
+	
+	//where does this get called?
 	public void deadMonster() {
 		hasMonster = false;
 		m.setAlive(false);

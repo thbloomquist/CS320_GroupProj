@@ -7,7 +7,7 @@ public class SystemModel {
 	public Boolean use;
 	public Boolean grab;
 	public Boolean inspect;
-	//shouldnt this be private?
+	//should this be private?
 	
 	public SystemModel() {
 		movement = false;

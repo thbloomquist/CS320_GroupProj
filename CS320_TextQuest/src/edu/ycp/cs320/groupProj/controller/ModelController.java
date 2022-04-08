@@ -5,8 +5,8 @@ import edu.ycp.cs320.groupProj.model.SystemModel;
 /**
  * Controller for the guessing game.
  */
-public class NotGuessingGameController {
-	private SystemModel model;
+public class ModelController {
+	private SystemModel model; //This is never used - look at later
 
 	/**
 	 * Set the model.

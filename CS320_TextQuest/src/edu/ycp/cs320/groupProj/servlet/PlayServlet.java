@@ -16,7 +16,7 @@ public class PlayServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		System.out.println("AddNumbers Servlet: doGet");	
+		System.out.println("PlayServlet Servlet: doGet");	
 		
 		// call JSP to generate empty form
 		req.getRequestDispatcher("/_view/play.jsp").forward(req, resp);
@@ -26,7 +26,7 @@ public class PlayServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		System.out.println("AddNumbers Servlet: doPost");
+		System.out.println("PlayServlet Servlet: doPost");
 		
 
 		// holds the error message text, if there is any
