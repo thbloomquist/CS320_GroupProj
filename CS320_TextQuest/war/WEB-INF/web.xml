@@ -6,18 +6,31 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
   <!-- Servlets -->
+    <servlet>
+    <servlet-name>AboutServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.groupProj.servlet.AboutServlet</servlet-class>
+  </servlet>
+  
   <servlet>
     <servlet-name>IndexServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.groupProj.servlet.IndexServlet</servlet-class>
   </servlet>
+  
+  <servlet>
+    <servlet-name>InstructionsServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.groupProj.servlet.InstructionsServlet</servlet-class>
+  </servlet>
+  
   <servlet>
     <servlet-name>ConsoleServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.groupProj.servlet.ConsoleServlet</servlet-class>
   </servlet>
+  
   <servlet>
     <servlet-name>WinServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.groupProj.servlet.WinServlet</servlet-class>
   </servlet>
+  
   <servlet>
   <servlet-name>DeadServlet</servlet-name>
   <servlet-class>edu.ycp.cs320.groupProj.servlet.DeadServlet</servlet-class>
@@ -25,20 +38,33 @@
 
   <!-- Servlet mappings -->
   <servlet-mapping>
+    <servlet-name>AboutServlet</servlet-name>
+    <url-pattern>/about</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
     <servlet-name>IndexServlet</servlet-name>
     <url-pattern>/start</url-pattern>
   </servlet-mapping>
+  
+   <servlet-mapping>
+    <servlet-name>InstructionsServlet</servlet-name>
+    <url-pattern>/instructions</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>ConsoleServlet</servlet-name>
     <url-pattern>/main</url-pattern>
   </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>WinServlet</servlet-name>
     <url-pattern>/win</url-pattern>
   </servlet-mapping>
+  
   <servlet-mapping>
-  <servlet-name>DeadServlet</servlet-name>
-  <url-pattern>/dead</url-pattern>
+  	<servlet-name>DeadServlet</servlet-name>
+  	<url-pattern>/dead</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>

@@ -17,11 +17,9 @@
 		}
 		</style>
 	</head>
+
 	<body>
 		<h1> Instructions </h1>
-		<p> This game is a text based adventure game. Your job is to traverse the map using commands
-		that prompt responses as the game continues. The object of the game is to find the key tat unlocks the chest 
-		to win the game. Along the way you will fight monsters, find items, and see how far you can get before time
-		runs out.</p>
+		<p>The instructions are gonna go here eventually </p>
 	</body>
 </html>
