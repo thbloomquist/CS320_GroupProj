@@ -6,17 +6,37 @@
 
 <html>
 	<head>
-		<title>Play Text Quest!</title>
+		<title>TextQuest!</title>
+		<style type="text/css">
+		.error {
+			color: red;
+		}
+		
+		td.label {
+			text-align: right;
+		}
+		</style>
 	</head>
 
 	<body>
-		<form action="/TextQuest/dead" method="post">
-		<label for="input"> Type your action here: </label>
-		<input type="text" name="action" id="input"> 			
-		</form>
-	</body>
+		<c:if test="${! empty errorMessage}">
+			<div class="error">${errorMessage}</div>
+		</c:if>
 	
-	<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Stuck?</button>
+		<form action="${pageContext.servletContext.contextPath}/main" method="post">
+			<label for="input"> Type your action here: </label>
+			<input type="text" name="action" id="input"> 
+			<br>
+			<br>
+			<table>
+				<tr>
+					<td class="label">Result:</td>
+					<td>${result}</td>
+				</tr>
+			</table>
+		</form>
+				
+		<button type="button" class="btn btn-outline-info" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Stuck?</button>
 
 		<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
 		  <div class="offcanvas-header">
@@ -27,10 +47,15 @@
 		    <ul>
 		    	<li>Move - enter this to move from room to room (followed by N/S/E/W)</li>
 		    	<li>Inspect - look at room or inventory</li>
-		    	<li>Enter more commands here later</li>
+		    	<li>Use - use an item in inventory or the room</li>
+		    	<li>Grab - grab an item in the room</li>
+		    	<li>Anything else thats needed</li>
 		    	
 		    </ul>
 		  </div>
 		</div>
-	
+		
+		<a href = "/TextQuest/start"><button type="button" class="btn btn-outline-danger">Back to Main Menu</button></a>
+		
+	</body>
 </html>

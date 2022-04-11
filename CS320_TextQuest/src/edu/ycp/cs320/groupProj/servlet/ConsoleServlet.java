@@ -53,6 +53,21 @@ public class ConsoleServlet extends HttpServlet {
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
 		// TO DO
+		
+		
+		for(int i = 0; i < 10; i++)
+		{
+			for(int j = 0; j < 10; j++)
+			{
+				if (map.getRoom(j, i).getEnter())
+				{
+					System.out.print(" [O] ");
+				}
+				else
+					System.out.print(" [X] ");
+			}
+			System.out.println();
+		}
 		String errorMessage = null;
 		//
 		String result = "";

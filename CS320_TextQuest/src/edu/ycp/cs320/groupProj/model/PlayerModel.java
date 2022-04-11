@@ -15,8 +15,8 @@ public class PlayerModel {
 	
 	public PlayerModel() {
 		hp = 100;
-		upLoc = 1;
-		sideLoc = 2;
+		upLoc = 7;
+		sideLoc = 3;
 		inventory = new ObjectModel[10];
 		invenIndex = 0;
 		

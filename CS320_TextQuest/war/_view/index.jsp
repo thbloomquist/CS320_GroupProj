@@ -9,18 +9,32 @@
 	
 		<h1 class="display-1">Text Quest!</h1>
 		
-		<br>
-		<a href="/TextQuest/dead">
-		<button> Dead page tester </button>
-		</a>
-		<br>
-		<br>
-		<a href="/TextQuest/play">
-		<button> Play tester </button>
-		</a>
-		<br>
-		<br>
-		<a href="/TextQuest/main">
+		<a href="/TextQuest/main ">
 		<button> Play! </button>
+		</a>
+		<br>
+		<br>
+		<a href = "instructions.html">
+		<button> Instructions </button>
+		</a>
+		<br>
+		<br>
+		<a href = "/TextQuest/about">
+		<button> About </button>
+		</a>
+		<br>
+		<br>
+		<a href = "/TextQuest/leaderboard">
+		<button> Leaderboard </button>
+		</a>
+		<br>
+		<br>
+		<a href = "/TextQuest/login">
+		<button> Login </button>
+		</a>
+		<br>
+		
+		
+		
 	</body>
 </html>
