@@ -1,55 +1,79 @@
 package edu.ycp.cs320.groupProj.model;
 
-
-// model class for TextQuest
-// keeps track of the moves, totaling North-South and East-West
-
-
 public class Monster {
-	public int hp;
-	public Room currentRoom;
-	public int damage;
-	public NameTag n;
-	public Boolean alive;
+	private int hp;
+	private Room currentRoom;
+	private int damage;
+	private NameTag n;
+	private Boolean alive;
+	private int score;
 	
-	public Monster() {
+	//"hp" and "damage" refers to the monster's stats
+	//The boolean refers to whether or not the monster is alive
+	
+	//"score" refers to the amount of points the player earns from killing the monster
+	//At the moment score is equal to the monster's damage * their health
+	
+	public Monster() 
+	{
 		hp = 100;
 		damage = 10;
 		n = new NameTag("Purple People Eater", "It's big, purple, and scary!");
 		alive = true;
+		score = hp * damage;
 	}
-	public Monster(int i, int j, NameTag n1) {
+	public Monster(int i, int j, NameTag n1) 
+	{
 		hp = i;
 		damage = j;
 		n = n1;
 	}
 	
-	public void setHP(int n) {
+	public void setHP(int n) 
+	{
 		hp = n;
 	}
-	public int getHP() {
+	public int getHP() 
+	{
 		return hp;
 	}
 	
-	public void setRoom(Room r) {
+	public void setRoom(Room r) 
+	{
 		currentRoom = r;
 	}
-	public Room getRoom() {
+	public Room getRoom() 
+	{
 		return currentRoom;
 	}
-	public NameTag getNameTag() {
+	public NameTag getTag() 
+	{
 		return n;
 	}
-	public void setAlive(Boolean t) {
+	//Returns name of monster
+	public String getName()
+	{
+		return this.getTag().getName();
+	}
+	//Returns description of monster
+	public String getDesc()
+	{
+		return this.getTag().getName();
+	}
+	public void setAlive(Boolean t) 
+	{
 		alive = t;
 	}
-	public Boolean getAlive() {
+	public Boolean getAlive() 
+	{
 		return alive;
 	}
-	public int getDMG() {
+	public int getDMG() 
+	{
 		return damage;
 	}
-	
-	
-	
+	public int getScore() 
+	{
+		return score;
+	}
 }

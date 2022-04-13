@@ -6,12 +6,21 @@ package edu.ycp.cs320.groupProj.model;
 
 
 public class PlayerModel {
-	public int hp;
-	public int upLoc;
-	public int sideLoc;
-	public ObjectModel[] inventory;
-	int invenIndex = 0;
-	public Room currentRoom;
+	private int hp;
+	private int upLoc;
+	private int sideLoc;
+	private ObjectModel[] inventory;
+	private int invenIndex = 0;
+	private Room currentRoom;
+	private int score;
+	
+	//"upLoc" and "sideLoc" are used to find the player's location on the map
+	
+	//"score" represents the player's current score
+	//TODO implement the following 
+	//Score begins at 0, but increases when the player...
+	//enters a new room, kills a monster, picks up treasure, and opens the chest
+	//The score is then further increased based on how fast the player won
 	
 	public PlayerModel() {
 		hp = 100;
@@ -19,7 +28,7 @@ public class PlayerModel {
 		sideLoc = 3;
 		inventory = new ObjectModel[10];
 		invenIndex = 0;
-		
+		score = 0;
 	}
 	public void reset() {
 		hp = 100;
@@ -31,6 +40,7 @@ public class PlayerModel {
 		invenIndex = 0;
 		upLoc = 1;
 		sideLoc = 2;
+		score = 0;
 		// currently initial starting room is [2][2]
 	}
 	
@@ -82,7 +92,14 @@ public class PlayerModel {
 	public Room getRoom() {
 		return currentRoom;
 	}
-	
-	
-	
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int n) {
+		score = n;
+	}
+	//Increases the score by this amount
+	public void addScore(int n) {
+		score = score + n;
+	}
 }

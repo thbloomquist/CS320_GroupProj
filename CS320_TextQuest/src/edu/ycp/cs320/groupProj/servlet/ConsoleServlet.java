@@ -48,12 +48,7 @@ public class ConsoleServlet extends HttpServlet {
 		PlayerController pController = new PlayerController();
 		pController.setModel(pModel);
 		controller.setModel(model);
-		oController.setModel(oModel);
-
-		// TO DO
-		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
-		// TO DO
-		
+		oController.setModel(oModel);		
 		
 		for(int i = 0; i < 10; i++)
 		{
@@ -82,21 +77,21 @@ public class ConsoleServlet extends HttpServlet {
 					String s = " the room contains: ";
 					for (int i = 0; i < currentR.getInven().length; i++) {
 						if (currentR.getInven()[i] != null) {
-							s += currentR.getInven()[i].getTag().getDesc() + " and ";
+							s += currentR.getInven()[i].getDesc() + " and ";
 						}
 					}
 					if (currentR.hasMonster()) {
-						s += currentR.getMonster().getNameTag().getName() + " and ";
+						s += currentR.getMonster().getName() + " and ";
 					}
 					if (s.toLowerCase().compareTo(" the room contains: ") == 0) {
-						result = currentR.getTag().getDesc();
+						result = currentR.getDesc();
 					} else {
 						s += "that's all";
-						result = currentR.getTag().getDesc() + s;
+						result = currentR.getDesc() + s;
 					}
 				} else if (action.toLowerCase().compareTo("monster") == 0) {
 					if (map.getRoom(pModel.getUp(), pModel.getSide()).hasMonster()) {
-						result = map.getRoom(pModel.getUp(), pModel.getSide()).getMonster().getNameTag().getDesc();
+						result = map.getRoom(pModel.getUp(), pModel.getSide()).getMonster().getDesc();
 					} else {
 						result = "There's no monster in the room, unless you consider yourself evil.";
 					}
@@ -105,7 +100,7 @@ public class ConsoleServlet extends HttpServlet {
 					int r = 0;
 					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
 						if (pModel.getInvenFULL()[i] != null) {
-							s += pModel.getInvenFULL()[i].getTag().getDesc() + ", ";
+							s += pModel.getInvenFULL()[i].getDesc() + ", ";
 							r++;
 						}
 					}
@@ -127,7 +122,7 @@ public class ConsoleServlet extends HttpServlet {
 					Boolean only1 = true;
 					for (int l = 0; l < pModel.getInvenFULL().length; l++) {
 						if (pModel.getInventory(l) != null) {
-							if (pModel.getInventory(l).getTag().getName().toLowerCase().equals(action.toLowerCase())
+							if (pModel.getInventory(l).getName().toLowerCase().equals(action.toLowerCase())
 									&& only1) {
 								tempr = pModel.getInventory(l);
 								only1 = false;
@@ -163,7 +158,7 @@ public class ConsoleServlet extends HttpServlet {
 					ObjectModel temp = null;
 					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
 						if (pModel.getInvenFULL()[i] != null) {
-							if (pModel.getInventory(i).getTag().getName().toLowerCase().equals(action.toLowerCase())
+							if (pModel.getInventory(i).getName().toLowerCase().equals(action.toLowerCase())
 									&& j1) {
 								temp = pModel.getInventory(i);
 								pModel.removeItem(i);
@@ -172,7 +167,7 @@ public class ConsoleServlet extends HttpServlet {
 						}
 					}
 					pModel.setHP(pModel.getHP() + temp.getThing());
-					result = "You used the " + temp.getTag().getName();
+					result = "You used the " + temp.getName();
 				} else {
 					result = "You don't have a " + action;
 				}
@@ -230,7 +225,7 @@ public class ConsoleServlet extends HttpServlet {
 				}
 			} else if (model.getGrab()) {
 				if (currentR.hasMonster()) {
-					result = "The " + currentR.getMonster().getNameTag().getName()
+					result = "The " + currentR.getMonster().getName()
 							+ " blocks your way. You'll have to kill it to loot this room.";
 				} else if (rController.contains(action)) {
 					ObjectModel[] temp = new ObjectModel[10];
@@ -243,9 +238,9 @@ public class ConsoleServlet extends HttpServlet {
 					}
 					Boolean only1 = true;
 					for (int i = 0; i < num; i++) {
-						if (action.toLowerCase().compareTo(temp[i].getTag().getName()) == 0 && only1) {
+						if (action.toLowerCase().compareTo(temp[i].getName()) == 0 && only1) {
 							pModel.addInventory(temp[i]);
-							result = "You grabbed the " + temp[i].getTag().getName();
+							result = "You grabbed the " + temp[i].getName();
 							temp[i] = null;
 							only1 = false;
 						}
@@ -257,30 +252,40 @@ public class ConsoleServlet extends HttpServlet {
 					result = "The room doesn't contain any: " + action;
 				}
 				model.indicateGrab(false);
+				//Player inputs "move" command
 			} else if (action.toLowerCase().compareTo("move") == 0) {
 				controller.setMovement(true);
 				movement = model.getMovement();
 				result = "Enter a direction you'd like to move.";
+				//Player inputs "grab" command
 			} else if (action.toLowerCase().compareTo("grab") == 0) {
 				model.indicateGrab(true);
 				result = "What would you like to grab?";
+				//Player inputs "use" command
 			} else if (action.toLowerCase().compareTo("use") == 0) {
 				model.indicateUse(true);
 				result = "Use what?";
+				//Player inputs "inspect" command
 			} else if (action.toLowerCase().compareTo("inspect") == 0) {
 				model.indicateInspect(true);
 				result = "Inspect what?";
+				//Player heals
 			} else if (action.toLowerCase().compareTo("health") == 0) {
 				result = " " + pModel.getHP();
+				//Player inputs "place" command
 			} else if (action.toLowerCase().compareTo("place") == 0) {
 				model.indicatePlace(true);
 				result = "Place what?";
+				//If player inputs "fight", checks rooms for monsters
+				//If room contains a monster, player kills the monster, takes damage, and earns points
 			} else if (action.toLowerCase().compareTo("fight") == 0) {
 				if (currentR.hasMonster()) {
-					result = "The " + currentR.getMonster().getNameTag().getName()
+					result = "The " + currentR.getMonster().getName()
 							+ " bites you, but you manage to beat it.";
 					pModel.setHP(pModel.getHP() - currentR.getMonster().getDMG());
 					currentR.deadMonster();
+					pModel.addScore(currentR.getMonster().getScore());
+					//If there are no monsters, player attacks themselves
 				} else {
 					result = "You fight yourself, you manage to both lose and win.";
 					pModel.setHP(pModel.getHP() - 25);

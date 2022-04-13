@@ -4,13 +4,14 @@ package edu.ycp.cs320.groupProj.model;
 // keeps track of the moves, totaling North-South and East-West
 
 
-public class ObjectModel {
+public class ObjectModel 
+{
 	public NameTag tag;
 	public int thing; // this will be the way it affects the player unless its a key
 	public Boolean key; // this flag will be true if its the key false otherwise
-	
-	
-	public ObjectModel() {
+
+	public ObjectModel() 
+	{
 		
 	}
 	public ObjectModel(NameTag n, int num, Boolean f) {
@@ -41,11 +42,17 @@ public class ObjectModel {
 	public NameTag getTag() {
 		return tag;
 	}
+	//Returns name of object
+	public String getName()
+	{
+		return this.tag.getName();
+	}
+	//Returns description of object
+	public String getDesc()
+	{
+		return this.tag.getDesc();
+	}
 	public ObjectModel getObject() {
 		return this;
 	}
-	
-	
-	
-	
 }

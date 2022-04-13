@@ -8,18 +8,18 @@ public class Room {
 	private Monster m;
 	private Boolean empty;
 	
-	//The boolean value refers to whether or not this room can be entered or not.
-	//If it's true, you can enter this room
-	//If it's false, you cannot enter this room
-	public Room(boolean canEnter, NameTag room, ObjectModel[] contents) {
-		this.canEnter = canEnter;
-		roomDesc = room;
-		this.contents = contents;
-	}
+	//"canEnter" refers to whether or not the player has access to the room
+	//if this value is false, it's basically an empty space on the map.
 	
-	//Second boolean is if room has monsters
-	//Third boolean is if room has items
-	public Room(boolean canEnter, NameTag room, ObjectModel[] contents, Boolean t, Boolean f) {
+	//"empty" refers to whether or not the room has any items in it.
+	//"hasMonster" refers to whether or not the room has a monster in it
+	//"contents" is the room's inventory
+		
+	//We should probably aim to remove the "empty" variable 
+	//Every room begins empty when the map is initialized
+	//And if you set a room to not be empty when you make it, it just adds the test banana item to it
+	public Room(boolean canEnter, NameTag room, ObjectModel[] contents, Boolean t, Boolean f) 
+	{
 		this.canEnter = canEnter;
 		roomDesc = room;
 		this.contents = contents;
@@ -35,14 +35,18 @@ public class Room {
 		// if f, room has items in it
 		
 	}
-	public Boolean hasMonster() {
+	public Boolean hasMonster() 
+	{
 		return hasMonster;
 	}
-	public void makeMonster() {
+	public void makeMonster() 
+	{
 		m = new Monster();
 		checkMonster();
 	}
-	public void checkMonster() {
+	//Updates the "hasMonster" boolean 
+	public void checkMonster() 
+	{
 		if(m.getAlive()) {
 			hasMonster = true;
 		} else {
@@ -51,24 +55,39 @@ public class Room {
 	}
 	
 	//where does this get called?
-	public void deadMonster() {
+	public void deadMonster() 
+	{
 		hasMonster = false;
 		m.setAlive(false);
 		m.setHP(0);
 	}
-	//Returns the boolean
-	public boolean getEnter() {
+	//Returns the cenEnter boolean
+	public boolean getEnter() 
+	{
 		return canEnter;
 	}
 	//Returns the room's nametag
-	public NameTag getTag() {
+	public NameTag getTag() 
+	{
 		return roomDesc;
 	}
+	//Returns the room's name
+	public String getName() 
+	{
+		return this.getTag().getName();
+	}
+	//Returns the room's description
+	public String getDesc() 
+	{
+		return this.getTag().getDesc();
+	}
 	//Returns the room's inventory
-	public ObjectModel[] getInven() {
+	public ObjectModel[] getInven() 
+	{
 		return contents;
 	}
-	public String printInven() {
+	public String printInven() 
+	{
 		String s = "";
 		for(int i = 0; i < contents.length; i++) {
 			if(contents[i] != null) {
@@ -77,11 +96,13 @@ public class Room {
 		}
 		return s;
 	}
-	public Monster getMonster() {
+	public Monster getMonster() 
+	{
 		return m;
 	}
 	
-	public void createContents1() {
+	public void createContents1() 
+	{
 		NameTag n = new NameTag("banana", "a yellow banana");
 		for(int i = 0; i < 10; i++) {
 			if(i == 0 || i == 3) {
@@ -89,10 +110,12 @@ public class Room {
 			}
 		}
 	}
-	public Boolean isEmpty() {
+	public Boolean isEmpty() 
+	{
 		return empty;
 	}
-	public void checkEmpty() {
+	public void checkEmpty() 
+	{
 		boolean n = false;
 		for(int i = 0; i < contents.length; i++) {
 			if(contents[i] != null) {
