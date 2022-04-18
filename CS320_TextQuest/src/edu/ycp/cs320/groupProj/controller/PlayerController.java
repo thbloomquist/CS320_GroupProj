@@ -29,4 +29,19 @@ public class PlayerController {
 		}
 		return t;
 	}
+	public int sortInven(ObjectModel[] inven) {
+		// this function serves two purposes - returning the new iNum & sorting the players inventory so the iNum is accurate.
+		int num = 0; 
+		ObjectModel[] tempr = new ObjectModel[inven.length];
+		for(int i = 0; i < inven.length; i++) {
+			if(inven[i] != null) {
+				tempr[num] = inven[i];
+				num++;
+			}
+		}
+		model.setInvenFULL(tempr);
+		
+		return num;
+		
+	}
 }

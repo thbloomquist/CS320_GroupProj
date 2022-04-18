@@ -7,6 +7,8 @@ public class Room {
 	private Boolean hasMonster;
 	private Monster m;
 	private Boolean empty;
+	private Boolean hasChest;
+	private Boolean isDark;
 	
 	//The boolean value refers to whether or not this room can be entered or not.
 	//If it's true, you can enter this room
@@ -33,7 +35,8 @@ public class Room {
 			empty = false;
 		}
 		// if f, room has items in it
-		
+		hasChest = false;
+		isDark = false;
 	}
 	public Boolean hasMonster() {
 		return hasMonster;
@@ -104,5 +107,22 @@ public class Room {
 		} else {
 			empty = true;
 		}
+	}
+	public Boolean hasChest() {
+		return hasChest;
+	}
+	public void setChest(Boolean t) {
+		hasChest = t;
+	}
+	public Boolean isDark() {
+		return isDark;
+	}
+	public void setDark(Boolean t) {
+		isDark = t;
+	}
+	public void createKey() {
+		NameTag tempr = new NameTag("THE key", "It's a shiny golden key, damn it's sparkly.");
+		ObjectModel thing = new ObjectModel(tempr, -1, true);
+		contents[7] = thing;
 	}
 }
