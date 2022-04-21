@@ -125,4 +125,6 @@ public class Room {
 		ObjectModel thing = new ObjectModel(tempr, -1, true);
 		contents[7] = thing;
 	}
+	
+	
 }

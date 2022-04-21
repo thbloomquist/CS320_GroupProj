@@ -452,7 +452,7 @@ public class ConsoleServlet extends HttpServlet {
 							String s = " the room contains: ";
 							for (int i = 0; i < currentR.getInven().length; i++) {
 								if (currentR.getInven()[i] != null) {
-									s += currentR.getInven()[i].getTag().getDesc() + " and ";
+									s += currentR.getInven()[i].getTag().getName() + " and ";
 								}
 							}
 							if (currentR.hasMonster()) {
@@ -494,14 +494,14 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						if (secondW.toLowerCase().compareTo("north") == 0) {
 							if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
-								Room roomT = map.getRoom(pModel.getUp()-1, pModel.getSide());
+								Room roomT = map.getRoom(pModel.getUp() - 1, pModel.getSide());
 								result = "You look into the room to your north and see ";
-								if(roomT.isDark()) {
+								if (roomT.isDark()) {
 									result += " nothing, the room is encased in shadow.";
 								} else {
-									if(roomT.hasMonster()) {
+									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if(!roomT.isEmpty()) {
+									} else if (!roomT.isEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -512,14 +512,14 @@ public class ConsoleServlet extends HttpServlet {
 							}
 						} else if (secondW.toLowerCase().compareTo("south") == 0) {
 							if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
-								Room roomT = map.getRoom(pModel.getUp()+1, pModel.getSide());
+								Room roomT = map.getRoom(pModel.getUp() + 1, pModel.getSide());
 								result = "You look into the room to your south and see ";
-								if(roomT.isDark()) {
+								if (roomT.isDark()) {
 									result += " nothing, the room is encased in shadow.";
 								} else {
-									if(roomT.hasMonster()) {
+									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if(!roomT.isEmpty()) {
+									} else if (!roomT.isEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -529,15 +529,15 @@ public class ConsoleServlet extends HttpServlet {
 								result = "You look south and see a wall.";
 							}
 						} else if (secondW.toLowerCase().compareTo("east") == 0) {
-							if (map.getRoom(pModel.getUp(), pModel.getSide()+1).getEnter()) {
-								Room roomT = map.getRoom(pModel.getUp(), pModel.getSide()+1);
+							if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
+								Room roomT = map.getRoom(pModel.getUp(), pModel.getSide() + 1);
 								result = "You look into the room to your east and see ";
-								if(roomT.isDark()) {
+								if (roomT.isDark()) {
 									result += " nothing, the room is encased in shadow.";
 								} else {
-									if(roomT.hasMonster()) {
+									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if(!roomT.isEmpty()) {
+									} else if (!roomT.isEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -547,15 +547,15 @@ public class ConsoleServlet extends HttpServlet {
 								result = "You look east and see a wall.";
 							}
 						} else if (secondW.toLowerCase().compareTo("west") == 0) {
-							if (map.getRoom(pModel.getUp(), pModel.getSide()-1).getEnter()) {
-								Room roomT = map.getRoom(pModel.getUp(), pModel.getSide()-1);
+							if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
+								Room roomT = map.getRoom(pModel.getUp(), pModel.getSide() - 1);
 								result = "You look into the room to your west and see ";
-								if(roomT.isDark()) {
+								if (roomT.isDark()) {
 									result += " nothing, the room is encased in shadow.";
 								} else {
-									if(roomT.hasMonster()) {
+									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if(!roomT.isEmpty()) {
+									} else if (!roomT.isEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -566,7 +566,8 @@ public class ConsoleServlet extends HttpServlet {
 							}
 						} else if (secondW.toLowerCase().compareTo("down") == 0) {
 							result = "You look downwards and see a stone-brick flooring, it's got patches of grasses growing through the cracks.";
-							// we COULD add a String in each room describing it's floor (like different sections have similar flooring or whatever)
+							// we COULD add a String in each room describing it's floor (like different
+							// sections have similar flooring or whatever)
 							// this also applies to the ceiling as shown below
 						} else if (secondW.toLowerCase().compareTo("up") == 0) {
 							result = "You look upwards and see a tile-stone ceiling, it's got signs of aging that lead you to believe this dungeon is very old.";
@@ -576,13 +577,17 @@ public class ConsoleServlet extends HttpServlet {
 					}
 				} else if (firstW.toLowerCase().compareTo("light") == 0) {
 					if (secondW.toLowerCase().compareTo("torch") == 0) {
-						if (pModel.getMatches() > 0) {
-							pModel.setMatches(pModel.getMatches() - 1);
-							pModel.setLit(true);
-							result = "You take out your pack of matches and strike one, lighting the torch and throwing out the now-burnt match.";
-							// maybe add a "burnt match" item on the floor of the room TBD
+						if (pController.contains(secondW)) {
+							if (pModel.getMatches() > 0) {
+								pModel.setMatches(pModel.getMatches() - 1);
+								pModel.setLit(true);
+								result = "You take out your pack of matches and strike one, lighting the torch and throwing out the now-burnt match.";
+								// maybe add a "burnt match" item on the floor of the room TBD
+							} else {
+								result = "You are out of matches, uh oh.";
+							}
 						} else {
-							result = "You are out of matches, uh oh.";
+							result = "You've lost your torch, that's not good.";
 						}
 					} else {
 						result = "You are unable to light the " + secondW + " on fire";

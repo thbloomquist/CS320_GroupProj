@@ -10,7 +10,7 @@ public class PlayerModel {
 	private int upLoc;
 	private int sideLoc;
 	private ObjectModel[] inventory;
-	private int invenIndex = 0;
+	private int invenIndex;
 	private Room currentRoom;
 	private int score;
 	private int matches;
@@ -31,9 +31,7 @@ public class PlayerModel {
 		hp = 100;
 		upLoc = 7; // replace these with intial values in 2d Array
 		sideLoc = 3;
-		for(int i = 0; i < inventory.length-1; i++) {
-			inventory[i] = null;
-		}
+		inventory = new ObjectModel[10];
 		invenIndex = 0;
 		score = 0;
 		matches = 10;
@@ -108,12 +106,21 @@ public class PlayerModel {
 		isLit = t;
 	}
 	public void createTorch() {
-		NameTag n = new NameTag("A torch", "It's a piece of wood with oil-covered cloth wrapped on the tip.");
+		NameTag n = new NameTag("torch", "It's a piece of wood with oil-covered cloth wrapped on the tip.");
 		ObjectModel torch = new ObjectModel(n, -1, false);
 		addInventory(torch);
 	}
 	public void setInvenFULL(ObjectModel[] temporary) {
 		inventory = temporary;
+	}
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int n) {
+		score = n;
+	}
+	public void incrementScore(int n) {
+		score += n;
 	}
 	
 	

@@ -19,6 +19,13 @@ public class SystemModel {
 		place = false;
 	}
 	
+	public void reset() {
+		movement = false;
+		use = false;
+		grab = false;
+		inspect = false;
+		place = false;
+	}
 	public Boolean getMovement() {
 		return movement;
 	}

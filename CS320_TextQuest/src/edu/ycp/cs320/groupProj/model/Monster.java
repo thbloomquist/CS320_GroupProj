@@ -22,6 +22,11 @@ public class Monster {
 		hp = i;
 		damage = j;
 		n = n1;
+		if(hp > 0) { 
+			alive = true;
+		} else {
+			alive = false;
+		}
 	}
 	
 	public void setHP(int n) {
@@ -48,6 +53,12 @@ public class Monster {
 	}
 	public int getDMG() {
 		return damage;
+	}
+	public void createEater() {
+		this.hp = 100;
+		this.damage = 10;
+		this.n = new NameTag("Purple People Eater", "It's big, purple, and scary!");
+		this.alive = true;
 	}
 	
 	

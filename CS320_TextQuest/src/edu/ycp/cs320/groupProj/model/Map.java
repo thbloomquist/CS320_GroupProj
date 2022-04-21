@@ -4,7 +4,7 @@ public class Map {
 	public Room[][] map;
 	public int currentUp;
 	public int currentSide;
-	
+
 	// need to add setDark(true) to the parts that are dark
 	// and setChest(true) to the chest room
 	// and setKey(true) to the key room
@@ -111,6 +111,25 @@ public class Map {
 		this.map[8][7] = new Room(true, new NameTag("Dark", "Foggy damn"), new ObjectModel[10], false, true);
 		this.map[8][8] = new Room(true, new NameTag("Dark", "Foggy as hell"), new ObjectModel[10], false, true);
 		// [8][9] is outside the dungeon
+
+		// top dark section ==
+		this.map[1][8].setDark(true);
+		this.map[2][8].setDark(true);
+		this.map[3][8].setDark(true);
+		this.map[3][7].setDark(true);
+		this.map[3][6].setDark(true);
+
+		// bottom dark section ==
+		this.map[5][7].setDark(true);
+		this.map[5][8].setDark(true);
+		this.map[6][7].setDark(true);
+		this.map[6][8].setDark(true);
+		this.map[7][6].setDark(true);
+		this.map[7][7].setDark(true);
+		this.map[7][8].setDark(true);
+		this.map[8][6].setDark(true);
+		this.map[8][7].setDark(true);
+		this.map[8][8].setDark(true);
 	}
 
 	public Room[][] getMap() {
@@ -218,6 +237,28 @@ public class Map {
 		this.map[8][8] = new Room(true, new NameTag("Dark", "Foggy as hell"), new ObjectModel[10], false, true);
 		// [8][9] is outside the dungeon
 
+		// top dark section ==
+		this.map[1][8].setDark(true);
+		this.map[2][8].setDark(true);
+		this.map[3][8].setDark(true);
+		this.map[3][7].setDark(true);
+		this.map[3][6].setDark(true);
+
+		// bottom dark section ==
+		this.map[5][7].setDark(true);
+		this.map[5][8].setDark(true);
+		this.map[6][7].setDark(true);
+		this.map[6][8].setDark(true);
+		this.map[7][6].setDark(true);
+		this.map[7][7].setDark(true);
+		this.map[7][8].setDark(true);
+		this.map[8][6].setDark(true);
+		this.map[8][7].setDark(true);
+		this.map[8][8].setDark(true);
+		
+		
+		// chest :_)
+		this.map[1][6].setChest(true);
 	}
 
 }
