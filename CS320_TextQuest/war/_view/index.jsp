@@ -29,7 +29,7 @@
 		</a>
 		<br>
 		<br>
-		<a href = "/TextQuest/login">
+		<a href = "/TextQuest/signup">
 		<button> Login </button>
 		</a>
 		<br>

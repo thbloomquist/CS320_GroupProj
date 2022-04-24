@@ -11,7 +11,7 @@ import edu.ycp.cs320.gamedb.model.Game;
 public class InitialData {
 	public static List<Player> getPlayers() throws IOException {
 		List<Player> playerList = new ArrayList<Player>();
-		ReadCSV readPlayers = new ReadCSV("authors.csv"); //FIX CSV LATER
+		ReadCSV readPlayers = new ReadCSV("players.csv"); //FIX CSV LATER
 		try {
 			// auto-generated primary key for authors table
 			Integer playerId = 1;
@@ -35,7 +35,7 @@ public class InitialData {
 	
 	public static List<Game> getGame() throws IOException {
 		List<Game> gameList = new ArrayList<Game>();
-		ReadCSV readGame = new ReadCSV("books.csv"); 	//FIX CSV LATER
+		ReadCSV readGame = new ReadCSV("games.csv"); 	//FIX CSV LATER
 		try {
 			// auto-generated primary key for books table
 			Integer gameId = 1;

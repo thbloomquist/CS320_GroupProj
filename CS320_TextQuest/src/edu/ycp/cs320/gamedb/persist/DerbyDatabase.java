@@ -29,155 +29,6 @@ public class DerbyDatabase implements IDatabase { //FIX
 
 	private static final int MAX_ATTEMPTS = 10;
 	
-	public List<Pair<Player, Game>> InsertNewGameInfoWithPlayer(final int playerId, final String username, final String password, final String move, final int score, final int health) {
-		return executeTransaction(new Transaction<List<Pair<Player,Game>>>() {
-			@Override
-			public List<Pair<Player, Game>> execute(Connection conn) throws SQLException {
-				PreparedStatement getPlayerStmt = null;
-				PreparedStatement getPlayerStmt2 = null;
-				PreparedStatement insertPlayerStmt = null;
-				PreparedStatement insertGameStmt = null;
-				PreparedStatement insertGameStmt2 = null;
-				PreparedStatement stmt = null;
-				ResultSet playerResultSet = null;
-				ResultSet playerResultSet2 = null;
-				ResultSet resultSet = null;
-				
-				try { //NO IDEA IF THIS IS RIGHT
-					getPlayerStmt = conn.prepareStatement(
-							"select playerId"
-							+ "  from players "
-							+ "  where username = ?"
-							+ " and password = ?"
-					);
-					getPlayerStmt.setString(1, username);
-					getPlayerStmt.setString(2, password);
-					
-					playerResultSet = getPlayerStmt.executeQuery();
-
-					
-					// for testing that a result was returned
-					Boolean found = false;
-					
-					while (playerResultSet.next()) {
-						found = true;
-						Object obj = playerResultSet.getObject(1);
-						int id = Integer.parseInt(obj.toString());
-						
-						insertGameStmt = conn.prepareStatement(
-								"insert into game (playerId, move, score, health)"
-								
-								+"values("+id+", ?, ?, ?)"
-						);
-						insertGameStmt.setString(1, move);
-						insertGameStmt.setInt(2,  score);
-						insertGameStmt.setInt(3, health);
-						
-						insertGameStmt.executeUpdate();
-					}
-					
-					
-					// check if the title was found
-					if (!found) {
-						System.out.println("Adding player here");
-						insertPlayerStmt = conn.prepareStatement(
-								"insert into players (username, password)"
-								
-								+"values(?, ?)"
-						);
-						insertPlayerStmt.setString(1, username);
-						insertPlayerStmt.setString(2,  password);
-						System.out.println(username + " " +password);
-						
-						insertPlayerStmt.executeUpdate();						
-
-						getPlayerStmt2 = conn.prepareStatement(
-								"select playerId"
-								+ "  from players "
-								+ "  where username = ?"
-								+ " and password = ?"
-						);
-						// substitute the title entered by the user for the placeholder in the query
-						getPlayerStmt2.setString(1, username);
-						getPlayerStmt2.setString(2,  password);
-						
-						int id = 0;
-						// execute the query
-						playerResultSet2 = getPlayerStmt2.executeQuery();
-						if(playerResultSet2.next()) {
-							Object obj = playerResultSet2.getObject(1);
-							id = Integer.parseInt(obj.toString());
-						}
-						System.out.println(id);
-						
-						DBUtil.closeQuietly(playerResultSet2);
-						
-						insertGameStmt2 = conn.prepareStatement(
-								"insert into game (playerId, move, score, health)"
-								
-								+"values("+id+", ?, ?, ?)"
-						);
-						insertGameStmt2.setString(1, move);
-						insertGameStmt2.setInt(2,  score);
-						insertGameStmt2.setInt(3, health);
-						System.out.println("Move: " + move + " Score: " + score + " Health: " + health);
-						insertGameStmt2.executeUpdate();
-					}
-					
-					
-					stmt = conn.prepareStatement(
-							"select players.*, game.* "
-									+ "  from players, game "
-									+ "  where players.playerId = game.playerId "
-									+ " 		and player.username = ?"
-					);
-					stmt.setString(1, username);
-					
-					List<Pair<Player, Game>> result = new ArrayList<Pair<Player,Game>>();
-					
-					resultSet = stmt.executeQuery();
-					
-					// for testing that a result was returned
-					Boolean found2 = false;
-					
-					while (resultSet.next()) {
-						found2 = true;
-						
-						// create new Player object
-						// retrieve attributes from resultSet starting with index 1
-						Player player = new Player();
-						loadPlayer(player, resultSet, 1);
-						
-						// create new Game object
-						// retrieve attributes from resultSet starting at index 4
-						Game game = new Game();
-						loadGame(game, resultSet, 4);
-						
-						result.add(new Pair<Player, Game>(player, game));
-					}
-					
-					// check if the title was found
-					if (!found2) {
-						System.out.println("<" + username + "> was not found in the players table");
-					}
-					
-					return result;
-				} finally {
-					DBUtil.closeQuietly(getPlayerStmt);
-					DBUtil.closeQuietly(getPlayerStmt2);
-					DBUtil.closeQuietly(insertPlayerStmt);
-					DBUtil.closeQuietly(insertGameStmt);
-					DBUtil.closeQuietly(insertGameStmt2);
-					DBUtil.closeQuietly(stmt);
-
-					DBUtil.closeQuietly(playerResultSet);
-					DBUtil.closeQuietly(playerResultSet2);
-					DBUtil.closeQuietly(resultSet);
-				}
-			}
-		});
-	}
-	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
@@ -265,7 +116,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 					// DO I NEED A PRIMARY KEY?
 					stmt2 = conn.prepareStatement(
 							"create table game (" +
-							"	playerId integer primary key " +
+							"	gameId integer primary key " +
 							"		generated always as identity (start with 1, increment by 1), " +
 							"	playerId integer constraint playerId references players, " +
 							"	move varchar(70)," +
@@ -346,22 +197,130 @@ public class DerbyDatabase implements IDatabase { //FIX
 		System.out.println("Success!");
 	}
 
-	@Override
-	public List<Pair<Player, Game>> findAuthorAndBookByTitle(String title) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public List<Pair<Player, Game>> findAuthorAndBookByAuthorLastName(String lastName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<Pair<Player, Game>> InsertNewGameInfoWithPlayer(String username, String password, String move,
 			String score, int health) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Boolean InsertNewPlayer(String username, String password) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement insertPlayer = null;
+			int resultSet = -1;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				insertPlayer = conn.prepareStatement("insert into players (username, password) values (?, ?)");
+				
+				insertPlayer.setString(1, username);
+				insertPlayer.setString(2, password);
+				
+				resultSet = insertPlayer.executeUpdate();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + username + "> could not be inserted into the Player table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(insertPlayer);
+			}
+			}
+	});
+	}
+	
+	public Boolean InsertNewGame(int playerId) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement insertGame = null;
+			int resultSet = -1;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				insertGame = conn.prepareStatement("insert into game (playerId, move, score, health) values (?, ' ', 0, 100)");
+				
+				insertGame.setInt(1, playerId);
+
+				resultSet = insertGame.executeUpdate();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be inserted into the Games table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(insertGame);
+			}
+			}
+	});
+	}
+
+	@Override
+	public Player getPlayerByUsernameAndPassword(String username, String password) {
+		return executeTransaction(new Transaction<Player>() {
+			@Override
+			public Player execute(Connection conn) throws SQLException {
+			PreparedStatement getPlayer = null;
+			ResultSet resultSet = null;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				getPlayer = conn.prepareStatement("select * from players where players.username=? AND players.password=?");
+				
+				getPlayer.setString(1, username);
+				getPlayer.setString(2,  password);
+
+				resultSet = getPlayer.executeQuery();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				while (resultSet.next()) {
+					found = true;
+					
+					// create new Student object
+					// retrieve attributes from resultSet starting with index 1
+					Player player = new Player();
+					loadPlayer(player, resultSet, 1);
+					return player;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + username + "> could not be found in the Player table");
+				}
+				
+				return null;
+			} finally {
+				DBUtil.closeQuietly(getPlayer);
+				DBUtil.closeQuietly(resultSet);
+			}
+			}
+	});
 	}
 }

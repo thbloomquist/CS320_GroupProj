@@ -6,11 +6,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import edu.ycp.cs320.groupProj.controller.SystemController;
 import edu.ycp.cs320.groupProj.model.DirectionsModel;
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
+import edu.ycp.cs320.gamedb.model.Player;
+import edu.ycp.cs320.groupProj.controller.DBController;
 import edu.ycp.cs320.groupProj.controller.ObjectController;
 import edu.ycp.cs320.groupProj.model.NameTag;
 import edu.ycp.cs320.groupProj.model.Map;
@@ -36,6 +39,15 @@ public class ConsoleServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		System.out.println("Console: doGet");
+		HttpSession session = req.getSession(false);
+		
+		System.out.println(session);
+		
+		Player player = (Player) session.getAttribute("player");
+		DBController controller = new DBController();
+		controller.InsertNewGame(player.getPlayerId());
+		System.out.println("New game created");
+		
 
 		// call JSP to generate empty form
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
@@ -44,7 +56,7 @@ public class ConsoleServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		System.out.println("AddNumbers Servlet: doPost");
+		System.out.println("Console Servlet: doPost");
 		SystemController controller = new SystemController();
 		ObjectController oController = new ObjectController();
 		RoomController rController = new RoomController();

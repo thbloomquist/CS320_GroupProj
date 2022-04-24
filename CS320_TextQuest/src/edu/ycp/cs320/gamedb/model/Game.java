@@ -11,7 +11,7 @@ public class Game {
 		
 	}
 	
-	public void setGameId(int bookId) {
+	public void setGameId(int gameId) {
 		this.gameId = gameId;
 	}
 	
