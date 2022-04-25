@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.ycp.cs320.groupProj.controller.SystemController;
-import edu.ycp.cs320.groupProj.model.DirectionsModel;
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
 import edu.ycp.cs320.gamedb.model.Player;
@@ -26,7 +25,6 @@ public class ConsoleServlet extends HttpServlet {
 	Boolean movement = false;
 	private static final long serialVersionUID = 1L;
 	SystemModel model = new SystemModel();
-	DirectionsModel dModel = new DirectionsModel();
 	PlayerModel pModel = new PlayerModel();
 	ObjectModel oModel = new ObjectModel();
 	ObjectModel currentObj = null;
@@ -49,6 +47,7 @@ public class ConsoleServlet extends HttpServlet {
 		controller.InsertNewGame(player.getPlayerId());
 		System.out.println("New game created");
 		
+		
 
 		// call JSP to generate empty form
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
@@ -69,11 +68,16 @@ public class ConsoleServlet extends HttpServlet {
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
 		// TO DO
-		/**
-		 * for (int i = 0; i < 10; i++) { for (int j = 0; j < 10; j++) { if
-		 * (map.getRoom(j, i).getEnter()) { System.out.print(" [O] "); } else
-		 * System.out.print(" [X] "); } System.out.println(); }
-		 **/
+		
+//		 for (int i = 0; i < 10; i++) { 
+//			 for (int j = 0; j < 10; j++) {
+//			 if(map.getRoom(j, i).getEnter()) { 
+//				 	System.out.print(" [O] "); 
+//				 } else
+//					 System.out.print(" [X] "); 
+//			 } System.out.println(); 
+//		 }
+		 
 		//
 		String result = "";
 		try {
@@ -86,6 +90,7 @@ public class ConsoleServlet extends HttpServlet {
 			//////// Move for DB ////////
 			DBController DBController = new DBController(); // Database controller
 			HttpSession session = req.getSession(false); // get current session
+			session.setAttribute("playerModel", pModel);
 			Player player = (Player) session.getAttribute("player"); // get player from session
 			DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
 			DBController.InsertNewMove(player.getPlayerId(), 1, action);
@@ -325,7 +330,6 @@ public class ConsoleServlet extends HttpServlet {
 				// game can be replayed through hyperlink buttons
 				if (pModel.getHP() <= 0) {
 					pModel.reset();
-					dModel.reset();
 					map.reset();
 					req.getRequestDispatcher("/_view/dead2.jsp").forward(req, resp);
 				}

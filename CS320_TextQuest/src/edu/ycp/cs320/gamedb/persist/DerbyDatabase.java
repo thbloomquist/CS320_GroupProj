@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ycp.cs320.gamedb.model.Player;
+import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.gamedb.model.Game;
 import edu.ycp.cs320.gamedb.model.Pair;
 import edu.ycp.cs320.sqldemo.DBUtil;
@@ -95,6 +96,13 @@ public class DerbyDatabase implements IDatabase { //FIX
 		game.setScore(resultSet.getInt(index++));
 		game.setHealth(resultSet.getInt(index++));		
 	}
+	
+	private void loadPlayerModel(PlayerModel playerModel, ResultSet resultSet, int index) throws SQLException {
+		playerModel.setHP(resultSet.getInt(index++));
+		playerModel.setSideLoc(resultSet.getInt(index++));
+		playerModel.setUpLoc(resultSet.getInt(index++));		
+		playerModel.setScore(resultSet.getInt(index++));
+	}
 
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
@@ -103,6 +111,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 				PreparedStatement stmt1 = null;
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
+				PreparedStatement stmt4 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -117,8 +126,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 					// DO I NEED A PRIMARY KEY?
 					stmt2 = conn.prepareStatement(
 							"create table game (" +
-							"	gameId integer primary key " +
-							"		generated always as identity (start with 1, increment by 1), " +
+							"	gameId integer, " +
 							"	playerId integer constraint playerId references players, " +
 							"	move varchar(70)," +
 							"	score integer," +
@@ -127,13 +135,24 @@ public class DerbyDatabase implements IDatabase { //FIX
 					);
 					stmt2.executeUpdate();
 					stmt3 = conn.prepareStatement(
-						"create table moves (" +
-								"	playerId integer constraint playerId1 references players,  " +
-								"	gameId integer constraint gameId references game, " +									
-								"	move varchar(20) " +
-								")"
-								);
+							"create table moves (" +
+									"	playerId integer constraint playerId1 references players,  " +
+									"	gameId integer, " +									
+									"	move varchar(20) " +
+									")"
+									);
 					stmt3.executeUpdate();
+						
+					stmt4 = conn.prepareStatement(
+							"create table playermodel (" +
+									"	playerId integer constraint playerId2 references players,  " +
+									"	health integer, " +									
+									"	xloc integer,"
+									+ "yloc integer,"
+									+ "score integer"+
+									")"
+									);
+					stmt4.executeUpdate();
 					
 					
 					return true;
@@ -176,13 +195,13 @@ public class DerbyDatabase implements IDatabase { //FIX
 					
 					// populate game table (do this after players table,
 					// since playerId must exist in players table before inserting game)
-					insertGame = conn.prepareStatement("insert into game (playerId, move, score, health) values (?, ?, ?, ?)");
+					insertGame = conn.prepareStatement("insert into game (gameId, playerId, move, score, health) values (?, ?, ?, ?, ?)");
 					for (Game game : gameList) {
-//						insertGame.setInt(1, game.getGameId());		// auto-generated primary key, don't insert this
-						insertGame.setInt(1, game.getPlayerId());
-						insertGame.setString(2, game.getMove());
-						insertGame.setInt(3, game.getScore());
-						insertGame.setInt(4,  game.getHealth());
+						insertGame.setInt(1, game.getGameId());		// auto-generated primary key, don't insert this
+						insertGame.setInt(2, game.getPlayerId());
+						insertGame.setString(3, game.getMove());
+						insertGame.setInt(4, game.getScore());
+						insertGame.setInt(5,  game.getHealth());
 						insertGame.addBatch();
 					}
 					insertGame.executeBatch();
@@ -303,7 +322,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 			
 			try {
 				// retreive all attributes from both Books and Authors tables
-				insertGame = conn.prepareStatement("insert into game (playerId, move, score, health) values (?, ' ', 0, 100)");
+				insertGame = conn.prepareStatement("insert into game (gameId, playerId, move, score, health) values (1, ?, ' ', 0, 100)");
 				
 				insertGame.setInt(1, playerId);
 
@@ -449,6 +468,90 @@ public class DerbyDatabase implements IDatabase { //FIX
 			} finally {
 				DBUtil.closeQuietly(getGame);
 				DBUtil.closeQuietly(resultSet);
+			}
+			}
+		});
+	}
+
+	@Override
+	public PlayerModel LoadPlayerModel(int playerId) {
+		return executeTransaction(new Transaction<PlayerModel>() {
+			@Override
+			public PlayerModel execute(Connection conn) throws SQLException {
+			PreparedStatement getGame = null;
+			ResultSet resultSet = null;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				getGame = conn.prepareStatement("select * from playermodel where playermodel.playerId=?");
+				
+				getGame.setInt(1, playerId);
+
+				resultSet = getGame.executeQuery();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				while (resultSet.next()) {
+					found = true;
+					
+					// create new Student object
+					// retrieve attributes from resultSet starting with index 1
+					PlayerModel playerModel = new PlayerModel();
+					loadPlayerModel(playerModel, resultSet, 3);
+					return playerModel;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be found in the playermodel table");
+				}
+				
+				return null;
+			} finally {
+				DBUtil.closeQuietly(getGame);
+				DBUtil.closeQuietly(resultSet);
+			}
+			}
+		});
+	}
+
+	@Override
+	public Boolean InsertNewPlayerModel(int playerId, int health, int x, int y, int score) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement insertPlayerModel = null;
+			int resultSet = -1;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				insertPlayerModel = conn.prepareStatement("insert into playermodel (playerId, health, xloc, yloc, score) values (?,?,?,?,?)");
+				
+				insertPlayerModel.setInt(1, playerId);
+				insertPlayerModel.setInt(2, health);
+				insertPlayerModel.setInt(3, x);
+				insertPlayerModel.setInt(4, y);
+				insertPlayerModel.setInt(5, score);
+
+				resultSet = insertPlayerModel.executeUpdate();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be inserted into the playermodel table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(insertPlayerModel);
 			}
 			}
 		});

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.ycp.cs320.groupProj.controller.SystemController;
-import edu.ycp.cs320.groupProj.model.DirectionsModel;
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
 import edu.ycp.cs320.gamedb.model.Game;
@@ -29,7 +28,6 @@ public class ContinueGameServlet extends HttpServlet {
 	Boolean movement = false;
 	private static final long serialVersionUID = 1L;
 	SystemModel model = new SystemModel();
-	DirectionsModel dModel = new DirectionsModel();
 	PlayerModel pModel = new PlayerModel();
 	ObjectModel oModel = new ObjectModel();
 	ObjectModel currentObj = null;
@@ -330,7 +328,6 @@ public class ContinueGameServlet extends HttpServlet {
 				// game can be replayed through hyperlink buttons
 				if (pModel.getHP() <= 0) {
 					pModel.reset();
-					dModel.reset();
 					map.reset();
 					req.getRequestDispatcher("/_view/dead2.jsp").forward(req, resp);
 				}

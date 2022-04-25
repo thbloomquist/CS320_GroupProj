@@ -9,6 +9,7 @@ import edu.ycp.cs320.gamedb.model.Player;
 import edu.ycp.cs320.gamedb.persist.DatabaseProvider;
 import edu.ycp.cs320.gamedb.persist.DerbyDatabase;
 import edu.ycp.cs320.gamedb.persist.IDatabase;
+import edu.ycp.cs320.groupProj.model.PlayerModel;
 
 public class DBController {
 	
@@ -70,6 +71,27 @@ public class DBController {
 		return game;	
 	}
 	
+	public PlayerModel LoadPlayerModel(int playerId) {
+		// Create the default IDatabase instance
+		DatabaseProvider.setInstance(new DerbyDatabase());
+
+		// get the DB instance and execute transaction
+		IDatabase db = DatabaseProvider.getInstance();
+		PlayerModel playerModel =  db.LoadPlayerModel(playerId);
+		
+		return playerModel;	
+	}
+	
+	public Boolean InsertNewPlayerModel(int playerId, int health, int x, int y, int score) {
+		// Create the default IDatabase instance
+		DatabaseProvider.setInstance(new DerbyDatabase());
+
+		// get the DB instance and execute transaction
+		IDatabase db = DatabaseProvider.getInstance();
+		Boolean playerModel =  db.InsertNewPlayerModel(playerId, health, x, y, score);
+		
+		return playerModel;	
+	}
 
 	//Don't I want a single query that updates game with map, score, and health instead of individual ones?
 }

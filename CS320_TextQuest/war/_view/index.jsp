@@ -1,46 +1,24 @@
 <!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
 	<head>
 		<title>Text Quest!</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<%@ include file="header.jsp" %>
 	</head>
 
 	<body>
 	
 		<h1 class="display-1">Text Quest!</h1>
-		<h1>${player.username}</h1>
+		<c:if test="${! empty player }">
+			<h1>Welcome ${player.username}!</h1>
+		</c:if>
 		
-		<a href="/TextQuest/main ">
-		<button> Play New Game! </button>
-		</a>
-		<br>
-		<a href="/TextQuest/continue ">
-		<button> Continue Game! </button>
-		</a>
-		<br>
 		<br>
 		<a href = "instructions">
 		<button> Instructions </button>
-		</a>
-		<br>
-		<br>
-		<a href = "/TextQuest/about">
-		<button> About </button>
-		</a>
-		<br>
-		<br>
-		<a href = "/TextQuest/leaderboard">
-		<button> Leaderboard </button>
-		</a>
-		<br>
-		<br>
-		<a href = "/TextQuest/signup">
-		<button> Sign-Up </button>
-		</a>
-		<br>
-		<br>
-		<a href = "/TextQuest/login">
-		<button> Login </button>
 		</a>
 		<br>
 		
