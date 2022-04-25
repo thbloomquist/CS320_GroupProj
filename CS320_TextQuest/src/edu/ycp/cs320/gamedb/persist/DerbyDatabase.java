@@ -95,13 +95,14 @@ public class DerbyDatabase implements IDatabase { //FIX
 		game.setScore(resultSet.getInt(index++));
 		game.setHealth(resultSet.getInt(index++));		
 	}
-	
+
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt1 = null;
 				PreparedStatement stmt2 = null;
+				PreparedStatement stmt3 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -125,11 +126,21 @@ public class DerbyDatabase implements IDatabase { //FIX
 							")"
 					);
 					stmt2.executeUpdate();
+					stmt3 = conn.prepareStatement(
+						"create table moves (" +
+								"	playerId integer constraint playerId1 references players,  " +
+								"	gameId integer constraint gameId references game, " +									
+								"	move varchar(20) " +
+								")"
+								);
+					stmt3.executeUpdate();
+					
 					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
 					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
 				}
 			}
 		});
@@ -241,7 +252,46 @@ public class DerbyDatabase implements IDatabase { //FIX
 				DBUtil.closeQuietly(insertPlayer);
 			}
 			}
-	});
+		});
+	}
+	
+	@Override
+	public Boolean InsertNewMove(int playerId, int gameId, String move) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement insertMove = null;
+			int resultSet = -1;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				insertMove = conn.prepareStatement("insert into moves (playerId, gameId, move) values (?, ?, ?)");
+				
+				insertMove.setInt(1, playerId);
+				insertMove.setInt(2, gameId);
+				insertMove.setString(3, move);
+				
+				resultSet = insertMove.executeUpdate();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + move + "> could not be inserted into the Move table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(insertMove);
+			}
+			}
+		});
 	}
 	
 	public Boolean InsertNewGame(int playerId) {
@@ -277,7 +327,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 				DBUtil.closeQuietly(insertGame);
 			}
 			}
-	});
+		});
 	}
 
 	@Override
@@ -321,6 +371,88 @@ public class DerbyDatabase implements IDatabase { //FIX
 				DBUtil.closeQuietly(resultSet);
 			}
 			}
-	});
+		});
 	}
+	
+	public Boolean UpdateCurrentGame(int playerId, String move, int score, int health) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement insertGame = null;
+			int resultSet = -1;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				insertGame = conn.prepareStatement("update game (playerId, move, score, health) values (?, ?. ?, ?)");
+				
+				insertGame.setInt(1, playerId);
+
+				resultSet = insertGame.executeUpdate();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be inserted into the Games table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(insertGame);
+			}
+			}
+		});
+	}
+
+	@Override
+	public Game LoadGame(int playerId, int gameId) {
+		return executeTransaction(new Transaction<Game>() {
+			@Override
+			public Game execute(Connection conn) throws SQLException {
+			PreparedStatement getGame = null;
+			ResultSet resultSet = null;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				getGame = conn.prepareStatement("select * from game where game.playerId=? AND game.gameId=?");
+				
+				getGame.setInt(1, playerId);
+				getGame.setInt(2,  gameId);
+
+				resultSet = getGame.executeQuery();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				while (resultSet.next()) {
+					found = true;
+					
+					// create new Student object
+					// retrieve attributes from resultSet starting with index 1
+					Game game = new Game();
+					loadGame(game, resultSet, 1);
+					return game;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + gameId + "> could not be found in the Game table");
+				}
+				
+				return null;
+			} finally {
+				DBUtil.closeQuietly(getGame);
+				DBUtil.closeQuietly(resultSet);
+			}
+			}
+		});
+	}
+	
+	
 }

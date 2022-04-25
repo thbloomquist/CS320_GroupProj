@@ -3,6 +3,7 @@ package edu.ycp.cs320.groupProj.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import edu.ycp.cs320.groupProj.controller.SystemController;
 import edu.ycp.cs320.groupProj.model.DirectionsModel;
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
+import edu.ycp.cs320.gamedb.model.Game;
 import edu.ycp.cs320.gamedb.model.Player;
 import edu.ycp.cs320.groupProj.controller.DBController;
 import edu.ycp.cs320.groupProj.controller.ObjectController;
@@ -22,7 +24,8 @@ import edu.ycp.cs320.groupProj.model.SystemModel;
 import edu.ycp.cs320.groupProj.controller.RoomController;
 import edu.ycp.cs320.groupProj.controller.PlayerController;
 
-public class ConsoleServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/continue") //instead of xml
+public class ContinueGameServlet extends HttpServlet {
 	Boolean movement = false;
 	private static final long serialVersionUID = 1L;
 	SystemModel model = new SystemModel();
@@ -46,8 +49,14 @@ public class ConsoleServlet extends HttpServlet {
 		Player player = (Player) session.getAttribute("player");
 		
 		DBController controller = new DBController();
-		controller.InsertNewGame(player.getPlayerId());
-		System.out.println("New game created");
+		Game game = controller.LoadGame(player.getPlayerId(), player.getPlayerId());
+		
+		if(game != null) {
+			System.out.println("Game loaded | GameId: " + game.getGameId());
+		}else {
+			System.out.println("Game could not be loaded");
+		}
+		
 		
 
 		// call JSP to generate empty form
@@ -202,7 +211,6 @@ public class ConsoleServlet extends HttpServlet {
 					pModel.setHP(pModel.getHP() + temp.getThing());
 					result = "You used the " + temp.getTag().getName();
 					errorMessage = "Current health == " + pModel.getHP();
-					//UPDATE DB - HEALTH
 				} else {
 					result = "You don't have a " + action;
 				}
@@ -278,7 +286,6 @@ public class ConsoleServlet extends HttpServlet {
 							result = "You grabbed the " + temp[i].getTag().getName();
 							temp[i] = null;
 							only1 = false;
-							//UPDATE DB HERE - ADD ITEM TO INVENTORY
 						}
 					}
 					for (int i = 0; i < currentR.getInven().length; i++) {
@@ -313,12 +320,10 @@ public class ConsoleServlet extends HttpServlet {
 					pModel.setHP(pModel.getHP() - currentR.getMonster().getDMG());
 					currentR.deadMonster();
 					errorMessage = "Current health == " + pModel.getHP();
-					//UPDATE DB - HEALTH
 				} else {
 					result = "You fight yourself, you manage to both lose and win.";
 					pModel.setHP(pModel.getHP() - 25);
 					errorMessage = "Current health == " + pModel.getHP();
-					//UPDATE DB - HEALTH
 				}
 
 				// reset all models & controllers if player health reaches 0.
@@ -381,7 +386,6 @@ public class ConsoleServlet extends HttpServlet {
 									temp = pModel.getInventory(i);
 									pModel.removeItem(i);
 									j1 = false;
-									//UPDATE DATABASE HERE - REMOVE ITEM FROM DB
 								}
 							}
 						}
@@ -390,7 +394,6 @@ public class ConsoleServlet extends HttpServlet {
 						pModel.setHP(pModel.getHP() + temp.getThing());
 						result = "You used the " + temp.getTag().getName();
 						errorMessage = "Current health == " + pModel.getHP();
-						//UPDATE DB - HEALTH
 					} else {
 						result = "You don't have any " + secondW;
 					}

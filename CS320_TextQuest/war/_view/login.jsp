@@ -18,7 +18,7 @@
 	</head>
 
 	<body>
-		<form action="${pageContext.servletContext.contextPath}/signup" method="post">
+		<form action="${pageContext.servletContext.contextPath}/login" method="post">
 			<!-- List of instructions -->
 			<div id="instructions">   
 				<!-- Sign Up Table-->
@@ -40,7 +40,7 @@
 					    <tr>
 					      <th scope="row"></th>
 					      <td></td>
-						  <td style="padding-left:24%;"><input class="btn btn-success" type="Submit" name="login" value="sign-up"></td>
+						  <td style="padding-left:24%;"><input class="btn btn-success" type="Submit" name="login" value="login"></td>
 					    </tr>
 			    	</tbody>
 				</table>

@@ -13,27 +13,39 @@ import edu.ycp.cs320.gamedb.persist.IDatabase;
 public class DBController {
 	
 	public Boolean InsertNewPlayer(String username, String password){
-	
-	// Create the default IDatabase instance
-	DatabaseProvider.setInstance(new DerbyDatabase());
+		
+		// Create the default IDatabase instance
+		DatabaseProvider.setInstance(new DerbyDatabase());
 
-	// get the DB instance and execute transaction
-	IDatabase db = DatabaseProvider.getInstance();
-	Boolean player =  db.InsertNewPlayer(username, password);
+		// get the DB instance and execute transaction
+		IDatabase db = DatabaseProvider.getInstance();
+		Boolean player =  db.InsertNewPlayer(username, password);
+		
+		return player;
+	}
 	
-	return player;
+	public Boolean InsertNewMove(int playerId, int gameId, String move){
+		
+		// Create the default IDatabase instance
+		DatabaseProvider.setInstance(new DerbyDatabase());
+
+		// get the DB instance and execute transaction
+		IDatabase db = DatabaseProvider.getInstance();
+		Boolean player =  db.InsertNewMove(playerId, gameId, move);
+		
+		return player;
 	}
 	
 	public Boolean InsertNewGame(int playerId){
 		
-	// Create the default IDatabase instance
-	DatabaseProvider.setInstance(new DerbyDatabase());
-
-	// get the DB instance and execute transaction
-	IDatabase db = DatabaseProvider.getInstance();
-	Boolean player =  db.InsertNewGame(playerId);
+		// Create the default IDatabase instance
+		DatabaseProvider.setInstance(new DerbyDatabase());
 	
-	return player;
+		// get the DB instance and execute transaction
+		IDatabase db = DatabaseProvider.getInstance();
+		Boolean player =  db.InsertNewGame(playerId);
+		
+		return player;
 	}
 
 	public Player getPlayerByUsernameAndPassword(String username, String password) {
@@ -46,4 +58,18 @@ public class DBController {
 		
 		return player;
 	}
+
+	public Game LoadGame(int playerId, int i) {
+		// Create the default IDatabase instance
+		DatabaseProvider.setInstance(new DerbyDatabase());
+
+		// get the DB instance and execute transaction
+		IDatabase db = DatabaseProvider.getInstance();
+		Game game =  db.LoadGame(playerId, i);
+		
+		return game;	
+	}
+	
+
+	//Don't I want a single query that updates game with map, score, and health instead of individual ones?
 }
