@@ -17,10 +17,11 @@ public class PlayerModel {
 	//"upLoc" and "sideLoc" are used to find the player's location on the map
 	
 	//"score" represents the player's current score
-	//TODO implement the following 
 	//Score begins at 0, but increases when the player...
-	//enters a new room, kills a monster, picks up treasure, and opens the chest
+	//enters a new room, kills a monster, picks up treasure, breaks crates, and opens the chest
 	//The score is then further increased based on how fast the player won
+	private int matches;
+	private Boolean isLit;
 	
 	public PlayerModel() {
 		hp = 100;
@@ -29,19 +30,22 @@ public class PlayerModel {
 		inventory = new ObjectModel[10];
 		invenIndex = 0;
 		score = 0;
+		matches = 10;
+		isLit = false;
+		createTorch(); // this creates the starting item - torch - in the players inventory
 	}
 	public void reset() {
 		hp = 100;
-		upLoc = 0; // replace these with intial values in 2d Array
-		sideLoc = 0;
-		for(int i = 0; i < inventory.length-1; i++) {
-			inventory[i] = null;
-		}
+		upLoc = 7; // replace these with intial values in 2d Array
+		sideLoc = 3;
+		inventory = new ObjectModel[10];
 		invenIndex = 0;
-		upLoc = 1;
-		sideLoc = 2;
 		score = 0;
-		// currently initial starting room is [2][2]
+		matches = 10;
+		isLit = false;
+		createTorch();
+		// fully resets values of current Player Model to their intended original states.
+		// i.e. score starts at 0, health starts at 100, etc.
 	}
 	
 	public void setLocation(int up, int side) {
@@ -70,9 +74,11 @@ public class PlayerModel {
 	public void addInventory(ObjectModel thing) {
 		inventory[invenIndex] = thing;
 		invenIndex++;
+		// adds an item to the players inventory
 	}
 	public void removeItem(int n) {
 		inventory[n] = null;
+		// removes an item, given the index in which it resides
 	}
 	public int getiNum() {
 		return invenIndex;
@@ -82,15 +88,37 @@ public class PlayerModel {
 	}
 	public ObjectModel getInventory(int n) {
 		return inventory[n];
+		// returns a reference to a single ObjectModel within the players inventory
 	}
 	public ObjectModel[] getInvenFULL() {
 		return inventory;
+		// returns a reference to the players entire inventory
 	}
 	public void setRoom(Room r) {
 		currentRoom = r;
 	}
 	public Room getRoom() {
 		return currentRoom;
+	}
+	public int getMatches() {
+		return matches;
+	}
+	public void setMatches(int num) {
+		matches = num;
+	}
+	public Boolean isLit() {
+		return isLit;
+	}
+	public void setLit(Boolean t) {
+		isLit = t;
+	}
+	public void createTorch() {
+		NameTag n = new NameTag("torch", "It's a piece of wood with oil-covered cloth wrapped on the tip.");
+		ObjectModel torch = new ObjectModel(n, -1, false);
+		addInventory(torch);
+	}
+	public void setInvenFULL(ObjectModel[] temporary) {
+		inventory = temporary;
 	}
 	public int getScore() {
 		return score;
@@ -101,5 +129,16 @@ public class PlayerModel {
 	//Increases the score by this amount
 	public void addScore(int n) {
 		score = score + n;
+	}
+	public Boolean checkInven(String name)
+	{
+		for(int i=0; i<this.inventory.length; i++)
+		{
+			if(inventory[i].getName() == name)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -21,5 +21,5 @@
 	<body>
 		<h1> Instructions </h1>
 		<p>The instructions are gonna go here eventually </p>
-	</body>
+	</body> 
 </html>

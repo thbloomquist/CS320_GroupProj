@@ -18,4 +18,22 @@ public class SystemController {
 		model.indicateMove(t);
 		
 	}
+	public Boolean getPlace() {
+		return model.getPlace();
+	}
+	public void setPlace() {
+		model.setPlace();
+	}
+	public Boolean getGrab() {
+		return model.getGrab();
+	}
+	public void setGrab() {
+		model.setGrab();
+	}
+	public Boolean getInspect() {
+		return model.getInspect();
+	}
+	public void setInspect() {
+		model.setInspect();
+	}
 }

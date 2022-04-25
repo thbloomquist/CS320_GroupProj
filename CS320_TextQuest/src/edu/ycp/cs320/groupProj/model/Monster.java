@@ -27,6 +27,11 @@ public class Monster {
 		hp = i;
 		damage = j;
 		n = n1;
+		if(hp > 0) { 
+			alive = true;
+		} else {
+			alive = false;
+		}
 	}
 	
 	public void setHP(int n) 
