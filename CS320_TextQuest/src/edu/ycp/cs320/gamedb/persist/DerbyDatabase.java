@@ -237,7 +237,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 
 	@Override
-	public Boolean InsertNewPlayer(String username, String password) {
+	public Boolean InsertNewPlayer(final String username, final String password) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
@@ -275,7 +275,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 	
 	@Override
-	public Boolean InsertNewMove(int playerId, int gameId, String move) {
+	public Boolean InsertNewMove(final int playerId, final int gameId, final String move) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
@@ -313,7 +313,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 		});
 	}
 	
-	public Boolean InsertNewGame(int playerId) {
+	public Boolean InsertNewGame(final int playerId) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
@@ -350,7 +350,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 
 	@Override
-	public Player getPlayerByUsernameAndPassword(String username, String password) {
+	public Player getPlayerByUsernameAndPassword(final String username, final String password) {
 		return executeTransaction(new Transaction<Player>() {
 			@Override
 			public Player execute(Connection conn) throws SQLException {
@@ -393,7 +393,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 		});
 	}
 	
-	public Boolean UpdateCurrentGame(int playerId, String move, int score, int health) {
+	public Boolean UpdateCurrentGame(final int playerId, String move, int score, int health) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
@@ -430,7 +430,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 
 	@Override
-	public Game LoadGame(int playerId, int gameId) {
+	public Game LoadGame(final int playerId, final int gameId) {
 		return executeTransaction(new Transaction<Game>() {
 			@Override
 			public Game execute(Connection conn) throws SQLException {
@@ -474,7 +474,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 
 	@Override
-	public PlayerModel LoadPlayerModel(int playerId) {
+	public PlayerModel LoadPlayerModel(final int playerId) {
 		return executeTransaction(new Transaction<PlayerModel>() {
 			@Override
 			public PlayerModel execute(Connection conn) throws SQLException {
@@ -517,7 +517,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 
 	@Override
-	public Boolean InsertNewPlayerModel(int playerId, int health, int x, int y, int score) {
+	public Boolean InsertNewPlayerModel(final int playerId, final int health, final int x, final int y, final int score) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {

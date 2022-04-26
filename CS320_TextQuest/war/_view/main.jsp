@@ -48,10 +48,10 @@
 		  <div class="offcanvas-body">
 		    <ul>
 		    	<li>Move - enter this to move from room to room (followed by N/S/E/W)</li>
-		    	<li>Inspect - look at room or inventory</li>
-		    	<li>Use - use an item in inventory or the room</li>
-		    	<li>Grab - grab an item in the room</li>
-		    	<li>Anything else thats needed</li>
+		    	<li>Inspect - look at room or inventory (followed by room or inventory)</li>
+		    	<li>Use - use an item in inventory or the room (followed by object)</li>
+		    	<li>Grab - grab an item in the room (followed by object)</li>
+		    	<li>Fight - fight the Purple People Eaters (just the word fight)</li>
 		    	
 		    </ul>
 		  </div>

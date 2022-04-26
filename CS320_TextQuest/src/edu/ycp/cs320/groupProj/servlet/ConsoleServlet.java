@@ -69,6 +69,7 @@ public class ConsoleServlet extends HttpServlet {
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
 		// TO DO
 		
+		//prints map - for testing purposes
 //		 for (int i = 0; i < 10; i++) { 
 //			 for (int j = 0; j < 10; j++) {
 //			 if(map.getRoom(j, i).getEnter()) { 
@@ -85,7 +86,7 @@ public class ConsoleServlet extends HttpServlet {
 			secondW = null;
 			// firstW & secondW have to be reset b/c if they enter a one word command it'll
 			// re-run the previously entered command
-			String action = getStringFromParameter(req.getParameter("action"));
+			String action = getStringFromParameter(req.getParameter("action")).toLowerCase();
 			
 			//////// Move for DB ////////
 			DBController DBController = new DBController(); // Database controller
@@ -99,8 +100,8 @@ public class ConsoleServlet extends HttpServlet {
 			
 			if (action.indexOf(" ") != -1) {
 				int firstS = action.indexOf(" ");
-				firstW = action.substring(0, firstS);
-				secondW = action.substring(firstS + 1, action.length());
+				firstW = action.substring(0, firstS).toLowerCase();
+				secondW = action.substring(firstS + 1, action.length()).toLowerCase();
 			}
 			Room currentR = map.getRoom(pModel.getUp(), pModel.getSide());
 			rController.setModel(currentR);
@@ -108,10 +109,10 @@ public class ConsoleServlet extends HttpServlet {
 
 			if (action == null) {
 				errorMessage = "Please specify an action or type 'help' for a list of commands.";
-			} else if (action.toLowerCase().compareTo("where") == 0) {
+			} else if (action.compareTo("where") == 0) {
 				result = "UpPlace ==" + pModel.getUp() + " sidePlace == " + pModel.getSide();
 			} else if (model.getInspect()) {
-				if (action.toLowerCase().compareTo("room") == 0) {
+				if (action.compareTo("room") == 0) {
 					String s = " the room contains: ";
 					for (int i = 0; i < currentR.getInven().length; i++) {
 						if (currentR.getInven()[i] != null) {
@@ -127,13 +128,13 @@ public class ConsoleServlet extends HttpServlet {
 						s += "that's all";
 						result = currentR.getTag().getDesc() + s;
 					}
-				} else if (action.toLowerCase().compareTo("monster") == 0) {
+				} else if (action.compareTo("monster") == 0) {
 					if (map.getRoom(pModel.getUp(), pModel.getSide()).hasMonster()) {
 						result = map.getRoom(pModel.getUp(), pModel.getSide()).getMonster().getNameTag().getDesc();
 					} else {
 						result = "There's no monster in the room, unless you consider yourself evil.";
 					}
-				} else if (action.toLowerCase().compareTo("inventory") == 0) {
+				} else if (action.compareTo("inventory") == 0) {
 					String s = "You rifle through your pack and find: ";
 					int r = 0;
 					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
@@ -150,7 +151,7 @@ public class ConsoleServlet extends HttpServlet {
 					result = "Invalid input.";
 				}
 				model.indicateInspect(false);
-			} else if (action.toLowerCase().compareTo("look") == 0) {
+			} else if (action.compareTo("look") == 0) {
 				NameTag n = map.getRoom(pModel.getUp(), pModel.getSide()).getTag();
 				String s = n.getName();
 				result = s;
@@ -160,7 +161,7 @@ public class ConsoleServlet extends HttpServlet {
 					Boolean only1 = true;
 					for (int l = 0; l < pModel.getInvenFULL().length; l++) {
 						if (pModel.getInventory(l) != null) {
-							if (pModel.getInventory(l).getTag().getName().toLowerCase().equals(action.toLowerCase())
+							if (pModel.getInventory(l).getTag().getName().toLowerCase().equals(action)
 									&& only1) {
 								tempr = pModel.getInventory(l);
 								only1 = false;
@@ -196,7 +197,7 @@ public class ConsoleServlet extends HttpServlet {
 					ObjectModel temp = null;
 					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
 						if (pModel.getInvenFULL()[i] != null) {
-							if (pModel.getInventory(i).getTag().getName().toLowerCase().equals(action.toLowerCase())
+							if (pModel.getInventory(i).getTag().getName().toLowerCase().equals(action)
 									&& j1) {
 								temp = pModel.getInventory(i);
 								pModel.removeItem(i);
@@ -213,15 +214,15 @@ public class ConsoleServlet extends HttpServlet {
 				}
 
 				model.indicateUse(false);
-			} else if (action.toLowerCase().compareTo("help") == 0) {
+			} else if (action.compareTo("help") == 0) {
 				result = "Use - Uses an item within your inventory. Grab - grabs an item within the room. Move - Moves"
 						+ " location.  !!!!The rest is Work In Progress.";
 			} else if (model.getMovement()) {
-				if (action.toLowerCase().compareTo("north") == 0 || action.toLowerCase().compareTo("west") == 0
-						|| action.toLowerCase().compareTo("south") == 0
-						|| action.toLowerCase().compareTo("east") == 0) {
+				if (action.compareTo("north") == 0 || action.compareTo("west") == 0
+						|| action.compareTo("south") == 0
+						|| action.compareTo("east") == 0) {
 
-					if (action.toLowerCase().compareTo("north") == 0) {
+					if (action.compareTo("north") == 0) {
 						if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() - 1);
 							result = "You moved " + action;
@@ -230,7 +231,7 @@ public class ConsoleServlet extends HttpServlet {
 						}
 						controller.setMovement(false);
 						movement = model.getMovement();
-					} else if (action.toLowerCase().compareTo("south") == 0) {
+					} else if (action.compareTo("south") == 0) {
 						if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() + 1);
 							result = "You moved " + action;
@@ -239,7 +240,7 @@ public class ConsoleServlet extends HttpServlet {
 						}
 						controller.setMovement(false);
 						movement = model.getMovement();
-					} else if (action.toLowerCase().compareTo("east") == 0) {
+					} else if (action.compareTo("east") == 0) {
 						if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
 							pModel.setSideLoc(pModel.getSide() + 1);
 							result = "You moved " + action;
@@ -248,7 +249,7 @@ public class ConsoleServlet extends HttpServlet {
 						}
 						controller.setMovement(false);
 						movement = model.getMovement();
-					} else if (action.toLowerCase().compareTo("west") == 0) {
+					} else if (action.compareTo("west") == 0) {
 						if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
 							pModel.setSideLoc(pModel.getSide() - 1);
 							result = "You moved " + action;
@@ -278,7 +279,7 @@ public class ConsoleServlet extends HttpServlet {
 					}
 					Boolean only1 = true;
 					for (int i = 0; i < num; i++) {
-						if (action.toLowerCase().compareTo(temp[i].getTag().getName()) == 0 && only1) {
+						if (action.compareTo(temp[i].getTag().getName()) == 0 && only1) {
 							pModel.addInventory(temp[i]);
 							result = "You grabbed the " + temp[i].getTag().getName();
 							temp[i] = null;
@@ -293,25 +294,25 @@ public class ConsoleServlet extends HttpServlet {
 					result = "The room doesn't contain any: " + action;
 				}
 				model.indicateGrab(false);
-			} else if (action.toLowerCase().compareTo("move") == 0) {
+			} else if (action.compareTo("move") == 0) {
 				controller.setMovement(true);
 				movement = model.getMovement();
 				result = "Enter a direction you'd like to move.";
-			} else if (action.toLowerCase().compareTo("grab") == 0) {
+			} else if (action.compareTo("grab") == 0) {
 				model.indicateGrab(true);
 				result = "What would you like to grab?";
-			} else if (action.toLowerCase().compareTo("use") == 0) {
+			} else if (action.compareTo("use") == 0) {
 				model.indicateUse(true);
 				result = "Use what?";
-			} else if (action.toLowerCase().compareTo("inspect") == 0) {
+			} else if (action.compareTo("inspect") == 0) {
 				model.indicateInspect(true);
 				result = "Inspect what?";
-			} else if (action.toLowerCase().compareTo("health") == 0) {
+			} else if (action.compareTo("health") == 0) {
 				result = " " + pModel.getHP();
-			} else if (action.toLowerCase().compareTo("place") == 0) {
+			} else if (action.compareTo("place") == 0) {
 				model.indicatePlace(true);
 				result = "Place what?";
-			} else if (action.toLowerCase().compareTo("fight") == 0) {
+			} else if (action.compareTo("fight") == 0) {
 				if (currentR.hasMonster()) {
 					result = "The " + currentR.getMonster().getNameTag().getName()
 							+ " bites you, but you manage to beat it.";
@@ -338,8 +339,8 @@ public class ConsoleServlet extends HttpServlet {
 			}
 
 			if (firstW != null & secondW != null) {
-				if (firstW.toLowerCase().compareTo("move") == 0) {
-					if (secondW.toLowerCase().compareTo("north") == 0) {
+				if (firstW.compareTo("move") == 0) {
+					if (secondW.compareTo("north") == 0) {
 						// checks to see if the tile directly above is traversable
 						if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() - 1); // updates player location
@@ -347,7 +348,7 @@ public class ConsoleServlet extends HttpServlet {
 						} else {
 							result = "The path is blocked.";// isn't traversable- no change
 						}
-					} else if (secondW.toLowerCase().compareTo("south") == 0) {
+					} else if (secondW.compareTo("south") == 0) {
 						// checks to see if the tile directly below is traversable
 						if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() + 1); // updates player location
@@ -355,7 +356,7 @@ public class ConsoleServlet extends HttpServlet {
 						} else {
 							result = "The path is blocked";// isn't traversable- no change
 						}
-					} else if (secondW.toLowerCase().compareTo("east") == 0) {
+					} else if (secondW.compareTo("east") == 0) {
 						// checks to see if the tile directly right is traversable
 						if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
 							pModel.setSideLoc(pModel.getSide() + 1); // updates player location
@@ -363,7 +364,7 @@ public class ConsoleServlet extends HttpServlet {
 						} else {
 							result = "The path is blocked"; // isn't traversable- no change
 						}
-					} else if (secondW.toLowerCase().compareTo("west") == 0) {
+					} else if (secondW.compareTo("west") == 0) {
 						// checks to see if the tile directly left is traversable
 						if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
 							pModel.setSideLoc(pModel.getSide() - 1);
@@ -374,14 +375,14 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						result = "That isn't a valid direction";
 					}
-				} else if (firstW.toLowerCase().compareTo("use") == 0) {
+				} else if (firstW.compareTo("use") == 0) {
 					if (pController.contains(secondW)) {
 						Boolean j1 = true;
 						ObjectModel temp = null;
 						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
 							if (pModel.getInvenFULL()[i] != null) {
 								if (pModel.getInventory(i).getTag().getName().toLowerCase()
-										.equals(secondW.toLowerCase()) && j1) {
+										.equals(secondW) && j1) {
 									temp = pModel.getInventory(i);
 									pModel.removeItem(i);
 									j1 = false;
@@ -398,7 +399,7 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						result = "You don't have any " + secondW;
 					}
-				} else if (firstW.toLowerCase().compareTo("grab") == 0) {
+				} else if (firstW.compareTo("grab") == 0) {
 					if (currentR.hasMonster()) {
 						result = "The " + currentR.getMonster().getNameTag().getName()
 								+ " blocks your way. You'll have to kill it to loot this room.";
@@ -410,7 +411,7 @@ public class ConsoleServlet extends HttpServlet {
 							result += ", but you hear a strange hissing coming from directly in front of you.";
 						}
 					} else {
-						if (secondW.toLowerCase().compareTo("key") == 0) {
+						if (secondW.compareTo("key") == 0) {
 							// if room hasKey() add key
 						} else if (rController.contains(secondW)) {
 							ObjectModel[] temp = new ObjectModel[10];
@@ -423,7 +424,7 @@ public class ConsoleServlet extends HttpServlet {
 							}
 							Boolean only1 = true;
 							for (int i = 0; i < num; i++) {
-								if (secondW.toLowerCase().compareTo(temp[i].getTag().getName()) == 0 && only1) {
+								if (secondW.compareTo(temp[i].getTag().getName()) == 0 && only1) {
 									pModel.addInventory(temp[i]);
 									result = "You grabbed the " + temp[i].getTag().getName();
 									temp[i] = null;
@@ -440,14 +441,14 @@ public class ConsoleServlet extends HttpServlet {
 							result = "There aren't any " + secondW + " around";
 						}
 					}
-				} else if (firstW.toLowerCase().compareTo("place") == 0) {
+				} else if (firstW.compareTo("place") == 0) {
 					if (pController.contains(secondW)) {
 						ObjectModel tempr = null;
 						Boolean only1 = true;
 						for (int l = 0; l < pModel.getInvenFULL().length; l++) {
 							if (pModel.getInventory(l) != null) {
 								if (pModel.getInventory(l).getTag().getName().toLowerCase()
-										.equals(secondW.toLowerCase()) && only1) {
+										.equals(secondW) && only1) {
 									tempr = pModel.getInventory(l);
 									only1 = false;
 									pModel.getInvenFULL()[l] = null;
@@ -477,11 +478,11 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						result = "You don't have any " + secondW;
 					}
-				} else if (firstW.toLowerCase().compareTo("inspect") == 0) {
+				} else if (firstW.compareTo("inspect") == 0) {
 					if (currentR.isDark() && !pModel.isLit()) {
 						result = "The room is entirely dark, you look down and notice you can't even see your feet.";
 					} else {
-						if (secondW.toLowerCase().compareTo("room") == 0) {
+						if (secondW.compareTo("room") == 0) {
 							String s = " the room contains: ";
 							for (int i = 0; i < currentR.getInven().length; i++) {
 								if (currentR.getInven()[i] != null) {
@@ -497,14 +498,14 @@ public class ConsoleServlet extends HttpServlet {
 								s += "that's all";
 								result = currentR.getTag().getDesc() + s;
 							}
-						} else if (secondW.toLowerCase().compareTo("monster") == 0) {
+						} else if (secondW.compareTo("monster") == 0) {
 							if (map.getRoom(pModel.getUp(), pModel.getSide()).hasMonster()) {
 								result = map.getRoom(pModel.getUp(), pModel.getSide()).getMonster().getNameTag()
 										.getDesc();
 							} else {
 								result = "There's no monster in the room, unless you consider yourself evil.";
 							}
-						} else if (secondW.toLowerCase().compareTo("inventory") == 0) {
+						} else if (secondW.compareTo("inventory") == 0) {
 							String s = "You rifle through your pack and find: ";
 							int r = 0;
 							for (int i = 0; i < pModel.getInvenFULL().length; i++) {
@@ -521,11 +522,11 @@ public class ConsoleServlet extends HttpServlet {
 							result = "You fail to inspect the " + secondW;
 						}
 					}
-				} else if (firstW.toLowerCase().compareTo("look") == 0) {
+				} else if (firstW.compareTo("look") == 0) {
 					if (currentR.isDark() && !pModel.isLit()) {
 						result = "It's too dark to see anything.";
 					} else {
-						if (secondW.toLowerCase().compareTo("north") == 0) {
+						if (secondW.compareTo("north") == 0) {
 							if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
 								Room roomT = map.getRoom(pModel.getUp() - 1, pModel.getSide());
 								result = "You look into the room to your north and see ";
@@ -543,7 +544,7 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								result = "You look north and see a wall.";
 							}
-						} else if (secondW.toLowerCase().compareTo("south") == 0) {
+						} else if (secondW.compareTo("south") == 0) {
 							if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
 								Room roomT = map.getRoom(pModel.getUp() + 1, pModel.getSide());
 								result = "You look into the room to your south and see ";
@@ -561,7 +562,7 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								result = "You look south and see a wall.";
 							}
-						} else if (secondW.toLowerCase().compareTo("east") == 0) {
+						} else if (secondW.compareTo("east") == 0) {
 							if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
 								Room roomT = map.getRoom(pModel.getUp(), pModel.getSide() + 1);
 								result = "You look into the room to your east and see ";
@@ -579,7 +580,7 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								result = "You look east and see a wall.";
 							}
-						} else if (secondW.toLowerCase().compareTo("west") == 0) {
+						} else if (secondW.compareTo("west") == 0) {
 							if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
 								Room roomT = map.getRoom(pModel.getUp(), pModel.getSide() - 1);
 								result = "You look into the room to your west and see ";
@@ -597,19 +598,19 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								result = "You look west and see a wall.";
 							}
-						} else if (secondW.toLowerCase().compareTo("down") == 0) {
+						} else if (secondW.compareTo("down") == 0) {
 							result = "You look downwards and see a stone-brick flooring, it's got patches of grasses growing through the cracks.";
 							// we COULD add a String in each room describing it's floor (like different
 							// sections have similar flooring or whatever)
 							// this also applies to the ceiling as shown below
-						} else if (secondW.toLowerCase().compareTo("up") == 0) {
+						} else if (secondW.compareTo("up") == 0) {
 							result = "You look upwards and see a tile-stone ceiling, it's got signs of aging that lead you to believe this dungeon is very old.";
 						} else {
 							result = "That is not a valid direction.";
 						}
 					}
-				} else if (firstW.toLowerCase().compareTo("light") == 0) {
-					if (secondW.toLowerCase().compareTo("torch") == 0) {
+				} else if (firstW.compareTo("light") == 0) {
+					if (secondW.compareTo("torch") == 0) {
 						if (pController.contains(secondW)) {
 							if (pModel.getMatches() > 0) {
 								pModel.setMatches(pModel.getMatches() - 1);
@@ -625,8 +626,8 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						result = "You are unable to light the " + secondW + " on fire";
 					}
-				} else if (firstW.toLowerCase().compareTo("open") == 0) {
-					if (secondW.toLowerCase().compareTo("chest") == 0) {
+				} else if (firstW.compareTo("open") == 0) {
+					if (secondW.compareTo("chest") == 0) {
 						Boolean tempr = false;
 						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
 							if (pModel.getInventory(i) != null) {
