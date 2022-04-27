@@ -30,7 +30,7 @@
 			<input type="text" name="action" id="input"> 
 			<br>
 			<br>
-			<table>
+			<table> 
 				<tr>
 					<td class="label">Result:</td>
 					<td>${result}</td>
@@ -54,6 +54,7 @@
 		    	<li>Look - get a description of the room your in (or follow it with a direction to get surrounding rooms)</li>
 		    	<li>Place - place a following object on the floor wherever you are (followed by object)</li>
 		    	<li>Fight - fight the Purple People Eaters (just the word fight)</li>
+		    	<li>Light torch - lights torch and allows you to see what ever room you are in (careful not to run out of matches)</li>
 		    	
 		    </ul>
 		  </div>

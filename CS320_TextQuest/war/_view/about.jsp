@@ -12,10 +12,14 @@
 			color: red;
 		}
 		
-		td.label {
-			text-align: right;
+		h1 {
+			text-align: center;
+		}
+		p {
+			text-align: center;
 		}
 		</style>
+		<%@ include file="header.jsp" %>
 	</head>
 
 	<body>

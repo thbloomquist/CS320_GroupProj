@@ -4,7 +4,7 @@
 
 <html>
 	<head>
-		<title>Add Numbers</title>
+		<title>Winner Winner</title>
 		<style type="text/css">
 		.error {
 			color: red;
@@ -14,10 +14,11 @@
 			text-align: right;
 		}
 		</style>
+		<%@ include file="header.jsp" %>
 	</head>
 
 	<body>
-		<h1> You inflate the boat and sail off into the sunset </h1>
+		<h1> You found the treasure! All the riches in the world are yours! </h1>
 		<h2 style="color:gold"> You win! </h2>
 		<a href = "/TextQuest/start">
 		<button> Play Again? </button>

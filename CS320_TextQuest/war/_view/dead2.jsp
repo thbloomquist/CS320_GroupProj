@@ -11,9 +11,10 @@
 		}
 		
 		td.label {
-			text-align: right;
+			text-align: center;
 		}
 		</style>
+		<%@ include file="header.jsp" %>
 	</head>
 
 	<body>

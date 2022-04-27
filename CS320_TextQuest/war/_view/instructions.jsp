@@ -13,13 +13,20 @@
 		}
 		
 		td.label {
-			text-align: right;
+			text-align: center;
 		}
 		</style>
+		<%@ include file="header.jsp" %>
 	</head>
 
 	<body>
-		<h1> Instructions </h1>
-		<p>The instructions are gonna go here eventually </p>
+		<h1 align="center"> Instructions </h1>
+		<br />
+		<p align="center">You are on a quest to find the hidden treasure in the dungeon!</p>
+		<p align="center">Enter commands to explore, find/use objects, fight monsters, and find the hidden treasure!</p>
+		<p align="center">Most commands are two words, an action followed by a description (ex. move south, light torch, use banana...)</p>
+		<p align="center">Find the hidden treasure before it's too late!</p>
+		<p align="center">Don't worry too much about getting stuck, there's hints if you need them</p>
+		<p align="center">Have fun on your quest!</p>
 	</body> 
 </html>
