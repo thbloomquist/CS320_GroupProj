@@ -8,7 +8,7 @@ public class Room {
 	private Monster m;
 	private Boolean empty;
 	private Boolean hasChest;
-	private Boolean isDark;
+	private Boolean isDark = false; //set to false for testing
 	
 	//The boolean value refers to whether or not this room can be entered or not.
 	//If it's true, you can enter this room

@@ -15,6 +15,7 @@ public class PlayerModel {
 	private int score;
 	private int matches;
 	private Boolean isLit;
+	private Boolean hasKey;
 	
 	public PlayerModel() {
 		hp = 100;
@@ -25,6 +26,7 @@ public class PlayerModel {
 		score = 0;
 		matches = 10;
 		isLit = false;
+		hasKey = false;
 		createTorch(); // this creates the starting item - torch - in the players inventory
 	}
 	public void reset() {
@@ -36,6 +38,7 @@ public class PlayerModel {
 		score = 0;
 		matches = 10;
 		isLit = false;
+		hasKey = false;
 		createTorch();
 		// fully resets values of current Player Model to their intended original states.
 		// i.e. score starts at 0, health starts at 100, etc.
@@ -122,6 +125,11 @@ public class PlayerModel {
 	public void incrementScore(int n) {
 		score += n;
 	}
-	
+	public Boolean getHasKey() {
+		return hasKey;
+	}
+	public void setHasKey(Boolean hasKey) {
+		this.hasKey = hasKey;
+	}
 	
 }

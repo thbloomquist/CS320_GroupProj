@@ -108,7 +108,7 @@ public class ConsoleServlet extends HttpServlet {
 			errorMessage = "Current health == " + pModel.getHP();
 
 			if (action == null) {
-				errorMessage = "Please specify an action or type 'help' for a list of commands.";
+				errorMessage = "Please specify an action or click 'Stuck?' for a list of commands.";
 			} else if (action.compareTo("where") == 0) {
 				result = "UpPlace ==" + pModel.getUp() + " sidePlace == " + pModel.getSide();
 			} else if (model.getInspect()) {
@@ -127,12 +127,6 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						s += "that's all";
 						result = currentR.getTag().getDesc() + s;
-					}
-				} else if (action.compareTo("monster") == 0) {
-					if (map.getRoom(pModel.getUp(), pModel.getSide()).hasMonster()) {
-						result = map.getRoom(pModel.getUp(), pModel.getSide()).getMonster().getNameTag().getDesc();
-					} else {
-						result = "There's no monster in the room, unless you consider yourself evil.";
 					}
 				} else if (action.compareTo("inventory") == 0) {
 					String s = "You rifle through your pack and find: ";
@@ -214,9 +208,6 @@ public class ConsoleServlet extends HttpServlet {
 				}
 
 				model.indicateUse(false);
-			} else if (action.compareTo("help") == 0) {
-				result = "Use - Uses an item within your inventory. Grab - grabs an item within the room. Move - Moves"
-						+ " location.  !!!!The rest is Work In Progress.";
 			} else if (model.getMovement()) {
 				if (action.compareTo("north") == 0 || action.compareTo("west") == 0
 						|| action.compareTo("south") == 0
@@ -307,8 +298,6 @@ public class ConsoleServlet extends HttpServlet {
 			} else if (action.compareTo("inspect") == 0) {
 				model.indicateInspect(true);
 				result = "Inspect what?";
-			} else if (action.compareTo("health") == 0) {
-				result = " " + pModel.getHP();
 			} else if (action.compareTo("place") == 0) {
 				model.indicatePlace(true);
 				result = "Place what?";
@@ -497,13 +486,6 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								s += "that's all";
 								result = currentR.getTag().getDesc() + s;
-							}
-						} else if (secondW.compareTo("monster") == 0) {
-							if (map.getRoom(pModel.getUp(), pModel.getSide()).hasMonster()) {
-								result = map.getRoom(pModel.getUp(), pModel.getSide()).getMonster().getNameTag()
-										.getDesc();
-							} else {
-								result = "There's no monster in the room, unless you consider yourself evil.";
 							}
 						} else if (secondW.compareTo("inventory") == 0) {
 							String s = "You rifle through your pack and find: ";

@@ -51,6 +51,8 @@
 		    	<li>Inspect - look at room or inventory (followed by room or inventory)</li>
 		    	<li>Use - use an item in inventory or the room (followed by object)</li>
 		    	<li>Grab - grab an item in the room (followed by object)</li>
+		    	<li>Look - get a description of the room your in (or follow it with a direction to get surrounding rooms)</li>
+		    	<li>Place - place a following object on the floor wherever you are (followed by object)</li>
 		    	<li>Fight - fight the Purple People Eaters (just the word fight)</li>
 		    	
 		    </ul>
