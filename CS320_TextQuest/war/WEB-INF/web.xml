@@ -22,7 +22,7 @@
   </servlet>
   
   <servlet>
-    <servlet-name>ConsoleServlet</servlet-name>
+    <servlet-name>ConsoleServlet2</servlet-name>
     <servlet-class>edu.ycp.cs320.groupProj.servlet.ConsoleServlet</servlet-class>
   </servlet>
   
@@ -53,7 +53,7 @@
   </servlet-mapping>
   
   <servlet-mapping>
-    <servlet-name>ConsoleServlet</servlet-name>
+    <servlet-name>ConsoleServlet2</servlet-name>
     <url-pattern>/main</url-pattern>
   </servlet-mapping>
   
