@@ -403,25 +403,9 @@ public class ConsoleServlet extends HttpServlet {
 						if (secondW.compareTo("key") == 0) {
 							// if room hasKey() add key
 						} else if (rController.contains(secondW)) {
-							ObjectModel[] temp = new ObjectModel[10];
-							int num = 0;
-							for (int i = 0; i < currentR.getInven().length; i++) {
-								if (currentR.getInven()[i] != null) {
-									temp[num] = currentR.getInven()[i];
-									num++;
-								}
-							}
-							Boolean only1 = true;
-							for (int i = 0; i < num; i++) {
-								if (secondW.compareTo(temp[i].getTag().getName()) == 0 && only1) {
-									pModel.addInventory(temp[i]);
-									result = "You grabbed the " + temp[i].getTag().getName();
-									temp[i] = null;
-									only1 = false;
-								}
-							}
-							for (int i = 0; i < currentR.getInven().length; i++) {
-								currentR.getInven()[i] = temp[i];
+							Boolean t = pController.grabItem(secondW, currentR);
+							if(t) {
+								result = "You grab the " + secondW;
 							}
 							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
 							pModel.setiNum(NEWINUM);

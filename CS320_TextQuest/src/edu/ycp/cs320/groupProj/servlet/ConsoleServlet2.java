@@ -199,11 +199,17 @@ public class ConsoleServlet2 extends HttpServlet {
 				result = "The " + currentR.getMonster().getNameTag().getName() + " blocks your way.";
 			} else {
 				if(rController.contains(action[1])) {
-					pController.grabItem(action[1], currentR); // good function great function
-					int NEWINUM = pController.sortInven(pModel.getInvenFULL());
-					pModel.setiNum(NEWINUM);
-					currentR.checkEmpty(); // if the last item in the room is taken room.isEmpty = true
-					// isEmpty matters for the look command tho its not important for this one
+					Boolean thing = pController.grabItem(action[1], currentR); // good function great function
+					if(thing) {
+						result = "You grab the " + action[1];
+						int NEWINUM = pController.sortInven(pModel.getInvenFULL());
+						pModel.setiNum(NEWINUM);
+						currentR.checkEmpty();
+						// if the last item in the room is taken room.isEmpty = true
+						// isEmpty matters for the look command tho its not important for this one
+					} else {
+						result = "Your hand slips grabbing the " + action[1] + " and it falls back onto the floor.";
+					}
 					
 				} else {
 					result = "There's no " + action[1] + " around.";
@@ -213,6 +219,11 @@ public class ConsoleServlet2 extends HttpServlet {
 
 		// deals with PLACE command
 		if (action[0].contentEquals("place")) {
+			if(pController.contains(action[1])) {
+				
+			} else {
+				result = "You don't have any " + action[1];
+			}
 			// check if place is valid + update inventory
 			// probably gonna move all the fat place and grab code into a controller
 		}
