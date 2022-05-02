@@ -5,24 +5,30 @@ public class NameTag {
 	
 	//NameTags are used to create Items and Rooms
 	//They are used to identify specific game objects through checking their name or description
-	public NameTag(String name, String desc) {
+	public NameTag(String name, String desc) 
+	{
 		this.name = name;
 		this.desc = desc;
 	}
-	public NameTag() {
+	public NameTag() 
+	{
 		name = "Default tag name";
 		desc = "Default tag desc";
 	}
-	public String getName() {
+	public String getName() 
+	{
 		return name;
 	}
-	public String getDesc() {
+	public String getDesc() 
+	{
 		return desc;
 	}
-	public void setName(String n) {
+	public void setName(String n) 
+	{
 		name = n;
 	}
-	public void setDesc(String n) {
+	public void setDesc(String n) 
+	{
 		desc = n;
 	}
 }

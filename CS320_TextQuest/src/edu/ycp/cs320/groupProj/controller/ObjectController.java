@@ -21,7 +21,4 @@ public class ObjectController {
 		ObjectModel thing = new ObjectModel(n, num, f);
 		return thing;
 	}
-	public ObjectModel getThis() {
-		return this.model;
-	}
 }

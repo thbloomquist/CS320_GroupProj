@@ -9,7 +9,6 @@ public class SystemModel {
 	private Boolean grab;
 	private Boolean inspect;
 	private Boolean place;
-	//shouldnt this be private?
 	
 	public SystemModel() {
 		movement = false;
@@ -19,13 +18,6 @@ public class SystemModel {
 		place = false;
 	}
 	
-	public void reset() {
-		movement = false;
-		use = false;
-		grab = false;
-		inspect = false;
-		place = false;
-	}
 	public Boolean getMovement() {
 		return movement;
 	}

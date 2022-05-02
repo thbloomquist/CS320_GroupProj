@@ -14,7 +14,7 @@
 		</a>
 		<br>
 		<br>
-		<a href = "instructions">
+		<a href = "instructions.html">
 		<button> Instructions </button>
 		</a>
 		<br>

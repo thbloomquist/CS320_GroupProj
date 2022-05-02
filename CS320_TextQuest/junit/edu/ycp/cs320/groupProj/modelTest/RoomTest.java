@@ -2,7 +2,6 @@ package edu.ycp.cs320.groupProj.modelTest;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +19,6 @@ public class RoomTest {
 		ObjectModel[] obj = new ObjectModel[10];
 		room1 = new Room(false, n, obj, true, true);
 		room2 = new Room(true, n, obj, false, false);
-		
 	}
 	
 	@Test
@@ -46,17 +44,4 @@ public class RoomTest {
 		room2.makeMonster();
 		assertTrue(room2.hasMonster());
 	}
-	@Test
-	public void testIsDark() {
-		// originally rooms aren't dark unless stated otherwise
-		assertFalse(room1.isDark());
-		assertFalse(room2.isDark());
-	}
-	@Test
-	public void testSetDark() {
-		assertFalse(room1.isDark());
-		room1.setDark(true);
-		assertTrue(room1.isDark());
-	}
-	
 }

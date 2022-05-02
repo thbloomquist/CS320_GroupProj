@@ -1,5 +1,10 @@
 package edu.ycp.cs320.groupProj.model;
 
+
+// model class for TextQuest
+// keeps track of the moves, totaling North-South and East-West
+
+
 public class Monster {
 	private int hp;
 	private Room currentRoom;
@@ -27,11 +32,6 @@ public class Monster {
 		hp = i;
 		damage = j;
 		n = n1;
-		if(hp > 0) { 
-			alive = true;
-		} else {
-			alive = false;
-		}
 	}
 	
 	public void setHP(int n) 
@@ -81,4 +81,7 @@ public class Monster {
 	{
 		return score;
 	}
+	
+	
+	
 }
