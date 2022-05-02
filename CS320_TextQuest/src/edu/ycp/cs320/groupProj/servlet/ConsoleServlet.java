@@ -581,12 +581,12 @@ public class ConsoleServlet extends HttpServlet {
 								result = "You look west and see a wall.";
 							}
 						} else if (secondW.compareTo("down") == 0) {
-							result = "You look downwards and see a stone-brick flooring, it's got patches of grasses growing through the cracks.";
+							result = "You look down and see " + currentR.getFloor();
 							// we COULD add a String in each room describing it's floor (like different
 							// sections have similar flooring or whatever)
 							// this also applies to the ceiling as shown below
 						} else if (secondW.compareTo("up") == 0) {
-							result = "You look upwards and see a tile-stone ceiling, it's got signs of aging that lead you to believe this dungeon is very old.";
+							result = "You look up and see " + currentR.getCel();
 						} else {
 							result = "That is not a valid direction.";
 						}

@@ -2,6 +2,7 @@ package edu.ycp.cs320.groupProj.controller;
 
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
+import edu.ycp.cs320.groupProj.model.Room;
 
 public class PlayerController {
 	private PlayerModel model;
@@ -43,5 +44,29 @@ public class PlayerController {
 		
 		return num;
 		
+	}
+	public Boolean grabItem(String secondW, Room currentR) {
+		Boolean t = false;
+		ObjectModel[] temp = new ObjectModel[10];
+		int num = 0;
+		for (int i = 0; i < currentR.getInven().length; i++) {
+			if (currentR.getInven()[i] != null) {
+				temp[num] = currentR.getInven()[i];
+				num++;
+			}
+		}
+		Boolean only1 = true;
+		for (int i = 0; i < num; i++) {
+			if (secondW.compareTo(temp[i].getTag().getName()) == 0 && only1) {
+				model.addInventory(temp[i]);
+				t = true;
+				temp[i] = null;
+				only1 = false;
+			}
+		}
+		for (int i = 0; i < currentR.getInven().length; i++) {
+			currentR.getInven()[i] = temp[i];
+		}
+		return t;
 	}
 }

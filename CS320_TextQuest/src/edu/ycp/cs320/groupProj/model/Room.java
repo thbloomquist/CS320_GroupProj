@@ -9,6 +9,8 @@ public class Room {
 	private Boolean empty;
 	private Boolean hasChest;
 	private Boolean isDark = false; //set to false for testing
+	private String ceiling = null;
+	private String floor = null;
 	
 	//The boolean value refers to whether or not this room can be entered or not.
 	//If it's true, you can enter this room
@@ -125,6 +127,16 @@ public class Room {
 		ObjectModel thing = new ObjectModel(tempr, -1, true);
 		contents[7] = thing;
 	}
-	
-	
+	public void setCel(String thing) {
+		ceiling = thing;
+	}
+	public String getCel() {
+		return ceiling;
+	}
+	public void setFloor(String thing) {
+		floor = thing;
+	}
+	public String getFloor() {
+		return floor;
+	}
 }
