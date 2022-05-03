@@ -13,6 +13,7 @@ import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
 import edu.ycp.cs320.gamedb.model.Player;
 import edu.ycp.cs320.groupProj.controller.DBController;
+import edu.ycp.cs320.groupProj.controller.GameController;
 import edu.ycp.cs320.groupProj.controller.ObjectController;
 import edu.ycp.cs320.groupProj.model.NameTag;
 import edu.ycp.cs320.groupProj.model.Map;
@@ -24,14 +25,13 @@ import edu.ycp.cs320.groupProj.controller.PlayerController;
 public class ConsoleServlet2 extends HttpServlet {
 	Boolean movement = false;
 	private static final long serialVersionUID = 1L;
-	SystemModel model = new SystemModel();
-	PlayerModel pModel = new PlayerModel();
-	ObjectModel oModel = new ObjectModel();
-	ObjectModel currentObj = null;
-	Map map = new Map();
-	String errorMessage = "Current health == " + pModel.getHP();
-	String firstW = null;
-	String secondW = null;
+//	SystemModel model = new SystemModel();
+//	PlayerModel pModel = new PlayerModel();
+//	ObjectModel oModel = new ObjectModel();
+//	ObjectModel currentObj = null;
+//	Map map = new Map();
+	String errorMessage = "Current health == "; //FIX LATER
+
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,25 +57,29 @@ public class ConsoleServlet2 extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		System.out.println("Console Servlet: doPost");
-		SystemController controller = new SystemController();
-		ObjectController oController = new ObjectController();
-		RoomController rController = new RoomController();
-		PlayerController pController = new PlayerController();
-		pController.setModel(pModel);
-		controller.setModel(model);
-		oController.setModel(oModel);
+		GameController controller = new GameController();
+//		SystemController controller = new SystemController();
+//		ObjectController oController = new ObjectController();
+//		RoomController rController = new RoomController();
+//		PlayerController pController = new PlayerController();
+//		pController.setModel(pModel);
+//		controller.setModel(model);
+//		oController.setModel(oModel);
 		String userInput = req.getParameter("action").toLowerCase();
 		String[] action = null;
 		String result = "";
-		Room currentR = map.getRoom(pModel.getUp(), pModel.getSide());
-		Room roomNorth = map.getRoom(pModel.getUp()-1, pModel.getSide());
-		Room roomSouth = map.getRoom(pModel.getUp()-1, pModel.getSide());
-		Room roomWest = map.getRoom(pModel.getUp(), pModel.getSide()-1);
-		Room roomEast = map.getRoom(pModel.getUp(), pModel.getSide()+1);
+//		Room currentR = map.getRoom(pModel.getUp(), pModel.getSide());\
+		Room currentR = controller.getRoom();
+//		Room roomNorth = map.getRoom(pModel.getUp()-1, pModel.getSide());
+//		Room roomSouth = map.getRoom(pModel.getUp()-1, pModel.getSide());
+//		Room roomWest = map.getRoom(pModel.getUp(), pModel.getSide()-1);
+//		Room roomEast = map.getRoom(pModel.getUp(), pModel.getSide()+1);
 		
-		// TO DO
-		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
-		// TO DO
+		
+		HttpSession session = req.getSession(true);
+		if(session == null) {
+			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
+		}
 		
 		//prints map - for testing purposes
 //		 for (int i = 0; i < 10; i++) { 
@@ -87,7 +91,6 @@ public class ConsoleServlet2 extends HttpServlet {
 //			 } System.out.println(); 
 //		 }
 		
-		//splits input into a two String array
 		
 //		//////// Move for DB ////////
 //		DBController DBController = new DBController(); // Database controller
@@ -99,51 +102,28 @@ public class ConsoleServlet2 extends HttpServlet {
 //		System.out.println("Player entered : " + action);
 //		//////// Move for DB ////////
 		
-		 for(int i = 0; i < 2; i++)
+		 for(int i = 0; i <= 2; i++) //why can't I just do <2
 		 {
 			 action = userInput.split(" ");
 		 }
+		 System.out.println(action[0]);
+		 System.out.println(action[1]);
 		 
-		 
-		 if(action[0].contentEquals(null)) {
+		 if(action[0].equals("")) {
 			 errorMessage = "Please specify an action or click 'Stuck?' for a list of commands.";
 			 }
 		 
 		 //deals with MOVE command - done I think - no DB stuff
-		 if (action[0].contentEquals("move")) {
+		 if (action[0].equals("move")) {
 			 controller.setMovement(true);
-			 movement = model.getMovement();
-			 if(action[1].contentEquals("north")) {
-				 if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
-						pModel.setUpLoc(pModel.getUp() - 1); // updates player location
-						result = "You moved north";
-					} else {
-						result = "The path is blocked.";// isn't traversable- no change
-					}
-			 } else if(action[1].contentEquals("south")) {
-				 if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
-						pModel.setUpLoc(pModel.getUp() + 1); // updates player location
-						result = "You moved south";
-					} else {
-						result = "The path is blocked";// isn't traversable- no change
-					}
-			 } else if(action[1].contentEquals("east")) {
-				 if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
-						pModel.setSideLoc(pModel.getSide() + 1); // updates player location
-						result = "You moved east";
-					} else {
-						result = "The path is blocked"; // isn't traversable- no change
-					}
-			 } else if(action[1].contentEquals("west")) {
-				 if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
-						pModel.setSideLoc(pModel.getSide() - 1);
-						result = "You moved west"; // updates player location
-					} else {
-						result = "The path is blocked"; // isn't traversable- no change
-					}
-				} else {
-					result = "That isn't a valid direction";
-				}
+			 if(action[1].equals("")) {
+				 result = "Move where?";
+			 }
+			 else if(controller.checkMove(action[1])) {
+				 result = "You moved " + action[1];
+			 } else {
+				 result = "That isn't a valid direction";
+			 }
 		 }
 		 
 		 if (currentR.hasMonster()) {
@@ -152,281 +132,51 @@ public class ConsoleServlet2 extends HttpServlet {
 		 }
 
 		 //deals with LOOK command - done I think - no DB stuff	 
-		 //move done
-		 if(action[0].contentEquals(null)) {
-			 errorMessage = "Please specify an action or click 'Stuck?' for a list of commands.";		 
-			 }
-		 
-		 if (action[0].contentEquals("move")) {
-			 if(action[1].contentEquals("north")) {
-				 if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
-						pModel.setUpLoc(pModel.getUp() - 1); // updates player location
-						result = "You moved " + action[1];
-					} else {
-						result = "The path is blocked.";// isn't traversable- no change
-					}
-			 } else if(action[1].contentEquals("south")) {
-				 if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
-						pModel.setUpLoc(pModel.getUp() + 1); // updates player location
-						result = "You moved " + action[1];
-					} else {
-						result = "The path is blocked";// isn't traversable- no change
-					}
-			 } else if(action[1].contentEquals("east")) {
-				 if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
-						pModel.setSideLoc(pModel.getSide() + 1); // updates player location
-						result = "You moved " + action[1];
-					} else {
-						result = "The path is blocked"; // isn't traversable- no change
-					}
-			 } else if(action[1].contentEquals("west")) {
-				 if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
-						pModel.setSideLoc(pModel.getSide() - 1);
-						result = "You moved " + action[1]; // updates player location
-					} else {
-						result = "The path is blocked"; // isn't traversable- no change
-					}
+		 if (action[0].equals("look")) {
+			 if (action[1].equals("")) {
+				 result = "Look where?";
 			 } else {
-				 result = "That isn't a valid direction.";
-			 }
-		 }
-		 
-		 //deals with LOOK command - done I think
-		 if (action[0].contentEquals("look")) {
-			 if (currentR.isDark() && !pModel.isLit()) {
-					result = "It's too dark to see anything.";
-			 } else if(action[1].contentEquals("north") && roomNorth.getEnter()) {
-				 result = "You look north and see ";
-				 if(roomNorth.hasMonster()) {
-					 result += "Something shuffling around in the room, it makes you feel uneasy.";
-				 }
-				 else if(!roomNorth.isEmpty()) {
-					 result += " Something on the floor, you can't discern what it is from here.";
-				 }
-				 if(roomNorth.isDark()) {
-					 result = "The room is encased in shadows, you can't see anything.";
-				 }
-			 } else if(action[1].contentEquals("south") && roomSouth.getEnter()) {	
-				 if(roomSouth.hasMonster()) {
-					 result += "Something shuffling around in the room, it makes you feel uneasy.";
-				 }
-				 else if(!roomSouth.isEmpty()) {
-					 result += " Something on the floor, you can't discern what it is from here.";
-				 }
-				 if(roomSouth.isDark()) {
-					 result = "The room is encased in shadows, you can't see anything.";
-				 } 
-			 } else if(action[1].contentEquals("east") && roomEast.getEnter()) {
-				 if(roomEast.hasMonster()) {
-					 result += "Something shuffling around in the room, it makes you feel uneasy.";
-				 }
-				 else if(!roomEast.isEmpty()) {
-					 result += " Something on the floor, you can't discern what it is from here.";
-				 }
-				 if(roomEast.isDark()) {
-					 result = "The room is encased in shadows, you can't see anything.";
-				 } 
-			 } else if(action[1].contentEquals("west") && roomWest.getEnter()) {
-				 if(roomWest.hasMonster()) {
-					 result += "Something shuffling around in the room, it makes you feel uneasy.";
-				 }
-				 else if(!roomWest.isEmpty()) {
-					 result += " Something on the floor, you can't discern what it is from here.";
-				 }
-				 if(roomWest.isDark()) {
-					 result = "The room is encased in shadows, you can't see anything.";
-				 } 
-			 }
-			 else if (action[1].contentEquals("down")) {
-				 result = "You look downward and see a stone-brick flooring, it's got patches of grass growing through the cracks";
-			 }
-			 else if (action[1].contentEquals("up")) {
-					result = "You look upwards and see a tile-stone ceiling, it's got signs of aging that lead you to believe this dungeon is very old.";
-			 }
-			 else if (action[1].contentEquals(null)){
-				 result = "Please enter a valid direction to look";
-			 }
-			 else {
-				 result = "You see a wall";
+				 result = controller.Look(action[1]);
 			 }
 		 }
 		 
 		 //deals with GRAB command - update PLAYER and ROOM INVENTORY DB
-		 if (action[0].contentEquals("grab")) {
-			 model.indicateGrab(true);
-			 if (currentR.hasMonster()) {
-					result = "The " + currentR.getMonster().getNameTag().getName()
-							+ " blocks your way. You'll have to kill it to loot this room.";
-				} else if (pModel.getiNum() == 9) {
-					result = "Your inventory is full.";
-				} else if (currentR.isDark() && !pModel.isLit()) {
-					result = "It's too dark to try to grab anything";
-				} else if (action[1].contentEquals("key")) {
-					//check if room actually has key
-					//add key to inventory
-					pModel.setHasKey(true);
-				}
-					else {
-						result = "There is no key here";
-					}
-				} else if (rController.contains(action[1])) {
-					ObjectModel[] temp = new ObjectModel[10];
-					int num = 0;
-					for (int i = 0; i < currentR.getInven().length; i++) {
-						if (currentR.getInven()[i] != null) {
-							temp[num] = currentR.getInven()[i];
-							num++;
-						}
-				}
-					//UPDATE INVENTORY DB FOR ROOM + PLAYER
-			 
+		 if (action[0].equals("grab")) {
+			 if (action[1].equals("")) {
+				 result = "Grab what?";
+			 } else {
+				 result = controller.grab(action[1]);
+			 }
+			 //controller.indicateGrab(true);
+			//UPDATE INVENTORY DB FOR ROOM + PLAYER
 		 }
 		 
 		 //deals with PLACE command - done I think - update PLAYER and ROOM INVENTORY DB 
-		 if (action[0].contentEquals("place")){
-			 model.indicatePlace(true);
-			 if (action[1].contentEquals(null)) {
-				 result = "Place what?";
-			 } else if (pController.contains(action[1])) {
-				 ObjectModel tempr = null;
-					Boolean only1 = true;
-					for (int l = 0; l < pModel.getInvenFULL().length; l++) {
-						if (pModel.getInventory(l) != null) {
-							if (pModel.getInventory(l).getTag().getName().toLowerCase()
-									.equals(secondW) && only1) {
-								tempr = pModel.getInventory(l);
-								only1 = false;
-								pModel.getInvenFULL()[l] = null;
-								// this should return a reference to the first index of an item that contains
-								// the same name as the input
-							}
-						}
-					}
-					int temp = -1;
-					Boolean firstI = true;
-					for (int i = 0; i < currentR.getInven().length; i++) {
-						if (currentR.getInven()[i] == null && firstI) {
-							temp = i;
-							firstI = false;
-							// this should return the first index that is "open" for an item input
-						}
-					}
-					if (temp == -1) {
-						result = "The room is full.";
-					} else {
-						currentR.getInven()[temp] = tempr;
-						int NEWINUM = pController.sortInven(pModel.getInvenFULL());
-						pModel.setiNum(NEWINUM);
-						result = "You placed the " + action + " on the floor.";
-					}
-				} else {
-					result = "You don't have any " + action[1];
-				}
-			 //UPDATE INVENTORY FOR ROOM AND PLAYER
+		 if (action[0].equals("place")){
+			 result = controller.place(action[1]);
 			 }
+			 //UPDATE INVENTORY FOR ROOM AND PLAYER
 			 //check if place is valid + update inventory
 			 // probably gonna move all the fat place and grab code into a controller
 		 
 		 
 		 //deals with USE command - done I think - update PLAYER INVENTORY and HEALTH
-		 if (action[0].contentEquals("use")) {
-			 model.indicateUse(true);
-			 if(action[1].contentEquals(null)) {
-				 result = "Use what?";
-			 } else if (pController.contains(action[1])){
-				 Boolean j1 = true;
-					ObjectModel temp = null;
-					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-						if (pModel.getInvenFULL()[i] != null) {
-							if (pModel.getInventory(i).getTag().getName().toLowerCase()
-									.equals(secondW) && j1) {
-								temp = pModel.getInventory(i);
-								pModel.removeItem(i);
-								j1 = false;
-								//UPDATE DATABASE HERE - REMOVE ITEM FROM PLAYER INVENTORY
-							}
-						}
-					}
-					int NEWINUM = pController.sortInven(pModel.getInvenFULL());
-					pModel.setiNum(NEWINUM);
-					pModel.setHP(pModel.getHP() + temp.getThing());
-					result = "You used the " + temp.getTag().getName();
-					errorMessage = "Current health == " + pModel.getHP();
-					//UPDATE HEALTH DB
-			 } else {
-				 result = "You dont have any " + action[1];
-			 }
+		 if (action[0].equals("use")) {
+			 //model.indicateUse(true);
+			 controller.use(action[1]);
 			 //check if use is valid + update inventory and health
 			 // gonna implement a controller that checks validity
 		 }
 		 
 		 //deals with INSPECT command - done I think - no DB stuff
-		 if (action[0].contentEquals("inspect")) {
-			 model.indicateInspect(true);
-			 if (action[1].contentEquals(null)) {
+		 if (action[0].equals("inspect")) {
+			// model.indicateInspect(true);
+			 if (action[1].equals("")) {
 				 result = "Inspect what?";
-			 }
-			 else if (currentR.isDark() && !pModel.isLit()) {
-					result = "The room is entirely dark, you look down and notice you can't even see your feet.";
-			}
-			 else if (action[1].contentEquals("room")) {
-				 result = "The room contains: ";
-				 for (int i = 0; i < currentR.getInven().length; i++) {
-						if (currentR.getInven()[i] != null) {
-							result += currentR.getInven()[i].getTag().getName() + " and ";
-						}
-				 }
-				 if (currentR.hasMonster()) {
-						result += currentR.getMonster().getNameTag().getName() + " and ";
-				}else {
-						result += "that's all";
-						result = currentR.getTag().getDesc() + result;
-				 String s = " the room contains: ";
-					for (int i = 0; i < currentR.getInven().length; i++) {
-						if (currentR.getInven()[i] != null) {
-							s += currentR.getInven()[i].getTag().getName() + " and ";
-						}
-					}
-					if (currentR.hasMonster()) {
-						s += currentR.getMonster().getNameTag().getName() + " and ";
-					}
-					if (s.toLowerCase().compareTo(" the room contains: ") == 0) {
-						result = currentR.getTag().getDesc();
-					} else {
-						s += "that's all";
-						result = currentR.getTag().getDesc() + s;
-					}
-			 }
+			 } else {
+				 result = controller.inspect(action[1]);
 			 }
 		 }
-			 else if (action[1].contentEquals("inventory")){
-				 result = "You rifle through your pack and find: ";
-				 int r = 0;
-					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-						if (pModel.getInvenFULL()[i] != null) {
-							result += pModel.getInvenFULL()[i].getTag().getName() + ", ";
-							r++;
-						}
-					}
-					if (r == 0) {
-						result += "it's empty.";
-					} else {
-					result = "You fail to inspect the " + action[1];
-					}
-
-				 String s = "You rifle through your pack and find: ";
-					int q = 0;
-					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-						if (pModel.getInvenFULL()[i] != null) {
-							s += pModel.getInvenFULL()[i].getTag().getName() + ", ";
-							q++;
-						}
-					}
-					if (q == 0) {
-						s += "it's empty.";
-					}
-					result = s;
-			 }
 			 else {
 				 result = "That is not a command I recognize";
 			 }
@@ -436,40 +186,13 @@ public class ConsoleServlet2 extends HttpServlet {
 		 //deals with LIGHT command - done I think - DB stuff but idk what yet
 		 
 		 //deals with LIGHT command - done I think
-		 if (action[0].contentEquals("light")) {
-			 if (action[1].contentEquals("torch")) {
-				 if (pModel.getMatches() > 0) {
-					 pModel.setMatches(pModel.getMatches() - 1);
-					 pModel.setLit(true);
-					 result = "You take out your pack of matches and strike one, lighting the torch and throwing out the now-burnt match.";
-				 }
-				 else {
-					 result = "Uh oh, you are out of matches";
-				 } 
-			 }
-			 else {
-				 result = "You are unable to light " + action[1] + " on fire";
-			 }
+		 if (action[0].equals("light")) {
+			 controller.light(action[1]);
 		 }
 		 
 		 //deals with OPEN command - almost done [NEED WIN SCREEN]
-		 if (action[0].contentEquals("open")){
-			 if (action[1].contentEquals("chest")) {
-				 if (currentR.hasChest()) {
-					 if (pModel.getHasKey()) {
-						 //LINK TO WIN SCREEN HERE
-					 } 
-					 else {
-						 result = "You don't have a key, how did you plan on opening it - brute strength?";
-					 }
-				 }
-				 else {
-					 result = "There is no chest in this room, you should get your eyes checked";
-				 }
-			 }
-			 else {
-				 result = "You fail to open " + action[1];
-			 }
+		 if (action[0].equals("open")){
+			 controller.open(action[1]);
 		 }
 		 
 		 

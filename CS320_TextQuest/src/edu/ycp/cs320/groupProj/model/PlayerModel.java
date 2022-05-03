@@ -132,4 +132,14 @@ public class PlayerModel {
 		this.hasKey = hasKey;
 	}
 	
+	public ObjectModel hasInven(String object, int length, ObjectModel[] stuff) {
+		ObjectModel newThing = null;
+		for (int i = 0; i < length; i++) {
+			if (stuff[i].equals(object)) {
+				newThing = stuff[i];
+			}
+		}
+		return newThing;
+	}
+	
 }

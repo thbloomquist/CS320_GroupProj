@@ -1,7 +1,7 @@
 package edu.ycp.cs320.groupProj.model;
 
 public class Room {
-	private boolean canEnter;
+	private Boolean canEnter;
 	private NameTag roomDesc;
 	private ObjectModel[] contents = new ObjectModel[10];
 	private Boolean hasMonster;
@@ -126,5 +126,23 @@ public class Room {
 		contents[7] = thing;
 	}
 	
+	public ObjectModel hasInven(String object, int length, ObjectModel[] stuff) {
+		ObjectModel newThing = null;
+		for (int i = 0; i < length; i++) {
+			if (stuff[i].equals(object)) {
+				newThing = stuff[i];
+			}
+		}
+		return newThing;
+	}
+
+	public void addInventory(ObjectModel object) {
+		for (int i = 0; i < contents.length; i++) {
+			if (contents[i].equals(null)) {
+				contents[i] = object;
+			}
+		}
+	}
 	
 }
+	

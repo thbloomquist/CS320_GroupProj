@@ -36,4 +36,6 @@ public class SystemController {
 	public void setInspect() {
 		model.setInspect();
 	}
+	
+	
 }
