@@ -90,14 +90,14 @@ public class ContinueGameServlet extends HttpServlet {
 			// re-run the previously entered command
 			String action = getStringFromParameter(req.getParameter("action"));
 			
-			//////// Move for DB ////////
-			DBController DBController = new DBController(); // Database controller
-			HttpSession session = req.getSession(false); // get current session
-			Player player = (Player) session.getAttribute("player"); // get player from session
-			DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
-			DBController.InsertNewMove(player.getPlayerId(), 1, action);
-			System.out.println("Player entered : " + action);
-			//////// Move for DB ////////
+//			//////// Move for DB ////////
+//			DBController DBController = new DBController(); // Database controller
+//			HttpSession session = req.getSession(false); // get current session
+//			Player player = (Player) session.getAttribute("player"); // get player from session
+//			DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
+//			DBController.InsertNewMove(player.getPlayerId(), 1, action);
+//			System.out.println("Player entered : " + action);
+//			//////// Move for DB ////////
 			
 			if (action.indexOf(" ") != -1) {
 				int firstS = action.indexOf(" ");

@@ -11,9 +11,9 @@
 
 	<body>
 	
-		<h1 class="display-1">Text Quest!</h1>
+		<h1 class="display-1" align = "center">Text Quest!</h1>
 		<c:if test="${! empty player }">
-			<h1>Welcome ${player.username}!</h1>
+			<h1 align = "center">Welcome ${player.username}!</h1>
 		</c:if>
 		
 		<br>

@@ -288,7 +288,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 				
 				insertMove.setInt(1, playerId);
 				insertMove.setInt(2, gameId);
-				insertMove.setString(3, move);
+				insertMove.setString(3, move); //cant store array, fix later.
 				
 				resultSet = insertMove.executeUpdate();
 				
