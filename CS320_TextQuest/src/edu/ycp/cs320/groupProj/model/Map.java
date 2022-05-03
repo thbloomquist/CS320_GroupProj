@@ -1,7 +1,7 @@
 package edu.ycp.cs320.groupProj.model;
+
 import java.util.Random;
 import edu.ycp.cs320.groupProj.controller.RoomController;
-
 
 public class Map {
 	public Room[][] map;
@@ -133,19 +133,26 @@ public class Map {
 		this.map[8][6].setDark(true);
 		this.map[8][7].setDark(true);
 		this.map[8][8].setDark(true);
+
 		
 		
-		//handles room types below
+		
+		
+		// handles room types below
 		RoomController rC = new RoomController();
 		Random rand = new Random();
-		
-		for(int i = 0; i < 10; i++) {
-			for(int j = 0; j < 10; j++) {
+
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
 				rC.setModel(this.map[i][j]);
 				int num = rand.nextInt(3);
 				rC.setRoomType(num);
 			}
 		}
+		
+		this.map[1][6].setChest(true);
+		this.map[1][4].createKey();
+		
 	}
 
 	public Room[][] getMap() {
@@ -271,10 +278,20 @@ public class Map {
 		this.map[8][6].setDark(true);
 		this.map[8][7].setDark(true);
 		this.map[8][8].setDark(true);
-		
-		
+
 		// chest :_)
 		this.map[1][6].setChest(true);
+
+		RoomController rC = new RoomController();
+		Random rand = new Random();
+
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				rC.setModel(this.map[i][j]);
+				int num = rand.nextInt(3);
+				rC.setRoomType(num);
+			}
+		}
 	}
 
 }

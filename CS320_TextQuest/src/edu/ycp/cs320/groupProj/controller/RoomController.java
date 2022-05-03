@@ -2,6 +2,7 @@ package edu.ycp.cs320.groupProj.controller;
 
 import edu.ycp.cs320.groupProj.model.Room;
 import edu.ycp.cs320.groupProj.model.ObjectModel;
+import edu.ycp.cs320.groupProj.controller.ObjectController;
 
 public class RoomController {
 	private Room currentRoom;
@@ -14,7 +15,7 @@ public class RoomController {
 		Boolean thing = false;
 		for (int i = 0; i < currentRoom.getInven().length; i++) {
 			if (currentRoom.getInven()[i] != null) {
-				if (currentRoom.getInven()[i].getTag().getName().equals(item)) {
+				if (currentRoom.getInven()[i].getTag().getName().toLowerCase().equals(item.toLowerCase())) {
 					thing = true;
 				}
 			}
@@ -45,6 +46,22 @@ public class RoomController {
 			//candy type
 			break;
 		}
+	}
+	public void assignKey() {
+		ObjectController obj = new ObjectController();
+		ObjectModel temp = new ObjectModel();
+		
+		obj.setModel(temp);
+		obj.Key();
+		int te = 0;
+		Boolean first1 = true;
+		for(int i = 0; i < currentRoom.getInven().length; i++) {
+			if(currentRoom.getInven()[i] == null && first1) {
+				te = i;
+				first1 = false;
+			}
+		}
+		currentRoom.getInven()[te] = temp;
 	}
 
 }

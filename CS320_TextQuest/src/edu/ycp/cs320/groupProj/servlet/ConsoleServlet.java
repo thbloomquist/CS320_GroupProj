@@ -304,15 +304,17 @@ public class ConsoleServlet extends HttpServlet {
 			} else if (action.compareTo("fight") == 0) {
 				if (currentR.hasMonster()) {
 					result = "The " + currentR.getMonster().getNameTag().getName()
-							+ " bites you, but you manage to beat it.";
+							+ " bites you, but you manage to beat it. Your torch goes out during the scuffle.";
 					pModel.setHP(pModel.getHP() - currentR.getMonster().getDMG());
 					currentR.deadMonster();
 					errorMessage = "Current health == " + pModel.getHP();
+					pModel.setLit(false);
 					//UPDATE DB - HEALTH
 				} else {
 					result = "You fight yourself, you manage to both lose and win.";
 					pModel.setHP(pModel.getHP() - 25);
 					errorMessage = "Current health == " + pModel.getHP();
+					pModel.setLit(false);
 					//UPDATE DB - HEALTH
 				}
 
@@ -366,23 +368,7 @@ public class ConsoleServlet extends HttpServlet {
 					}
 				} else if (firstW.compareTo("use") == 0) {
 					if (pController.contains(secondW)) {
-						Boolean j1 = true;
-						ObjectModel temp = null;
-						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-							if (pModel.getInvenFULL()[i] != null) {
-								if (pModel.getInventory(i).getTag().getName().toLowerCase()
-										.equals(secondW) && j1) {
-									temp = pModel.getInventory(i);
-									pModel.removeItem(i);
-									j1 = false;
-									//UPDATE DATABASE HERE - REMOVE ITEM FROM DB
-								}
-							}
-						}
-						int NEWINUM = pController.sortInven(pModel.getInvenFULL());
-						pModel.setiNum(NEWINUM);
-						pModel.setHP(pModel.getHP() + temp.getThing());
-						result = "You used the " + temp.getTag().getName();
+						result = pController.useItem(secondW, currentR);
 						errorMessage = "Current health == " + pModel.getHP();
 						//UPDATE DB - HEALTH
 					} else {
@@ -400,9 +386,20 @@ public class ConsoleServlet extends HttpServlet {
 							result += ", but you hear a strange hissing coming from directly in front of you.";
 						}
 					} else {
-						if (secondW.compareTo("key") == 0) {
-							// if room hasKey() add key
-						} else if (rController.contains(secondW)) {
+						if (secondW.toLowerCase().compareTo("key") == 0) {
+							System.out.println("Entered key stream.");
+							if(rController.contains(secondW)) {
+								System.out.println("Room has key.");
+								Boolean t = pController.grabItem(secondW, currentR);
+								if(t) {
+									result = "You grabbed the key, nice job!";
+									System.out.println("PLAYER HAS KEY!");
+								}
+								int NEWINUM = pController.sortInven(pModel.getInvenFULL());
+								pModel.setiNum(NEWINUM);
+								currentR.checkEmpty();
+							}
+						} else if (rController.contains(secondW.toLowerCase())) {
 							Boolean t = pController.grabItem(secondW, currentR);
 							if(t) {
 								result = "You grab the " + secondW;
@@ -416,38 +413,7 @@ public class ConsoleServlet extends HttpServlet {
 					}
 				} else if (firstW.compareTo("place") == 0) {
 					if (pController.contains(secondW)) {
-						ObjectModel tempr = null;
-						Boolean only1 = true;
-						for (int l = 0; l < pModel.getInvenFULL().length; l++) {
-							if (pModel.getInventory(l) != null) {
-								if (pModel.getInventory(l).getTag().getName().toLowerCase()
-										.equals(secondW) && only1) {
-									tempr = pModel.getInventory(l);
-									only1 = false;
-									pModel.getInvenFULL()[l] = null;
-									// this should return a reference to the first index of an item that contains
-									// the same name as the input
-								}
-							}
-						}
-						int temp = -1;
-						Boolean firstI = true;
-						for (int i = 0; i < currentR.getInven().length; i++) {
-							if (currentR.getInven()[i] == null && firstI) {
-								temp = i;
-								firstI = false;
-								// this should return the first index that is "open" for an item input
-							}
-						}
-
-						if (temp == -1) {
-							result = "The room is full.";
-						} else {
-							currentR.getInven()[temp] = tempr;
-							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
-							pModel.setiNum(NEWINUM);
-							result = "You placed the " + action + " on the floor.";
-						}
+						result = pController.placeItem(secondW, currentR);
 					} else {
 						result = "You don't have any " + secondW;
 					}

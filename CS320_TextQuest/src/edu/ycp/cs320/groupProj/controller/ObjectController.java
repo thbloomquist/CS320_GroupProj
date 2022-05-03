@@ -24,4 +24,11 @@ public class ObjectController {
 	public ObjectModel getThis() {
 		return this.model;
 	}
+	public void Key() {
+		NameTag n = new NameTag("Key", "It's a shiny golden key");
+		int num = -1;
+		boolean f = true;
+		ObjectModel key = new ObjectModel(n, num, f);
+		this.model = key;
+	}
 }
