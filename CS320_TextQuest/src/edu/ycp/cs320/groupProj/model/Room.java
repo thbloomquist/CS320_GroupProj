@@ -6,11 +6,11 @@ public class Room {
 	private ObjectModel[] contents = new ObjectModel[10];
 	private Boolean hasMonster;
 	private Monster m;
-	private Boolean empty;
 	private Boolean hasChest;
 	private Boolean isDark = false; //set to false for testing
 	private String ceiling = null;
 	private String floor = null;
+	private Boolean discovered = false; //Begins false, sets to true when a room is discovered
 	
 	//The boolean value refers to whether or not this room can be entered or not.
 	//If it's true, you can enter this room
@@ -28,13 +28,11 @@ public class Room {
 		roomDesc = room;
 		this.contents = contents;
 		hasMonster = t;
-		empty = true;
 		if(hasMonster) {
 			makeMonster();
 		}
 		if(f) {
 			createContents1();
-			empty = false;
 		}
 		// if f, room has items in it
 		hasChest = false;
@@ -87,28 +85,21 @@ public class Room {
 	}
 	
 	public void createContents1() {
-		NameTag n = new NameTag("banana", "a yellow banana");
-		for(int i = 0; i < 10; i++) {
-			if(i == 0 || i == 3) {
+		NameTag n = new NameTag("Crate", "an old wooden crate");
+		for(int i = 0; i < contents.length; i++) {
+			if(contents[i] == null) {
 				contents[i] = new ObjectModel(n, 5, false);
+				i = contents.length + 1;
 			}
 		}
 	}
-	public Boolean isEmpty() {
-		return empty;
-	}
-	public void checkEmpty() {
-		boolean n = false;
+	public boolean checkEmpty() {
 		for(int i = 0; i < contents.length; i++) {
 			if(contents[i] != null) {
-				n = true;
+				return false;
 			}
 		}
-		if(n) {
-			empty = false;
-		} else {
-			empty = true;
-		}
+		return true;
 	}
 	public Boolean hasChest() {
 		return hasChest;
@@ -138,5 +129,38 @@ public class Room {
 	}
 	public String getFloor() {
 		return floor;
+	}
+	public String getName()
+	{
+		return this.getTag().getName();
+	}
+	public String getDesc()
+	{
+		return this.getTag().getName();
+	}
+	public boolean getDiscovered()
+	{
+		return this.discovered;
+	}
+	public void setDiscovered(PlayerModel pModel)
+	{
+		pModel.incrementScore(10);
+		this.discovered = true;
+	}
+	//Returns an object given a specific name or description. 
+	//Set isName to true to search by name, and isName to false to search by description.
+	public ObjectModel searchObject(boolean isName, String string)
+	{
+		for(int i = 0; i < contents.length; i++) {
+			if(contents[i] != null) {
+				if(contents[i].getName() == string && isName) {
+					return contents[i];
+				}
+				if(contents[i].getDesc() == string && isName == false) {
+					return contents[i];
+				}
+			}
+		}
+		return null;
 	}
 }

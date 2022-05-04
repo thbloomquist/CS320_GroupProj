@@ -128,6 +128,7 @@ public class ConsoleServlet extends HttpServlet {
 						s += "that's all";
 						result = currentR.getTag().getDesc() + s;
 					}
+				//Inventory
 				} else if (action.compareTo("inventory") == 0) {
 					String s = "You rifle through your pack and find: ";
 					int r = 0;
@@ -208,11 +209,12 @@ public class ConsoleServlet extends HttpServlet {
 				}
 
 				model.indicateUse(false);
+			//north, south, west, or east
 			} else if (model.getMovement()) {
 				if (action.compareTo("north") == 0 || action.compareTo("west") == 0
 						|| action.compareTo("south") == 0
 						|| action.compareTo("east") == 0) {
-
+				//north
 					if (action.compareTo("north") == 0) {
 						if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() - 1);
@@ -222,6 +224,7 @@ public class ConsoleServlet extends HttpServlet {
 						}
 						controller.setMovement(false);
 						movement = model.getMovement();
+				//South
 					} else if (action.compareTo("south") == 0) {
 						if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() + 1);
@@ -231,6 +234,7 @@ public class ConsoleServlet extends HttpServlet {
 						}
 						controller.setMovement(false);
 						movement = model.getMovement();
+				//East
 					} else if (action.compareTo("east") == 0) {
 						if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
 							pModel.setSideLoc(pModel.getSide() + 1);
@@ -240,6 +244,7 @@ public class ConsoleServlet extends HttpServlet {
 						}
 						controller.setMovement(false);
 						movement = model.getMovement();
+				//West
 					} else if (action.compareTo("west") == 0) {
 						if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
 							pModel.setSideLoc(pModel.getSide() - 1);
@@ -270,9 +275,9 @@ public class ConsoleServlet extends HttpServlet {
 					}
 					Boolean only1 = true;
 					for (int i = 0; i < num; i++) {
-						if (action.compareTo(temp[i].getTag().getName()) == 0 && only1) {
+						if (action.compareTo(temp[i].getName()) == 0 && only1) {
 							pModel.addInventory(temp[i]);
-							result = "You grabbed the " + temp[i].getTag().getName();
+							result = "You grabbed the " + temp[i].getName();
 							temp[i] = null;
 							only1 = false;
 							//UPDATE DB HERE - ADD ITEM TO INVENTORY
@@ -330,7 +335,9 @@ public class ConsoleServlet extends HttpServlet {
 			}
 
 			if (firstW != null & secondW != null) {
+				//Move
 				if (firstW.compareTo("move") == 0) {
+					//Move North
 					if (secondW.compareTo("north") == 0) {
 						// checks to see if the tile directly above is traversable
 						if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
@@ -339,6 +346,7 @@ public class ConsoleServlet extends HttpServlet {
 						} else {
 							result = "The path is blocked.";// isn't traversable- no change
 						}
+					//Move South
 					} else if (secondW.compareTo("south") == 0) {
 						// checks to see if the tile directly below is traversable
 						if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
@@ -347,6 +355,7 @@ public class ConsoleServlet extends HttpServlet {
 						} else {
 							result = "The path is blocked";// isn't traversable- no change
 						}
+					//Move East
 					} else if (secondW.compareTo("east") == 0) {
 						// checks to see if the tile directly right is traversable
 						if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
@@ -355,6 +364,7 @@ public class ConsoleServlet extends HttpServlet {
 						} else {
 							result = "The path is blocked"; // isn't traversable- no change
 						}
+					//Move West
 					} else if (secondW.compareTo("west") == 0) {
 						// checks to see if the tile directly left is traversable
 						if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
@@ -366,6 +376,7 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						result = "That isn't a valid direction";
 					}
+				//Use Item
 				} else if (firstW.compareTo("use") == 0) {
 					if (pController.contains(secondW)) {
 						result = pController.useItem(secondW, currentR);
@@ -374,6 +385,7 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						result = "You don't have any " + secondW;
 					}
+				//Grab
 				} else if (firstW.compareTo("grab") == 0) {
 					if (currentR.hasMonster()) {
 						result = "The " + currentR.getMonster().getNameTag().getName()
@@ -386,6 +398,7 @@ public class ConsoleServlet extends HttpServlet {
 							result += ", but you hear a strange hissing coming from directly in front of you.";
 						}
 					} else {
+					//Grab Key
 						if (secondW.toLowerCase().compareTo("key") == 0) {
 							System.out.println("Entered key stream.");
 							if(rController.contains(secondW)) {
@@ -399,14 +412,23 @@ public class ConsoleServlet extends HttpServlet {
 								pModel.setiNum(NEWINUM);
 								currentR.checkEmpty();
 							}
+						//Grab Item
 						} else if (rController.contains(secondW.toLowerCase())) {
 							Boolean t = pController.grabItem(secondW, currentR);
 							if(t) {
 								result = "You grab the " + secondW;
+								//Check to see if the item is a gem
+								if(secondW.toLowerCase().compareTo("black gem") == 0 || secondW.toLowerCase().compareTo("green gem") == 0
+										|| secondW.toLowerCase().compareTo("blue gem") == 0 || secondW.toLowerCase().compareTo("yellow gem") == 0
+										|| secondW.toLowerCase().compareTo("red gem") == 0)
+								{
+									//If it is a gem, the player gets points based on the "Thing" value and the thing value is set to 0
+									pModel.incrementScore(currentR.searchObject(true, secondW).getThing());
+									currentR.searchObject(true, secondW).setThing(0);
+								}
 							}
 							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
 							pModel.setiNum(NEWINUM);
-							currentR.checkEmpty(); // if the last item in the room is taken room.isEmpty = true
 						} else {
 							result = "There aren't any " + secondW + " around";
 						}
@@ -417,10 +439,12 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						result = "You don't have any " + secondW;
 					}
+				//Inspect
 				} else if (firstW.compareTo("inspect") == 0) {
 					if (currentR.isDark() && !pModel.isLit()) {
 						result = "The room is entirely dark, you look down and notice you can't even see your feet.";
 					} else {
+					//Inspect Room
 						if (secondW.compareTo("room") == 0) {
 							String s = " the room contains: ";
 							for (int i = 0; i < currentR.getInven().length; i++) {
@@ -437,6 +461,7 @@ public class ConsoleServlet extends HttpServlet {
 								s += "that's all";
 								result = currentR.getTag().getDesc() + s;
 							}
+						//Inspect Inventory
 						} else if (secondW.compareTo("inventory") == 0) {
 							String s = "You rifle through your pack and find: ";
 							int r = 0;
@@ -454,10 +479,12 @@ public class ConsoleServlet extends HttpServlet {
 							result = "You fail to inspect the " + secondW;
 						}
 					}
+				//Look
 				} else if (firstW.compareTo("look") == 0) {
 					if (currentR.isDark() && !pModel.isLit()) {
 						result = "It's too dark to see anything.";
 					} else {
+					//Look North
 						if (secondW.compareTo("north") == 0) {
 							if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
 								Room roomT = map.getRoom(pModel.getUp() - 1, pModel.getSide());
@@ -467,7 +494,7 @@ public class ConsoleServlet extends HttpServlet {
 								} else {
 									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if (!roomT.isEmpty()) {
+									} else if (!roomT.checkEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -476,6 +503,7 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								result = "You look north and see a wall.";
 							}
+						//Look South
 						} else if (secondW.compareTo("south") == 0) {
 							if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
 								Room roomT = map.getRoom(pModel.getUp() + 1, pModel.getSide());
@@ -485,7 +513,7 @@ public class ConsoleServlet extends HttpServlet {
 								} else {
 									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if (!roomT.isEmpty()) {
+									} else if (!roomT.checkEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -494,6 +522,7 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								result = "You look south and see a wall.";
 							}
+						//look East
 						} else if (secondW.compareTo("east") == 0) {
 							if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
 								Room roomT = map.getRoom(pModel.getUp(), pModel.getSide() + 1);
@@ -503,7 +532,7 @@ public class ConsoleServlet extends HttpServlet {
 								} else {
 									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if (!roomT.isEmpty()) {
+									} else if (!roomT.checkEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -512,6 +541,7 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								result = "You look east and see a wall.";
 							}
+						//Look West
 						} else if (secondW.compareTo("west") == 0) {
 							if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
 								Room roomT = map.getRoom(pModel.getUp(), pModel.getSide() - 1);
@@ -521,7 +551,7 @@ public class ConsoleServlet extends HttpServlet {
 								} else {
 									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if (!roomT.isEmpty()) {
+									} else if (!roomT.checkEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -530,17 +560,20 @@ public class ConsoleServlet extends HttpServlet {
 							} else {
 								result = "You look west and see a wall.";
 							}
+						//Look down
 						} else if (secondW.compareTo("down") == 0) {
 							result = "You look down and see " + currentR.getFloor();
 							// we COULD add a String in each room describing it's floor (like different
 							// sections have similar flooring or whatever)
 							// this also applies to the ceiling as shown below
+						//Look Up
 						} else if (secondW.compareTo("up") == 0) {
 							result = "You look up and see " + currentR.getCel();
 						} else {
 							result = "That is not a valid direction.";
 						}
 					}
+				//Light Torch
 				} else if (firstW.compareTo("light") == 0) {
 					if (secondW.compareTo("torch") == 0) {
 						if (pController.contains(secondW)) {
@@ -558,6 +591,7 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						result = "You are unable to light the " + secondW + " on fire";
 					}
+				//Open Chest
 				} else if (firstW.compareTo("open") == 0) {
 					if (secondW.compareTo("chest") == 0) {
 						Boolean tempr = false;
@@ -570,6 +604,14 @@ public class ConsoleServlet extends HttpServlet {
 						}
 						if (tempr) {
 							if (currentR.hasChest()) {
+								pModel.incrementScore(1000);
+								//Checks if the player collected every Gem, gives them bonus points if they do.
+								if(pModel.searchObject(true, "Black Gem") != null && pModel.searchObject(true, "Blue Gem") != null
+										&& pModel.searchObject(true, "Red Gem") != null && pModel.searchObject(true, "Green Gem") != null
+										&& pModel.searchObject(true, "Yellow Gem") != null) 
+								{
+									pModel.incrementScore(1000);
+								}
 								// !!!!!!!!!!!!!!!!!!
 								//
 								// IMPLEMENT RE-ROUTE TO WIN SCREEN & RESET MODELS

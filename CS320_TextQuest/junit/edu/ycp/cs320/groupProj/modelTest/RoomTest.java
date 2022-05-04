@@ -25,8 +25,8 @@ public class RoomTest {
 	
 	@Test
 	public void testisEmpty() {
-		assertTrue(!room1.isEmpty());
-		assertTrue(room2.isEmpty());
+		assertTrue(!room1.checkEmpty());
+		assertTrue(room2.checkEmpty());
 	}
 	@Test
 	public void testHasMonster() {

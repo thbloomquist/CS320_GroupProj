@@ -16,18 +16,11 @@ public class PlayerModel {
 	private int matches;
 	private Boolean isLit;
 	private Boolean hasKey;
+	private Boolean hardyMode; //TODO implement Hardy mode, currently just here for score multiplier
+	private Boolean spokeToNPC; //Set to false at the start of the game, sets to true when player talks to the NPC
 	
 	public PlayerModel() {
-		hp = 100;
-		upLoc = 7;
-		sideLoc = 3;
-		inventory = new ObjectModel[10];
-		invenIndex = 0;
-		score = 0;
-		matches = 10;
-		isLit = false;
-		hasKey = false;
-		createTorch(); // this creates the starting item - torch - in the players inventory
+		this.reset();
 	}
 	public void reset() {
 		hp = 100;
@@ -39,6 +32,8 @@ public class PlayerModel {
 		matches = 10;
 		isLit = false;
 		hasKey = false;
+		spokeToNPC = false;
+		hardyMode = false;
 		createTorch();
 		// fully resets values of current Player Model to their intended original states.
 		// i.e. score starts at 0, health starts at 100, etc.
@@ -123,7 +118,14 @@ public class PlayerModel {
 		score = n;
 	}
 	public void incrementScore(int n) {
-		score += n;
+		if(hardyMode)
+		{
+			score += n*2;
+		}
+		else
+		{
+			score += n;
+		}
 	}
 	public Boolean getHasKey() {
 		return hasKey;
@@ -131,5 +133,34 @@ public class PlayerModel {
 	public void setHasKey(Boolean hasKey) {
 		this.hasKey = hasKey;
 	}
-	
+	public Boolean getSpoke()
+	{
+		return spokeToNPC;
+	}
+	public void setSpoke()
+	{
+		this.spokeToNPC = true;
+	}
+	public ObjectModel searchObject(boolean isName, String string)
+	{
+		for(int i = 0; i < inventory.length; i++) {
+			if(inventory[i] != null) {
+				if(inventory[i].getName() == string && isName) {
+					return inventory[i];
+				}
+				if(inventory[i].getDesc() == string && isName == false) {
+					return inventory[i];
+				}
+			}
+		}
+		return null;
+	}
+	public Boolean getHardy()
+	{
+		return hardyMode;
+	}
+	public void setHardy(boolean hardy)
+	{
+		this.hardyMode = hardy;
+	}
 }

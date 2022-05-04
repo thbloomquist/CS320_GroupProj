@@ -168,7 +168,7 @@ public class ConsoleServlet2 extends HttpServlet {
 				result = "You look north and see ";
 				if (roomNorth.hasMonster()) {
 					result += "Something shuffling around in the room, it makes you feel uneasy.";
-				} else if (!roomNorth.isEmpty()) {
+				} else if (!roomNorth.checkEmpty()) {
 					result += " Something on the floor, you can't discern what it is from here.";
 				}
 				if (roomNorth.isDark()) {
@@ -177,7 +177,7 @@ public class ConsoleServlet2 extends HttpServlet {
 			} else if (action[1].contentEquals("south") && roomSouth.getEnter()) {
 				if (roomSouth.hasMonster()) {
 					result += "Something shuffling around in the room, it makes you feel uneasy.";
-				} else if (!roomSouth.isEmpty()) {
+				} else if (!roomSouth.checkEmpty()) {
 					result += " Something on the floor, you can't discern what it is from here.";
 				}
 				if (roomSouth.isDark()) {
@@ -186,7 +186,7 @@ public class ConsoleServlet2 extends HttpServlet {
 			} else if (action[1].contentEquals("east") && roomEast.getEnter()) {
 				if (roomEast.hasMonster()) {
 					result += "Something shuffling around in the room, it makes you feel uneasy.";
-				} else if (!roomEast.isEmpty()) {
+				} else if (!roomEast.checkEmpty()) {
 					result += " Something on the floor, you can't discern what it is from here.";
 				}
 				if (roomEast.isDark()) {
@@ -195,7 +195,7 @@ public class ConsoleServlet2 extends HttpServlet {
 			} else if (action[1].contentEquals("west") && roomWest.getEnter()) {
 				if (roomWest.hasMonster()) {
 					result += "Something shuffling around in the room, it makes you feel uneasy.";
-				} else if (!roomWest.isEmpty()) {
+				} else if (!roomWest.checkEmpty()) {
 					result += " Something on the floor, you can't discern what it is from here.";
 				}
 				if (roomWest.isDark()) {

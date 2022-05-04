@@ -167,10 +167,10 @@ public class ContinueGameServlet2 extends HttpServlet {
 				 else if (currentR.hasMonster()) {
 					 result+= "something shuffling within the room. It makes you feel uneasy";
 				 }
-				 else if (currentR.isEmpty()) {
+				 else if (currentR.checkEmpty()) {
 					 result += "an empty room";
 				 }
-				 else if (!currentR.isEmpty()) {
+				 else if (!currentR.checkEmpty()) {
 					 result += "something o the floor, though you can't discern what it is from here";
 				 }
 			 }
