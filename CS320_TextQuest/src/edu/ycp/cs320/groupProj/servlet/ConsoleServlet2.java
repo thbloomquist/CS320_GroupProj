@@ -71,6 +71,9 @@ public class ConsoleServlet2 extends HttpServlet {
 		Room roomWest = map.getRoom(pModel.getUp(), pModel.getSide() - 1);
 		Room roomEast = map.getRoom(pModel.getUp(), pModel.getSide() + 1);
 
+		
+		
+		rController.setModel(currentR);
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
 		// TO DO
@@ -90,25 +93,24 @@ public class ConsoleServlet2 extends HttpServlet {
 			action = userInput.split(" ");
 		}
 
-		if (currentR.hasMonster()) {
-			result = "The " + currentR.getMonster().getNameTag().getName()
-					+ " blocks your way. You'll have to kill it to loot this room.";
-		}
-		if(action[0].contentEquals("fight") && currentR.hasMonster()) {
+		if(action[0].equals("fight") && currentR.hasMonster()) {
 			result = "The " + currentR.getMonster().getNameTag().getName() + " manages to claw you before you fell the beast.";
+			pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
+			currentR.deadMonster();
 			if(pModel.isLit()) {
 				result += " During the scuffle your torch went out.";
+				pModel.setLit(false);
 			}
-		} else if(action[0].contentEquals("fight") && !currentR.hasMonster()) {
+		} else if(action[0].equals("fight") && !currentR.hasMonster()) {
 			result = "There's no monster here, unless you're counting yourself.";
 		}
 
 		// move done
-		if (action[0].contentEquals(null)) {
+		if (action[0].equals(null)) {
 			errorMessage = "Please specify an action or click 'Stuck?' for a list of commands.";
 		}
 
-		if (action[0].contentEquals("move")) {
+		if (action[0].equals("move")) {
 			Boolean did = false;
 			if (currentR.isDark() && !pModel.isLit()) {
 				result = "It's too dark to see where to go";
@@ -116,7 +118,7 @@ public class ConsoleServlet2 extends HttpServlet {
 					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 				}
 			} else {
-				if (action[1].contentEquals("north")) {
+				if (action[1].equals("north")) {
 					if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
 						pModel.setUpLoc(pModel.getUp() - 1); // updates player location
 						result = "You moved " + action[1];
@@ -124,7 +126,7 @@ public class ConsoleServlet2 extends HttpServlet {
 					} else {
 						result = "The path is blocked.";// isn't traversable- no change
 					}
-				} else if (action[1].contentEquals("south")) {
+				} else if (action[1].equals("south")) {
 					if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
 						pModel.setUpLoc(pModel.getUp() + 1); // updates player location
 						result = "You moved " + action[1];
@@ -132,7 +134,7 @@ public class ConsoleServlet2 extends HttpServlet {
 					} else {
 						result = "The path is blocked";// isn't traversable- no change
 					}
-				} else if (action[1].contentEquals("east")) {
+				} else if (action[1].equals("east")) {
 					if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
 						pModel.setSideLoc(pModel.getSide() + 1); // updates player location
 						result = "You moved " + action[1];
@@ -140,7 +142,7 @@ public class ConsoleServlet2 extends HttpServlet {
 					} else {
 						result = "The path is blocked"; // isn't traversable- no change
 					}
-				} else if (action[1].contentEquals("west")) {
+				} else if (action[1].equals("west")) {
 					if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
 						pModel.setSideLoc(pModel.getSide() - 1);
 						result = "You moved " + action[1]; // updates player location
@@ -158,13 +160,13 @@ public class ConsoleServlet2 extends HttpServlet {
 		}
 
 		// deals with LOOK command - done I think
-		if (action[0].contentEquals("look")) {
+		if (action[0].equals("look")) {
 			if (currentR.isDark() && !pModel.isLit()) {
 				result = "It's too dark to see anything";
 				if (currentR.hasMonster()) {
 					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 				}
-			} else if (action[1].contentEquals("north") && roomNorth.getEnter()) {
+			} else if (action[1].equals("north") && roomNorth.getEnter()) {
 				result = "You look north and see ";
 				if (roomNorth.hasMonster()) {
 					result += "Something shuffling around in the room, it makes you feel uneasy.";
@@ -174,7 +176,7 @@ public class ConsoleServlet2 extends HttpServlet {
 				if (roomNorth.isDark()) {
 					result = "The room is encased in shadows, you can't see anything.";
 				}
-			} else if (action[1].contentEquals("south") && roomSouth.getEnter()) {
+			} else if (action[1].equals("south") && roomSouth.getEnter()) {
 				if (roomSouth.hasMonster()) {
 					result += "Something shuffling around in the room, it makes you feel uneasy.";
 				} else if (!roomSouth.checkEmpty()) {
@@ -183,7 +185,7 @@ public class ConsoleServlet2 extends HttpServlet {
 				if (roomSouth.isDark()) {
 					result = "The room is encased in shadows, you can't see anything.";
 				}
-			} else if (action[1].contentEquals("east") && roomEast.getEnter()) {
+			} else if (action[1].equals("east") && roomEast.getEnter()) {
 				if (roomEast.hasMonster()) {
 					result += "Something shuffling around in the room, it makes you feel uneasy.";
 				} else if (!roomEast.checkEmpty()) {
@@ -192,7 +194,7 @@ public class ConsoleServlet2 extends HttpServlet {
 				if (roomEast.isDark()) {
 					result = "The room is encased in shadows, you can't see anything.";
 				}
-			} else if (action[1].contentEquals("west") && roomWest.getEnter()) {
+			} else if (action[1].equals("west") && roomWest.getEnter()) {
 				if (roomWest.hasMonster()) {
 					result += "Something shuffling around in the room, it makes you feel uneasy.";
 				} else if (!roomWest.checkEmpty()) {
@@ -201,11 +203,11 @@ public class ConsoleServlet2 extends HttpServlet {
 				if (roomWest.isDark()) {
 					result = "The room is encased in shadows, you can't see anything.";
 				}
-			} else if (action[1].contentEquals("down")) {
+			} else if (action[1].equals("down")) {
 				result = "You look downward and see " + currentR.getFloor();
-			} else if (action[1].contentEquals("up")) {
+			} else if (action[1].equals("up")) {
 				result = "You look upwards and see " + currentR.getCel();
-			} else if (action[1].contentEquals(null)) {
+			} else if (action[1].equals(null)) {
 				result = "Please enter a valid direction to look";
 			} else {
 				result = "You see a wall";
@@ -214,7 +216,7 @@ public class ConsoleServlet2 extends HttpServlet {
 		}
 
 		// deals with GRAB command
-		if (action[0].contentEquals("grab")) {
+		if (action[0].equals("grab")) {
 			if (pModel.getiNum() == 9) {
 				result = "Your inventory is full.";
 			} else if (currentR.isDark() && !pModel.isLit()) {
@@ -237,7 +239,6 @@ public class ConsoleServlet2 extends HttpServlet {
 					} else {
 						result = "Your hand slips grabbing the " + action[1] + " and it falls back onto the floor.";
 					}
-
 				} else {
 					result = "There's no " + action[1] + " around.";
 				}
@@ -246,27 +247,26 @@ public class ConsoleServlet2 extends HttpServlet {
 		}
 
 		// deals with PLACE command
-		if (action[0].contentEquals("place")) {
+		if (action[0].equals("place")) {
 			if (currentR.isDark() && !pModel.isLit()) {
 				result = "It's too dark to see where to place anything";
 				if (currentR.hasMonster()) {
 					result += ", but you hear a strange hissing come from directly in front of you.  You should light your torch fast!";
 				}
 			} else {
-
 				if (pController.contains(action[1])) {
-					result = pController.placeItem(result, currentR);
+					result = pController.placeItem(action[1], currentR);
 					pController.upScore(action[0]);
 				} else {
 					result = "You don't have any " + action[1];
 				}
 			}
 			// check if place is valid + update inventory
-			// probably gonna move all the fat place and grab code into a controller
+			// most code is contained within controller(s)
 		}
 
 		// deals with USE command
-		if (action[0].contentEquals("use")) {
+		if (action[0].equals("use")) {
 			if (currentR.isDark() && !pModel.isLit()) {
 				result = "It's too dark to try to grab anything from your pack";
 				if (currentR.hasMonster()) {
@@ -289,16 +289,16 @@ public class ConsoleServlet2 extends HttpServlet {
 		}
 
 		// deals with INSPECT command
-		if (action[0].contentEquals("inspect")) {
+		if (action[0].equals("inspect")) {
 			if (currentR.isDark() && !pModel.isLit()) {
 				result = "It's too dark to inspect anything";
 				if (currentR.hasMonster()) {
 					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 				}
 			} else {
-				if (action[1].contentEquals(null)) {
+				if (action[1].equals(null)) {
 					result = "Inspect what?";
-				} else if (action[1].contentEquals("room")) {
+				} else if (action[1].equals("room")) {
 					String s = " the room contains: ";
 					for (int i = 0; i < currentR.getInven().length; i++) {
 						if (currentR.getInven()[i] != null) {
@@ -314,7 +314,7 @@ public class ConsoleServlet2 extends HttpServlet {
 						s += "that's all";
 						result = currentR.getTag().getDesc() + s;
 					}
-				} else if (action[1].contentEquals("inventory")) {
+				} else if (action[1].equals("inventory")) {
 					String s = "You rifle through your pack and find: ";
 					int r = 0;
 					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
@@ -334,8 +334,8 @@ public class ConsoleServlet2 extends HttpServlet {
 			}
 		}
 		// deals with LIGHT command - done I think
-		if (action[0].contentEquals("light")) {
-			if (action[1].contentEquals("torch")) {
+		if (action[0].equals("light")) {
+			if (action[1].equals("torch")) {
 				if (pModel.getMatches() > 0) {
 					pModel.setMatches(pModel.getMatches() - 1);
 					pModel.setLit(true);
@@ -355,16 +355,16 @@ public class ConsoleServlet2 extends HttpServlet {
 		}
 
 		// deals with OPEN command - almost done [NEED WIN SCREEN]
-		if (action[0].contentEquals("open")) {
+		if (action[0].equals("open")) {
 			if (currentR.isDark() && !pModel.isLit()) {
 				result = "It's too dark to see anything";
 				if (currentR.hasMonster()) {
 					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 				}
 			} else {
-				if (action[1].contentEquals("chest")) {
+				if (action[1].equals("chest")) {
 					if (currentR.hasChest()) {
-						if (pModel.getHasKey()) {
+						if (pController.contains("key")) {
 							// CREATE WIN SCREEN HERE
 						} else {
 							result = "You don't have a key, how did you plan on opening it - brute strength?";
@@ -379,7 +379,9 @@ public class ConsoleServlet2 extends HttpServlet {
 				}
 			}
 		}
-
+		
+		errorMessage = "Current health == " + pModel.getHP();
+		
 		req.setAttribute("action", req.getParameter("action"));
 
 		// add result objects as attributes
