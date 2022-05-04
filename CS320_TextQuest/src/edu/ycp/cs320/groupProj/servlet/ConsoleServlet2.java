@@ -71,6 +71,9 @@ public class ConsoleServlet2 extends HttpServlet {
 		Room roomWest = map.getRoom(pModel.getUp(), pModel.getSide() - 1);
 		Room roomEast = map.getRoom(pModel.getUp(), pModel.getSide() + 1);
 
+		
+		
+		rController.setModel(currentR);
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
 		// TO DO
@@ -259,7 +262,7 @@ public class ConsoleServlet2 extends HttpServlet {
 				}
 			}
 			// check if place is valid + update inventory
-			// probably gonna move all the fat place and grab code into a controller
+			// most code is contained within controller(s)
 		}
 
 		// deals with USE command
