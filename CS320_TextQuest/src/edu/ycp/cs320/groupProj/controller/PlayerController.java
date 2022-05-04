@@ -24,7 +24,7 @@ public class PlayerController {
 		Boolean t  = false;
 		for(int i = 0; i < model.getInvenFULL().length; i++) {
 			if(model.getInvenFULL()[i] != null) {
-				if(model.getInvenFULL()[i].getTag().getName().equals(item)) {
+				if(model.getInvenFULL()[i].getTag().getName().toLowerCase().equals(item.toLowerCase())) {
 					t = true;
 				}
 			}
@@ -78,7 +78,7 @@ public class PlayerController {
 		for (int l = 0; l < model.getInvenFULL().length; l++) {
 			if (model.getInventory(l) != null) {
 				if (model.getInventory(l).getTag().getName().toLowerCase()
-						.equals(secondW) && only1) {
+						.equals(secondW.toLowerCase()) && only1) {
 					tempr = model.getInventory(l);
 					only1 = false;
 					model.getInvenFULL()[l] = null;

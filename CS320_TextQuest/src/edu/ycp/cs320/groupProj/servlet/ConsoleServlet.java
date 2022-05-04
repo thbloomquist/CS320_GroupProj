@@ -38,16 +38,14 @@ public class ConsoleServlet extends HttpServlet {
 
 		System.out.println("Console: doGet");
 		HttpSession session = req.getSession(false);
-		
+
 		System.out.println(session);
-		
+
 		Player player = (Player) session.getAttribute("player");
-		
+
 		DBController controller = new DBController();
 		controller.InsertNewGame(player.getPlayerId());
 		System.out.println("New game created");
-		
-		
 
 		// call JSP to generate empty form
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
@@ -68,8 +66,8 @@ public class ConsoleServlet extends HttpServlet {
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
 		// TO DO
-		
-		//prints map - for testing purposes
+
+		// prints map - for testing purposes
 //		 for (int i = 0; i < 10; i++) { 
 //			 for (int j = 0; j < 10; j++) {
 //			 if(map.getRoom(j, i).getEnter()) { 
@@ -78,7 +76,7 @@ public class ConsoleServlet extends HttpServlet {
 //					 System.out.print(" [X] "); 
 //			 } System.out.println(); 
 //		 }
-		 
+
 		//
 		String result = "";
 		try {
@@ -87,7 +85,7 @@ public class ConsoleServlet extends HttpServlet {
 			// firstW & secondW have to be reset b/c if they enter a one word command it'll
 			// re-run the previously entered command
 			String action = getStringFromParameter(req.getParameter("action")).toLowerCase();
-			
+
 //			//////// Move for DB ////////
 //			DBController DBController = new DBController(); // Database controller
 //			HttpSession session = req.getSession(false); // get current session
@@ -97,7 +95,7 @@ public class ConsoleServlet extends HttpServlet {
 //			DBController.InsertNewMove(player.getPlayerId(), 1, action);
 //			System.out.println("Player entered : " + action);
 //			//////// Move for DB ////////
-			
+
 			if (action.indexOf(" ") != -1) {
 				int firstS = action.indexOf(" ");
 				firstW = action.substring(0, firstS).toLowerCase();
@@ -155,8 +153,7 @@ public class ConsoleServlet extends HttpServlet {
 					Boolean only1 = true;
 					for (int l = 0; l < pModel.getInvenFULL().length; l++) {
 						if (pModel.getInventory(l) != null) {
-							if (pModel.getInventory(l).getTag().getName().toLowerCase().equals(action)
-									&& only1) {
+							if (pModel.getInventory(l).getTag().getName().toLowerCase().equals(action) && only1) {
 								tempr = pModel.getInventory(l);
 								only1 = false;
 								pModel.getInvenFULL()[l] = null;
@@ -191,8 +188,7 @@ public class ConsoleServlet extends HttpServlet {
 					ObjectModel temp = null;
 					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
 						if (pModel.getInvenFULL()[i] != null) {
-							if (pModel.getInventory(i).getTag().getName().toLowerCase().equals(action)
-									&& j1) {
+							if (pModel.getInventory(i).getTag().getName().toLowerCase().equals(action) && j1) {
 								temp = pModel.getInventory(i);
 								pModel.removeItem(i);
 								j1 = false;
@@ -202,15 +198,14 @@ public class ConsoleServlet extends HttpServlet {
 					pModel.setHP(pModel.getHP() + temp.getThing());
 					result = "You used the " + temp.getTag().getName();
 					errorMessage = "Current health == " + pModel.getHP();
-					//UPDATE DB - HEALTH
+					// UPDATE DB - HEALTH
 				} else {
 					result = "You don't have a " + action;
 				}
 
 				model.indicateUse(false);
 			} else if (model.getMovement()) {
-				if (action.compareTo("north") == 0 || action.compareTo("west") == 0
-						|| action.compareTo("south") == 0
+				if (action.compareTo("north") == 0 || action.compareTo("west") == 0 || action.compareTo("south") == 0
 						|| action.compareTo("east") == 0) {
 
 					if (action.compareTo("north") == 0) {
@@ -275,7 +270,7 @@ public class ConsoleServlet extends HttpServlet {
 							result = "You grabbed the " + temp[i].getTag().getName();
 							temp[i] = null;
 							only1 = false;
-							//UPDATE DB HERE - ADD ITEM TO INVENTORY
+							// UPDATE DB HERE - ADD ITEM TO INVENTORY
 						}
 					}
 					for (int i = 0; i < currentR.getInven().length; i++) {
@@ -307,15 +302,14 @@ public class ConsoleServlet extends HttpServlet {
 							+ " bites you, but you manage to beat it. Your torch goes out during the scuffle.";
 					pModel.setHP(pModel.getHP() - currentR.getMonster().getDMG());
 					currentR.deadMonster();
-					errorMessage = "Current health == " + pModel.getHP();
 					pModel.setLit(false);
-					//UPDATE DB - HEALTH
+					// UPDATE DB - HEALTH
 				} else {
 					result = "You fight yourself, you manage to both lose and win.";
 					pModel.setHP(pModel.getHP() - 25);
 					errorMessage = "Current health == " + pModel.getHP();
 					pModel.setLit(false);
-					//UPDATE DB - HEALTH
+					// UPDATE DB - HEALTH
 				}
 
 				// reset all models & controllers if player health reaches 0.
@@ -370,7 +364,7 @@ public class ConsoleServlet extends HttpServlet {
 					if (pController.contains(secondW)) {
 						result = pController.useItem(secondW, currentR);
 						errorMessage = "Current health == " + pModel.getHP();
-						//UPDATE DB - HEALTH
+						// UPDATE DB - HEALTH
 					} else {
 						result = "You don't have any " + secondW;
 					}
@@ -388,20 +382,23 @@ public class ConsoleServlet extends HttpServlet {
 					} else {
 						if (secondW.toLowerCase().compareTo("key") == 0) {
 							System.out.println("Entered key stream.");
-							if(rController.contains(secondW)) {
-								System.out.println("Room has key.");
+							if (rController.contains(secondW)) {
+								System.out.println("Room contains key.");
 								Boolean t = pController.grabItem(secondW, currentR);
-								if(t) {
+								if (t) {
+									System.out.println("Player grabbed key.");
 									result = "You grabbed the key, nice job!";
-									System.out.println("PLAYER HAS KEY!");
 								}
 								int NEWINUM = pController.sortInven(pModel.getInvenFULL());
 								pModel.setiNum(NEWINUM);
 								currentR.checkEmpty();
 							}
+							if (pController.contains("key")) {
+								System.out.println("Player contains key.");
+							}
 						} else if (rController.contains(secondW.toLowerCase())) {
 							Boolean t = pController.grabItem(secondW, currentR);
-							if(t) {
+							if (t) {
 								result = "You grab the " + secondW;
 							}
 							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
@@ -589,7 +586,7 @@ public class ConsoleServlet extends HttpServlet {
 					result = "That's not a verb I recognize, click 'Stuck?' for a list of the commands.";
 				}
 			} // connected to firstW!= null dont touch
-
+			errorMessage = "Current health == " + pModel.getHP();
 		} catch (
 
 		NumberFormatException e) {
