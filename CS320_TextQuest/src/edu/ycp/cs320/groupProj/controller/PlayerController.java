@@ -85,7 +85,7 @@ public class PlayerController {
 		Boolean only1 = true;
 		for (int l = 0; l < model.getInvenFULL().length; l++) {
 			if (model.getInventory(l) != null) {
-				if (model.getInventory(l).getTag().getName().toLowerCase()
+				if (model.getInventory(l).getName().toLowerCase()
 						.equals(secondW) && only1) {
 					tempr = model.getInventory(l);
 					only1 = false;

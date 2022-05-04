@@ -65,10 +65,6 @@ public class ConsoleServlet extends HttpServlet {
 		controller.setModel(model);
 		oController.setModel(oModel);
 
-		// TO DO
-		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
-		// TO DO
-		
 		//prints map - for testing purposes
 //		 for (int i = 0; i < 10; i++) { 
 //			 for (int j = 0; j < 10; j++) {
@@ -351,7 +347,7 @@ public class ConsoleServlet extends HttpServlet {
 						// checks to see if the tile directly below is traversable
 						if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() + 1); // updates player location
-							result = "You moved " + secondW;
+							result = "You moved " + secondW ;
 						} else {
 							result = "The path is blocked";// isn't traversable- no change
 						}
