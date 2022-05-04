@@ -67,7 +67,7 @@ public class ConsoleServlet2 extends HttpServlet {
 		String result = "";
 		Room currentR = map.getRoom(pModel.getUp(), pModel.getSide());
 		Room roomNorth = map.getRoom(pModel.getUp() - 1, pModel.getSide());
-		Room roomSouth = map.getRoom(pModel.getUp() - 1, pModel.getSide());
+		Room roomSouth = map.getRoom(pModel.getUp() + 1, pModel.getSide());
 		Room roomWest = map.getRoom(pModel.getUp(), pModel.getSide() - 1);
 		Room roomEast = map.getRoom(pModel.getUp(), pModel.getSide() + 1);
 
@@ -178,6 +178,8 @@ public class ConsoleServlet2 extends HttpServlet {
 				}
 				if (roomNorth.isDark()) {
 					result = " a room encased in shadows, you can't see anything.";
+				} else if(roomNorth.isEmpty()) {
+					result = "You see an empty room, it's eerily similar to the one you're standing in now.";
 				}
 			} else if (action[1].equals("south") && roomSouth.getEnter()) {
 				if (roomSouth.hasMonster()) {
@@ -187,6 +189,8 @@ public class ConsoleServlet2 extends HttpServlet {
 				}
 				if (roomSouth.isDark()) {
 					result = " a room encased in shadows, you can't see anything.";
+				} else if(roomSouth.isEmpty()) {
+					result = "You see an empty room, it's eerily similar to the one you're standing in now.";
 				}
 			} else if (action[1].equals("east") && roomEast.getEnter()) {
 				if (roomEast.hasMonster()) {
@@ -196,6 +200,8 @@ public class ConsoleServlet2 extends HttpServlet {
 				}
 				if (roomEast.isDark()) {
 					result = " a room encased in shadows, you can't see anything.";
+				} else if(roomEast.isEmpty()) {
+					result = "You see an empty room, it's eerily similar to the one you're standing in now.";
 				}
 			} else if (action[1].equals("west") && roomWest.getEnter()) {
 				if (roomWest.hasMonster()) {
@@ -205,6 +211,8 @@ public class ConsoleServlet2 extends HttpServlet {
 				}
 				if (roomWest.isDark()) {
 					result = " a room encased in shadows, you can't see anything.";
+				} else if(roomWest.isEmpty()) {
+					result = "You see an empty room, it's eerily similar to the one you're standing in now.";
 				}
 			} else if (action[1].equals("down")) {
 				result = "You look downward and see " + currentR.getFloor();
