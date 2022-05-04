@@ -74,7 +74,7 @@ public class PlayerModelTest {
 		// the TestRoom contains no monsters or items
 		// if the models.GetRoom has no monsters or items, it is LIKELY the right room
 		assertFalse(model.getRoom().hasMonster()); 
-		assertTrue(model.getRoom().isEmpty());
+		assertTrue(model.getRoom().checkEmpty());
 	}
 	@Test
 	public void testAddItem() {

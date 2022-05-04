@@ -44,8 +44,12 @@ public class ObjectModel {
 	public ObjectModel getObject() {
 		return this;
 	}
-	
-	
-	
-	
+	public String getName()
+	{
+		return this.getTag().getName();
+	}
+	public String getDesc()
+	{
+		return this.getTag().getName();
+	}
 }

@@ -530,7 +530,7 @@ public class ContinueGameServlet extends HttpServlet {
 								} else {
 									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if (!roomT.isEmpty()) {
+									} else if (!roomT.checkEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -548,7 +548,7 @@ public class ContinueGameServlet extends HttpServlet {
 								} else {
 									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if (!roomT.isEmpty()) {
+									} else if (!roomT.checkEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -566,7 +566,7 @@ public class ContinueGameServlet extends HttpServlet {
 								} else {
 									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if (!roomT.isEmpty()) {
+									} else if (!roomT.checkEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
@@ -584,7 +584,7 @@ public class ContinueGameServlet extends HttpServlet {
 								} else {
 									if (roomT.hasMonster()) {
 										result += " something shuffling about within the room, it makes you feel uneasy";
-									} else if (!roomT.isEmpty()) {
+									} else if (!roomT.checkEmpty()) {
 										result += " something on the floor, though you can't discern what it is from here.";
 									} else {
 										result += " an exact copy of the room you're currently in, perhaps the dungeon is getting to your mind.";
