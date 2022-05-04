@@ -147,20 +147,20 @@ public class Room {
 		pModel.incrementScore(10);
 		this.discovered = true;
 	}
-	//Returns an object given a specific name or description. 
+	//Checks if the room contains a specific item
 	//Set isName to true to search by name, and isName to false to search by description.
-	public ObjectModel searchObject(boolean isName, String string)
+	public Boolean searchObject(boolean isName, String string)
 	{
 		for(int i = 0; i < contents.length; i++) {
 			if(contents[i] != null) {
 				if(contents[i].getName() == string && isName) {
-					return contents[i];
+					return true;
 				}
 				if(contents[i].getDesc() == string && isName == false) {
-					return contents[i];
+					return true;
 				}
 			}
 		}
-		return null;
+		return false;
 	}
 }

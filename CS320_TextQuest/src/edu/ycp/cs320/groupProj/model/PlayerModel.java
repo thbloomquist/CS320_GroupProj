@@ -18,6 +18,7 @@ public class PlayerModel {
 	private Boolean hasKey;
 	private Boolean hardyMode; //TODO implement Hardy mode, currently just here for score multiplier
 	private Boolean spokeToNPC; //Set to false at the start of the game, sets to true when player talks to the NPC
+	//The NPC will have different dialogue based on whether or not the player has talked to them before
 	
 	public PlayerModel() {
 		this.reset();
@@ -141,19 +142,21 @@ public class PlayerModel {
 	{
 		this.spokeToNPC = true;
 	}
-	public ObjectModel searchObject(boolean isName, String string)
+	//Checks if a specific item is in the player's inventory
+	//Set isName to true to search by name, and isName to false to search by description.
+	public Boolean searchObject(boolean isName, String string)
 	{
 		for(int i = 0; i < inventory.length; i++) {
 			if(inventory[i] != null) {
 				if(inventory[i].getName() == string && isName) {
-					return inventory[i];
+					return true;
 				}
 				if(inventory[i].getDesc() == string && isName == false) {
-					return inventory[i];
+					return true;
 				}
 			}
 		}
-		return null;
+		return false;
 	}
 	public Boolean getHardy()
 	{

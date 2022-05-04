@@ -417,15 +417,6 @@ public class ConsoleServlet extends HttpServlet {
 							Boolean t = pController.grabItem(secondW, currentR);
 							if(t) {
 								result = "You grab the " + secondW;
-								//Check to see if the item is a gem
-								if(secondW.toLowerCase().compareTo("black gem") == 0 || secondW.toLowerCase().compareTo("green gem") == 0
-										|| secondW.toLowerCase().compareTo("blue gem") == 0 || secondW.toLowerCase().compareTo("yellow gem") == 0
-										|| secondW.toLowerCase().compareTo("red gem") == 0)
-								{
-									//If it is a gem, the player gets points based on the "Thing" value and the thing value is set to 0
-									pModel.incrementScore(currentR.searchObject(true, secondW).getThing());
-									currentR.searchObject(true, secondW).setThing(0);
-								}
 							}
 							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
 							pModel.setiNum(NEWINUM);
@@ -606,9 +597,9 @@ public class ConsoleServlet extends HttpServlet {
 							if (currentR.hasChest()) {
 								pModel.incrementScore(1000);
 								//Checks if the player collected every Gem, gives them bonus points if they do.
-								if(pModel.searchObject(true, "Black Gem") != null && pModel.searchObject(true, "Blue Gem") != null
-										&& pModel.searchObject(true, "Red Gem") != null && pModel.searchObject(true, "Green Gem") != null
-										&& pModel.searchObject(true, "Yellow Gem") != null) 
+								if(pModel.searchObject(true, "Black Gem") == true && pModel.searchObject(true, "Blue Gem") == true
+										&& pModel.searchObject(true, "Red Gem") == true && pModel.searchObject(true, "Green Gem") == true
+										&& pModel.searchObject(true, "Yellow Gem") == true) 
 								{
 									pModel.incrementScore(1000);
 								}
