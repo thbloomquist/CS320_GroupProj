@@ -92,7 +92,10 @@ public class ConsoleServlet2 extends HttpServlet {
 		for (int i = 0; i < 2; i++) {
 			action = userInput.split(" ");
 		}
-
+		
+		action[0].toLowerCase();
+		action[1].toLowerCase();
+		
 		if(action[0].equals("fight") && currentR.hasMonster()) {
 			result = "The " + currentR.getMonster().getNameTag().getName() + " manages to claw you before you fell the beast.";
 			pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
@@ -167,41 +170,41 @@ public class ConsoleServlet2 extends HttpServlet {
 					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 				}
 			} else if (action[1].equals("north") && roomNorth.getEnter()) {
-				result = "You look north and see ";
+				result = "You look north and see";
 				if (roomNorth.hasMonster()) {
-					result += "Something shuffling around in the room, it makes you feel uneasy.";
+					result += " something shuffling around in the room, it makes you feel uneasy.";
 				} else if (!roomNorth.isEmpty()) {
-					result += " Something on the floor, you can't discern what it is from here.";
+					result += " something on the floor, you can't discern what it is from here.";
 				}
 				if (roomNorth.isDark()) {
-					result = "The room is encased in shadows, you can't see anything.";
+					result = " a room encased in shadows, you can't see anything.";
 				}
 			} else if (action[1].equals("south") && roomSouth.getEnter()) {
 				if (roomSouth.hasMonster()) {
-					result += "Something shuffling around in the room, it makes you feel uneasy.";
+					result += " something shuffling around in the room, it makes you feel uneasy.";
 				} else if (!roomSouth.isEmpty()) {
-					result += " Something on the floor, you can't discern what it is from here.";
+					result += " something on the floor, you can't discern what it is from here.";
 				}
 				if (roomSouth.isDark()) {
-					result = "The room is encased in shadows, you can't see anything.";
+					result = " a room encased in shadows, you can't see anything.";
 				}
 			} else if (action[1].equals("east") && roomEast.getEnter()) {
 				if (roomEast.hasMonster()) {
-					result += "Something shuffling around in the room, it makes you feel uneasy.";
+					result += " something shuffling around in the room, it makes you feel uneasy.";
 				} else if (!roomEast.isEmpty()) {
-					result += " Something on the floor, you can't discern what it is from here.";
+					result += " something on the floor, you can't discern what it is from here.";
 				}
 				if (roomEast.isDark()) {
-					result = "The room is encased in shadows, you can't see anything.";
+					result = " a room encased in shadows, you can't see anything.";
 				}
 			} else if (action[1].equals("west") && roomWest.getEnter()) {
 				if (roomWest.hasMonster()) {
-					result += "Something shuffling around in the room, it makes you feel uneasy.";
+					result += " something shuffling around in the room, it makes you feel uneasy.";
 				} else if (!roomWest.isEmpty()) {
-					result += " Something on the floor, you can't discern what it is from here.";
+					result += " something on the floor, you can't discern what it is from here.";
 				}
 				if (roomWest.isDark()) {
-					result = "The room is encased in shadows, you can't see anything.";
+					result = " a room encased in shadows, you can't see anything.";
 				}
 			} else if (action[1].equals("down")) {
 				result = "You look downward and see " + currentR.getFloor();
