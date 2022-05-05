@@ -109,6 +109,8 @@ public class ConsoleServlet2 extends HttpServlet {
 			action = userInput.split(" ");
 		}
 		
+		
+		//checks if theres only one word to remove null pointer exception errors
 		if (action.length == 0) {
 			result = "Please enter a command! Don't know what to enter? Press the \"stuck\" button for hints!";
 		} else if (action.length == 1) {
