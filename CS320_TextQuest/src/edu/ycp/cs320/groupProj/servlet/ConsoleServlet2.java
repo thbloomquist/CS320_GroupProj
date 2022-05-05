@@ -51,6 +51,7 @@ public class ConsoleServlet2 extends HttpServlet {
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -72,7 +73,6 @@ public class ConsoleServlet2 extends HttpServlet {
 		Room roomEast = map.getRoom(pModel.getUp(), pModel.getSide() + 1);
 
 		
-		
 		rController.setModel(currentR);
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
@@ -89,8 +89,22 @@ public class ConsoleServlet2 extends HttpServlet {
 //		 }
 
 		// splits input into a two String array
+		
+		//////// Move for DB ////////
+		DBController DBController = new DBController(); // Database controller
+		HttpSession session = req.getSession(false); // get current session
+		session.setAttribute("playerModel", pModel);
+		Player player = (Player) session.getAttribute("player"); // get player from session
+		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
+		DBController.InsertNewMove(player.getPlayerId(), 1, action.toString()); //added suppress warning
+		System.out.println("Player entered : " + action);
+		//////// Move for DB ////////
+		
 		for (int i = 0; i < 2; i++) {
 			action = userInput.split(" ");
+		}
+		if (action.length < 2) {
+			action[1] = "";
 		}
 		
 		action[0].toLowerCase();
@@ -394,5 +408,28 @@ public class ConsoleServlet2 extends HttpServlet {
 
 		// Forward to view to render the result HTML document
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
+	
 	}
+	public void UpdatePlayerModel(int health, int xLoc, int yLoc, int score, int matches, HttpServletRequest req) {
+		DBController DBController = new DBController(); // Database controller
+		HttpSession session = req.getSession(false); // get current session
+		session.setAttribute("playerModel", pModel);
+		Player player = (Player) session.getAttribute("player"); // get player from session
+		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
+		DBController.InsertNewPlayerModel(player.getPlayerId(), health, xLoc, yLoc, score, matches); //added suppress warning
+		System.out.println("PlayerModel updated with : health = " + health + " x = " + xLoc + " y = " + yLoc + " score = " + score + " matches = " + matches);
+	}
+//	private void UpdatePlayerInven(String insert, HttpServletRequest req) {
+//		DBController DBController = new DBController(); // Database controller
+//		HttpSession session = req.getSession(false); // get current session
+//		session.setAttribute("playerModel", pModel);
+//		Player player = (Player) session.getAttribute("player"); // get player from session
+//		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
+//		DBController.UpdatePlayerInven(player.getPlayerId(), insert); //added suppress warning
+//		System.out.println("PlayerInventory updated with: " + insert);
+//	}
+	private void UpdateRoomInven(int xLoc, int yLoc, String thing) {
+		//update ROOMINVEN with XLOC, YLOC, and String
+	}
+
 }

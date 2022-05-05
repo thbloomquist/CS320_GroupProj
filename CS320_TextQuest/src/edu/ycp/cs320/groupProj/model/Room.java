@@ -8,7 +8,7 @@ public class Room {
 	private Monster m;
 	private Boolean empty;
 	private Boolean hasChest;
-	private Boolean isDark = false; //set to false for testing
+	private Boolean isDark = true; //set to false for testing
 	private String ceiling = null;
 	private String floor = null;
 	

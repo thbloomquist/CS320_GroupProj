@@ -82,13 +82,13 @@ public class DBController {
 		return playerModel;	
 	}
 	
-	public Boolean InsertNewPlayerModel(int playerId, int health, int x, int y, int score) {
+	public Boolean InsertNewPlayerModel(int playerId, int health, int x, int y, int score, int matches) {
 		// Create the default IDatabase instance
 		DatabaseProvider.setInstance(new DerbyDatabase());
 
 		// get the DB instance and execute transaction
 		IDatabase db = DatabaseProvider.getInstance();
-		Boolean playerModel =  db.InsertNewPlayerModel(playerId, health, x, y, score);
+		Boolean playerModel =  db.InsertNewPlayerModel(playerId, health, x, y, score, matches);
 		
 		return playerModel;	
 	}
