@@ -60,7 +60,12 @@ public class Monster {
 		this.n = new NameTag("Purple People Eater", "It's big, purple, and scary!");
 		this.alive = true;
 	}
-	
-	
-	
+	public String getName()
+	{
+		return this.getNameTag().getName();
+	}
+	public String getDesc()
+	{
+		return this.getNameTag().getName();
+	}
 }

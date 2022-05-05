@@ -19,6 +19,14 @@ public class PlayerController {
 	}
 	public void grab(ObjectModel thing) {
 		model.addInventory(thing);
+		//Checks if the item is one of the gems
+		if(thing.getName() == "Black Gem" || thing.getName() == "Green Gem" || thing.getName() == "Yellow Gem" 
+				|| thing.getName() == "Red Gem" || thing.getName() == "Blue Gem" )
+		{
+			//player gets score equal to the gem's "thing" value, and then that value is set to 0
+			model.incrementScore(thing.getThing());
+			thing.setThing(0);
+		}
 	}
 	public Boolean contains(String item) {
 		Boolean t  = false;
@@ -77,8 +85,8 @@ public class PlayerController {
 		Boolean only1 = true;
 		for (int l = 0; l < model.getInvenFULL().length; l++) {
 			if (model.getInventory(l) != null) {
-				if (model.getInventory(l).getTag().getName().toLowerCase()
-						.equals(secondW.toLowerCase()) && only1) {
+				if (model.getInventory(l).getName().toLowerCase()
+						.equals(secondW) && only1) {
 					tempr = model.getInventory(l);
 					only1 = false;
 					model.getInvenFULL()[l] = null;
