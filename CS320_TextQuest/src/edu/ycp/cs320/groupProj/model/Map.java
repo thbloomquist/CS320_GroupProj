@@ -50,18 +50,18 @@ public class Map {
 		// [2][5] is a wall
 		// [2][6] is a wall
 		// [2][7] is a wall
-		this.map[2][8] = new Room(true, new NameTag("Hallway", "a dark steel hallway covered in "), new ObjectModel[10], false, false);
+		this.map[2][8] = new Room(true, new NameTag("Hallway", "a dark steel hallway covered in bloody scratch marks. There's two doors leading north and south."), new ObjectModel[10], false, false);
 		// [2][9] is outside of dungeon
 
 		// [3][0] is outside of dungeon
-		this.map[3][1] = new Room(true, new NameTag("Open", "a fancy room"), new ObjectModel[10], false, false);
-		this.map[3][2] = new Room(true, new NameTag("Open", "a fancy room"), new ObjectModel[10], false, false);
-		this.map[3][3] = new Room(true, new NameTag("Hallway", "a steel room"), new ObjectModel[10], false, false);
-		this.map[3][4] = new Room(true, new NameTag("Open", "a steel room"), new ObjectModel[10], false, false);
-		this.map[3][5] = new Room(true, new NameTag("Open", "a steel room"), new ObjectModel[10], false, false);
-		this.map[3][6] = new Room(true, new NameTag("Hallway", "a steel room"), new ObjectModel[10], false, false);
-		this.map[3][7] = new Room(true, new NameTag("Hallway", "a steel room"), new ObjectModel[10], false, false);
-		this.map[3][8] = new Room(true, new NameTag("Turn in Hallway", "a steel room"), new ObjectModel[10], false, false);
+		this.map[3][1] = new Room(true, new NameTag("Open", "a sparklingly clean room with marble flooring and polished wooden walls. There's three doors leading north, south, and east."), new ObjectModel[10], false, false);
+		this.map[3][2] = new Room(true, new NameTag("Open", "a glamourous room with marble tile flooring and polished wooden walls with doors leading in every direction. The floor actually seems to be at a slight incline to the south."), new ObjectModel[10], false, false);
+		this.map[3][3] = new Room(true, new NameTag("Hallway", "a grungy steel hallway with a couple doors leading east and west. The rest of the room is comparatively dirty to the eastern door."), new ObjectModel[10], false, false);
+		this.map[3][4] = new Room(true, new NameTag("Open", "an open steel room with doors leading south, east, and west. The walls are a bit rusty."), new ObjectModel[10], false, false);
+		this.map[3][5] = new Room(true, new NameTag("Open", "a gloomy steel corridor with doors leading south, east, and west."), new ObjectModel[10], false, false);
+		this.map[3][6] = new Room(true, new NameTag("Hallway", "a dimly lit steel hall leading east and west, it's not so dark that you need a torch but having a lit torch would make you feel better."), new ObjectModel[10], false, false);
+		this.map[3][7] = new Room(true, new NameTag("Hallway", "a dimly lit steel hall leading east and west, there's a slight odor in the air."), new ObjectModel[10], false, false);
+		this.map[3][8] = new Room(true, new NameTag("Turn in Hallway", "a dimly lit steel hall that smells awful. The door out is to the west and the hallway continues north."), new ObjectModel[10], false, false);
 		// [3][9] is outside of dungeon
 
 		this.map[4][1] = new Room(true, new NameTag("Open", "a fancy room"), new ObjectModel[10], false, false);
@@ -137,6 +137,10 @@ public class Map {
 
 		// chest :_)
 		this.map[1][6].setChest(true);
+		
+		//FOR TESTING CHEST AND KEY, COMMENT OUT WHEN FINISHED
+		//this.map[8][3].setChest(true);
+		//this.map[8][3].createKey();
 		
 		//Gems
 		//When you grab a gem for the first time you get 500 points and the number updates so that you can't get more

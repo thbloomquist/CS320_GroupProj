@@ -163,4 +163,18 @@ public class Room {
 		}
 		return false;
 	}
+	public int getObjectIndex(boolean isName, String string)
+	{
+		for(int i = 0; i < contents.length; i++) {
+			if(contents[i] != null) {
+				if(contents[i].getName() == string && isName) {
+					return i;
+				}
+				if(contents[i].getDesc() == string && isName == false) {
+					return i;
+				}
+			}
+		}
+		return 999;
+	}
 }
