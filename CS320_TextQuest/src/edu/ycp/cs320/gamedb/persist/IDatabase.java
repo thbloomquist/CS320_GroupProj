@@ -13,8 +13,10 @@ public interface IDatabase {
 	public Boolean InsertNewPlayer(String username, String password);
 	public Boolean InsertNewGame(int playerId);
 	public Player getPlayerByUsernameAndPassword(String username, String password);
-	Boolean InsertNewMove(int playerId, int gameId, String move);
+	public Boolean InsertNewMove(int playerId, int gameId, String move);
 	public Game LoadGame(int playerId, int i);
 	public PlayerModel LoadPlayerModel(int playerId);
-	public Boolean InsertNewPlayerModel(int playerId, int health, int x, int y, int score);
+	public Boolean InsertNewPlayerModel(int playerId, int health, int x, int y, int score, int matches);
+	public Boolean UpdatePlayerInven();
+	public Boolean UpdateRoomInven(); //idk what im doing here
 }

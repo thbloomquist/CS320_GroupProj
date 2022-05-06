@@ -17,7 +17,6 @@ public class PlayerModel {
 	private Boolean isLit;
 	private Boolean hasKey;
 	private Boolean hardyMode; //TODO implement Hardy mode, currently just here for score multiplier
-	private Boolean spokeToNPC; //Set to false at the start of the game, sets to true when player talks to the NPC
 	//The NPC will have different dialogue based on whether or not the player has talked to them before
 	
 	public PlayerModel() {
@@ -33,7 +32,6 @@ public class PlayerModel {
 		matches = 10;
 		isLit = false;
 		hasKey = false;
-		spokeToNPC = false;
 		hardyMode = false;
 		createTorch();
 		// fully resets values of current Player Model to their intended original states.
@@ -133,14 +131,6 @@ public class PlayerModel {
 	}
 	public void setHasKey(Boolean hasKey) {
 		this.hasKey = hasKey;
-	}
-	public Boolean getSpoke()
-	{
-		return spokeToNPC;
-	}
-	public void setSpoke()
-	{
-		this.spokeToNPC = true;
 	}
 	//Checks if a specific item is in the player's inventory
 	//Set isName to true to search by name, and isName to false to search by description.

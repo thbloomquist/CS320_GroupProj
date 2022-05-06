@@ -112,8 +112,11 @@ public class DerbyDatabase implements IDatabase { //FIX
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
 				PreparedStatement stmt4 = null;
+				PreparedStatement stmt5 = null;
+				PreparedStatement stmt6 = null;
 				
 				try {
+					//PLAYER TABLE
 					stmt1 = conn.prepareStatement(
 						"create table players (" +
 						"	playerId integer primary key " +
@@ -123,7 +126,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 						")"
 					);	
 					stmt1.executeUpdate();
-					// DO I NEED A PRIMARY KEY?
+					//GAME TABLE
 					stmt2 = conn.prepareStatement(
 							"create table game (" +
 							"	gameId integer, " +
@@ -134,6 +137,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 							")"
 					);
 					stmt2.executeUpdate();
+					//MOVES TABLE
 					stmt3 = conn.prepareStatement(
 							"create table moves (" +
 									"	playerId integer constraint playerId1 references players,  " +
@@ -142,24 +146,42 @@ public class DerbyDatabase implements IDatabase { //FIX
 									")"
 									);
 					stmt3.executeUpdate();
-						
+					//PLAYERMODEL TABLE	
 					stmt4 = conn.prepareStatement(
 							"create table playermodel (" +
 									"	playerId integer constraint playerId2 references players,  " +
 									"	health integer, " +									
 									"	xloc integer,"
 									+ "yloc integer,"
-									+ "score integer"+
+									+ "score integer"
+									+ "matches integer"+
 									")"
 									);
 					stmt4.executeUpdate();
-					
-					
+					//PLAYERINVEN TABLE
+					stmt5 = conn.prepareStatement(
+							"create table playerinven (" +
+									"	playerId integer constraint playerId3 references players,  " +
+									"	inven varchar(70) " +
+									")"
+									);
+					stmt5.executeUpdate();
+					//ROOMINVEN TABLE
+					stmt6 = conn.prepareStatement(
+							"create table playerinven (" +
+									"	playerId integer constraint playerId3 references players,  " +
+									"	inven varchar(70) " +
+									")"
+									);
+					stmt6.executeUpdate(); 
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
 					DBUtil.closeQuietly(stmt2);
 					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(stmt4);
+					DBUtil.closeQuietly(stmt5);
+					DBUtil.closeQuietly(stmt6);
 				}
 			}
 		});
@@ -517,7 +539,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 
 	@Override
-	public Boolean InsertNewPlayerModel(final int playerId, final int health, final int x, final int y, final int score) {
+	public Boolean InsertNewPlayerModel(final int playerId, final int health, final int x, final int y, final int score, final int matches) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
@@ -526,13 +548,14 @@ public class DerbyDatabase implements IDatabase { //FIX
 			
 			try {
 				// retreive all attributes from both Books and Authors tables
-				insertPlayerModel = conn.prepareStatement("insert into playermodel (playerId, health, xloc, yloc, score) values (?,?,?,?,?)");
+				insertPlayerModel = conn.prepareStatement("insert into playermodel (playerId, health, xloc, yloc, score, matches) values (?,?,?,?,?,?)");
 				
 				insertPlayerModel.setInt(1, playerId);
 				insertPlayerModel.setInt(2, health);
 				insertPlayerModel.setInt(3, x);
 				insertPlayerModel.setInt(4, y);
 				insertPlayerModel.setInt(5, score);
+				insertPlayerModel.setInt(6, matches);
 
 				resultSet = insertPlayerModel.executeUpdate();
 				
@@ -555,6 +578,18 @@ public class DerbyDatabase implements IDatabase { //FIX
 			}
 			}
 		});
+	}
+
+	@Override
+	public Boolean UpdatePlayerInven() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean UpdateRoomInven() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

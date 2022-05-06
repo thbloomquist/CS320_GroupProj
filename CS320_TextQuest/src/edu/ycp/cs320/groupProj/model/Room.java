@@ -7,7 +7,7 @@ public class Room {
 	private Boolean hasMonster;
 	private Monster m;
 	private Boolean hasChest;
-	private Boolean isDark = false; //set to false for testing
+	private Boolean isDark = true; //set to false for testing
 	private String ceiling = null;
 	private String floor = null;
 	private Boolean discovered = false; //Begins false, sets to true when a room is discovered
@@ -162,5 +162,19 @@ public class Room {
 			}
 		}
 		return false;
+	}
+	public int getObjectIndex(boolean isName, String string)
+	{
+		for(int i = 0; i < contents.length; i++) {
+			if(contents[i] != null) {
+				if(contents[i].getName() == string && isName) {
+					return i;
+				}
+				if(contents[i].getDesc() == string && isName == false) {
+					return i;
+				}
+			}
+		}
+		return 999;
 	}
 }

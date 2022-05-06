@@ -1,6 +1,7 @@
 package edu.ycp.cs320.groupProj.servlet;
 
 import java.io.IOException;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,6 +39,12 @@ public class ConsoleServlet2 extends HttpServlet {
 
 		System.out.println("Console: doGet");
 		HttpSession session = req.getSession(false);
+		
+		if(session == null) {
+			LoginServlet serve = new LoginServlet();
+			serve.doGet(req, resp);
+			return;
+		}
 
 		System.out.println(session);
 
@@ -72,11 +79,7 @@ public class ConsoleServlet2 extends HttpServlet {
 		Room roomEast = map.getRoom(pModel.getUp(), pModel.getSide() + 1);
 
 		
-		
 		rController.setModel(currentR);
-		// TO DO
-		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
-		// TO DO
 
 		// prints map - for testing purposes
 //		 for (int i = 0; i < 10; i++) { 
@@ -89,304 +92,426 @@ public class ConsoleServlet2 extends HttpServlet {
 //		 }
 
 		// splits input into a two String array
+		
+		//////// Move for DB ////////
+		DBController DBController = new DBController(); // Database controller
+		HttpSession session = req.getSession(false); // get current session
+		session.setAttribute("playerModel", pModel);
+		Player player = (Player) session.getAttribute("player"); // get player from session
+		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
+		DBController.InsertNewMove(player.getPlayerId(), 1, userInput);
+		System.out.println("Player entered : " + action);
+		//////// Move for DB ////////
+		
 		for (int i = 0; i < 2; i++) {
 			action = userInput.split(" ");
 		}
 		
-		action[0].toLowerCase();
-		action[1].toLowerCase();
 		
-		if(action[0].equals("fight") && currentR.hasMonster()) {
-			result = "The " + currentR.getMonster().getNameTag().getName() + " manages to claw you before you fell the beast.";
-			pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
-			currentR.deadMonster();
-			if(pModel.isLit()) {
-				result += " During the scuffle your torch went out.";
-				pModel.setLit(false);
+		//checks if theres only one word to remove null pointer exception errors
+		if (action.length == 0) {
+			result = "Please enter a command! Don't know what to enter? Press the \"stuck\" button for hints!";
+		} else if (action.length == 1) {
+			if(action[0].equals("fight") && currentR.hasMonster()) {
+				//FIGHT
+				result = "The " + currentR.getMonster().getName() + " manages to claw you before you fell the beast.";
+				pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
+				currentR.deadMonster();
+				if(pModel.isLit()) {
+					result += " During the scuffle your torch went out.";
+					pModel.setLit(false);
+				} 
+			} else if(action[0].equals("fight") && !currentR.hasMonster() && !pModel.getHardy()) {
+				result = "There's no monster here, unless you're counting yourself.";
+			} 
+			else if(action[0].equals("fight") && !currentR.hasMonster() && pModel.getHardy())
+			{
+				result = "You cleave Hardy's skull in half and kill him instantly. Hardy Mode has been disabled. The blood is on your hands.";
+				pModel.setHardy(false);
 			}
-		} else if(action[0].equals("fight") && !currentR.hasMonster()) {
-			result = "There's no monster here, unless you're counting yourself.";
-		}
-
-		// move done
-		if (action[0].equals(null)) {
-			errorMessage = "Please specify an action or click 'Stuck?' for a list of commands.";
-		}
-
-		if (action[0].equals("move")) {
-			Boolean did = false;
-			if (currentR.isDark() && !pModel.isLit()) {
-				result = "It's too dark to see where to go";
-				if (currentR.hasMonster()) {
-					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
-				}
+			else if (action[0].equals("where")) {
+				result = "UpPlace ==" + pModel.getUp() + " sidePlace == " + pModel.getSide();
+			} else if (action[0].equals("move") || action[0].equals("look")) {
+				result = action[0] + " where?";
+			} else if (action[0].equals("grab") || action[0].equals("place") || action[0].equals("use") || action[0].equals("inspect") || action[0].equals("light") || action[0].equals("open")) {
+				result = action[0] + " what?";
 			} else {
-				if (action[1].equals("north")) {
-					if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
-						pModel.setUpLoc(pModel.getUp() - 1); // updates player location
-						result = "You moved " + action[1];
-						did = true;
-					} else {
-						result = "The path is blocked.";// isn't traversable- no change
-					}
-				} else if (action[1].equals("south")) {
-					if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
-						pModel.setUpLoc(pModel.getUp() + 1); // updates player location
-						result = "You moved " + action[1];
-						did = true;
-					} else {
-						result = "The path is blocked";// isn't traversable- no change
-					}
-				} else if (action[1].equals("east")) {
-					if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
-						pModel.setSideLoc(pModel.getSide() + 1); // updates player location
-						result = "You moved " + action[1];
-						did = true;
-					} else {
-						result = "The path is blocked"; // isn't traversable- no change
-					}
-				} else if (action[1].equals("west")) {
-					if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
-						pModel.setSideLoc(pModel.getSide() - 1);
-						result = "You moved " + action[1]; // updates player location
-						did = true;
-					} else {
-						result = "The path is blocked"; // isn't traversable- no change
+				result = "I don't recognize that command. Click 'Stuck?' for more options";
+			}
+		} else if (action.length == 2){
+		// move done
+
+			if (action[0].equals("move")) {
+				Boolean did = false;
+				if (currentR.isDark() && !pModel.isLit()) {
+					result = "It's too dark to see where to go";
+					if (currentR.hasMonster()) {
+						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 					}
 				} else {
-					result = "That isn't a valid direction.";
+					if (action[1].equals("north")) {
+						if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
+							pModel.setUpLoc(pModel.getUp() - 1); // updates player location
+							if(pModel.getHardy())
+							{
+								result = "You and Hardy moved " + action[1]+ ".";
+							}
+							else
+							{
+								result = "You moved " + action[1]+ ".";
+							}
+							did = true;
+							if(currentR.getDiscovered() == false)
+							{
+								currentR.setDiscovered(pModel);
+							}
+						} else {
+							result = "The path is blocked.";// isn't traversable- no change
+						}
+					} else if (action[1].equals("south")) {
+						if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
+							pModel.setUpLoc(pModel.getUp() + 1); // updates player location
+							if(pModel.getHardy())
+							{
+								result = "You and Hardy moved " + action[1]+ ".";
+							}
+							else
+							{
+								result = "You moved " + action[1]+ ".";
+							}
+							did = true;
+							if(currentR.getDiscovered() == false)
+							{
+								currentR.setDiscovered(pModel);
+							}
+						} else {
+							result = "The path is blocked";// isn't traversable- no change
+						}
+					} else if (action[1].equals("east")) {
+						if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
+							pModel.setSideLoc(pModel.getSide() + 1); // updates player location
+							if(pModel.getHardy())
+							{
+								result = "You and Hardy moved " + action[1]+ ".";
+							}
+							else
+							{
+								result = "You moved " + action[1]+ ".";
+							}
+							did = true;
+							if(currentR.getDiscovered() == false)
+							{
+								currentR.setDiscovered(pModel);
+							}
+						} else {
+							result = "The path is blocked"; // isn't traversable- no change
+						}
+					} else if (action[1].equals("west")) {
+						if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
+							pModel.setSideLoc(pModel.getSide() - 1);
+							if(pModel.getHardy())
+							{
+								result = "You and Hardy moved " + action[1]+ ".";
+							}
+							else
+							{
+								result = "You moved " + action[1]+ ".";
+							}
+							did = true;
+							if(currentR.getDiscovered() == false)
+							{
+								currentR.setDiscovered(pModel);
+							}
+						} else {
+							result = "The path is blocked"; // isn't traversable- no change
+						}
+					} else {
+						result = "That isn't a valid direction.";
+					}
+				}
+				if (did) {
+					pController.upScore(action[0]);
 				}
 			}
-			if (did) {
+	
+			// deals with LOOK command - done I think
+			if (action[0].equals("look")) {
+				if (currentR.isDark() && !pModel.isLit()) {
+					result = "It's too dark to see anything";
+					if (currentR.hasMonster()) {
+						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
+					}
+				} else if (action[1].equals("north") && roomNorth.getEnter()) {
+					result = "You look north and see";
+					if (roomNorth.hasMonster()) {
+						result += " something shuffling around in the room, it makes you feel uneasy.";
+					} else if (!roomNorth.checkEmpty()) {
+						result += " something on the floor, you can't discern what it is from here.";
+					}
+					if (roomNorth.isDark()) {
+						result = " a room encased in shadows, you can't see anything.";
+					} else if(roomNorth.checkEmpty()) {
+						result = "You see an empty room, it's eerily similar to the one you're standing in now.";
+					}
+				} else if (action[1].equals("south") && roomSouth.getEnter()) {
+					if (roomSouth.hasMonster()) {
+						result += " something shuffling around in the room, it makes you feel uneasy.";
+					} else if (!roomSouth.checkEmpty()) {
+						result += " something on the floor, you can't discern what it is from here.";
+					}
+					if (roomSouth.isDark()) {
+						result = " a room encased in shadows, you can't see anything.";
+					} else if(roomSouth.checkEmpty()) {
+						result = "You see an empty room, it's eerily similar to the one you're standing in now.";
+					}
+				} else if (action[1].equals("east") && roomEast.getEnter()) {
+					if (roomEast.hasMonster()) {
+						result += " something shuffling around in the room, it makes you feel uneasy.";
+					} else if (!roomEast.checkEmpty()) {
+						result += " something on the floor, you can't discern what it is from here.";
+					}
+					if (roomEast.isDark()) {
+						result = " a room encased in shadows, you can't see anything.";
+					} else if(roomEast.checkEmpty()) {
+						result = "You see an empty room, it's eerily similar to the one you're standing in now.";
+					}
+				} else if (action[1].equals("west") && roomWest.getEnter()) {
+					if (roomWest.hasMonster()) {
+						result += " something shuffling around in the room, it makes you feel uneasy.";
+					} else if (!roomWest.checkEmpty()) {
+						result += " something on the floor, you can't discern what it is from here.";
+					}
+					if (roomWest.isDark()) {
+						result = " a room encased in shadows, you can't see anything.";
+					} else if(roomWest.checkEmpty()) {
+						result = "You see an empty room, it's eerily similar to the one you're standing in now.";
+					}
+				} else if (action[1].equals("down")) {
+					result = "You look downward and see " + currentR.getFloor();
+				} else if (action[1].equals("up")) {
+					result = "You look upwards and see " + currentR.getCel();
+				} else if (action[1].equals(null)) {
+					result = "Please enter a valid direction to look";
+				} else {
+					result = "You see a wall";
+				}
 				pController.upScore(action[0]);
 			}
-		}
-
-		// deals with LOOK command - done I think
-		if (action[0].equals("look")) {
-			if (currentR.isDark() && !pModel.isLit()) {
-				result = "It's too dark to see anything";
-				if (currentR.hasMonster()) {
-					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
-				}
-			} else if (action[1].equals("north") && roomNorth.getEnter()) {
-				result = "You look north and see";
-				if (roomNorth.hasMonster()) {
-					result += " something shuffling around in the room, it makes you feel uneasy.";
-				} else if (!roomNorth.checkEmpty()) {
-					result += " something on the floor, you can't discern what it is from here.";
-				}
-				if (roomNorth.isDark()) {
-					result = " a room encased in shadows, you can't see anything.";
-				} else if(roomNorth.checkEmpty()) {
-					result = "You see an empty room, it's eerily similar to the one you're standing in now.";
-				}
-			} else if (action[1].equals("south") && roomSouth.getEnter()) {
-				if (roomSouth.hasMonster()) {
-					result += " something shuffling around in the room, it makes you feel uneasy.";
-				} else if (!roomSouth.checkEmpty()) {
-					result += " something on the floor, you can't discern what it is from here.";
-				}
-				if (roomSouth.isDark()) {
-					result = " a room encased in shadows, you can't see anything.";
-				} else if(roomSouth.checkEmpty()) {
-					result = "You see an empty room, it's eerily similar to the one you're standing in now.";
-				}
-			} else if (action[1].equals("east") && roomEast.getEnter()) {
-				if (roomEast.hasMonster()) {
-					result += " something shuffling around in the room, it makes you feel uneasy.";
-				} else if (!roomEast.checkEmpty()) {
-					result += " something on the floor, you can't discern what it is from here.";
-				}
-				if (roomEast.isDark()) {
-					result = " a room encased in shadows, you can't see anything.";
-				} else if(roomEast.checkEmpty()) {
-					result = "You see an empty room, it's eerily similar to the one you're standing in now.";
-				}
-			} else if (action[1].equals("west") && roomWest.getEnter()) {
-				if (roomWest.hasMonster()) {
-					result += " something shuffling around in the room, it makes you feel uneasy.";
-				} else if (!roomWest.checkEmpty()) {
-					result += " something on the floor, you can't discern what it is from here.";
-				}
-				if (roomWest.isDark()) {
-					result = " a room encased in shadows, you can't see anything.";
-				} else if(roomWest.checkEmpty()) {
-					result = "You see an empty room, it's eerily similar to the one you're standing in now.";
-				}
-			} else if (action[1].equals("down")) {
-				result = "You look downward and see " + currentR.getFloor();
-			} else if (action[1].equals("up")) {
-				result = "You look upwards and see " + currentR.getCel();
-			} else if (action[1].equals(null)) {
-				result = "Please enter a valid direction to look";
-			} else {
-				result = "You see a wall";
-			}
-			pController.upScore(action[0]);
-		}
-
-		// deals with GRAB command
-		if (action[0].equals("grab")) {
-			if (pModel.getiNum() == 9) {
-				result = "Your inventory is full.";
-			} else if (currentR.isDark() && !pModel.isLit()) {
-				result = "It's too dark to try to grab anything";
-				if (currentR.hasMonster()) {
-					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
-				}
-			} else if (currentR.hasMonster()) {
-				result = "The " + currentR.getMonster().getNameTag().getName() + " blocks your way.";
-			} else {
-				if (rController.contains(action[1])) {
-					Boolean thing = pController.grabItem(action[1], currentR); // good function great function
-					if (thing) {
-						result = "You grab the " + action[1];
-						int NEWINUM = pController.sortInven(pModel.getInvenFULL());
-						pModel.setiNum(NEWINUM);
-						currentR.checkEmpty();
-						// if the last item in the room is taken room.isEmpty = true
-						// isEmpty matters for the look command tho its not important for this one
-					} else {
-						result = "Your hand slips grabbing the " + action[1] + " and it falls back onto the floor.";
-					}
-				} else {
-					result = "There's no " + action[1] + " around.";
-				}
-			}
-
-		}
-
-		// deals with PLACE command
-		if (action[0].equals("place")) {
-			if (currentR.isDark() && !pModel.isLit()) {
-				result = "It's too dark to see where to place anything";
-				if (currentR.hasMonster()) {
-					result += ", but you hear a strange hissing come from directly in front of you.  You should light your torch fast!";
-				}
-			} else {
-				if (pController.contains(action[1])) {
-					result = pController.placeItem(action[1], currentR);
-					pController.upScore(action[0]);
-				} else {
-					result = "You don't have any " + action[1];
-				}
-			}
-			// check if place is valid + update inventory
-			// most code is contained within controller(s)
-		}
-
-		// deals with USE command
-		if (action[0].equals("use")) {
-			if (currentR.isDark() && !pModel.isLit()) {
-				result = "It's too dark to try to grab anything from your pack";
-				if (currentR.hasMonster()) {
-					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
-				}
-			} else {
-				if (pController.contains(action[1])) {
-					result = pController.useItem(action[1], currentR);
-					errorMessage = "Current health == " + pModel.getHP();
-					pController.upScore(action[0]);
-					//
-					//
-					// UPDATE DB - HEALTH && SCORE
-					//
-					//
-				} else {
-					result = "You don't have any " + action[1];
-				}
-			}
-		}
-
-		// deals with INSPECT command
-		if (action[0].equals("inspect")) {
-			if (currentR.isDark() && !pModel.isLit()) {
-				result = "It's too dark to inspect anything";
-				if (currentR.hasMonster()) {
-					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
-				}
-			} else {
-				if (action[1].equals(null)) {
-					result = "Inspect what?";
-				} else if (action[1].equals("room")) {
-					String s = " the room contains: ";
-					for (int i = 0; i < currentR.getInven().length; i++) {
-						if (currentR.getInven()[i] != null) {
-							s += currentR.getInven()[i].getTag().getName() + " and ";
-						}
-					}
+	
+			// deals with GRAB command
+			if (action[0].equals("grab")) {
+				if (pModel.getiNum() == 9) {
+					result = "Your inventory is full.";
+				} else if (currentR.isDark() && !pModel.isLit()) {
+					result = "It's too dark to try to grab anything";
 					if (currentR.hasMonster()) {
-						s += currentR.getMonster().getNameTag().getName() + " and ";
+						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 					}
-					if (s.toLowerCase().compareTo(" the room contains: ") == 0) {
-						result = currentR.getTag().getDesc();
-					} else {
-						s += "that's all";
-						result = currentR.getTag().getDesc() + s;
-					}
-				} else if (action[1].equals("inventory")) {
-					String s = "You rifle through your pack and find: ";
-					int r = 0;
-					for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-						if (pModel.getInvenFULL()[i] != null) {
-							s += pModel.getInvenFULL()[i].getTag().getName() + ", ";
-							r++;
+				} else if (currentR.hasMonster()) {
+					result = "The " + currentR.getMonster().getName() + " blocks your way.";
+				} else {
+					if (rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate")) {
+						Boolean thing = pController.grabItem(action[1], currentR); // good function great function
+						if (thing) {
+							result = "You grab the " + action[1];
+							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
+							pModel.setiNum(NEWINUM);
 						}
+						if(rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate"))
+						{
+							Random rand = new Random();
+							int upperBound = 5 ;
+							int hardyChance = rand.nextInt(upperBound);
+							Boolean thing1 = pController.grabItem(action[1], currentR);
+							if(hardyChance > 4 && thing1 || action[1]=="key" && thing1)
+							{
+								result = "You grab the " + action[1];
+								int NEWINUM = pController.sortInven(pModel.getInvenFULL());
+								pModel.setiNum(NEWINUM);
+							}
+							else if(thing1 && hardyChance == 4){
+								result = "You go to grab the " + action[1] +", but Hardy takes it first";
+								pController.useItem(action[1], currentR);
+							}
+						}
+						else {
+							result = "Your hand slips grabbing the " + action[1] + " and it falls back onto the floor.";
+						}
+					} else {
+						result = "There's no " + action[1] + " around.";
 					}
-					if (r == 0) {
-						s += "it's empty.";
-					}
-					result = s;
-					pController.upScore(action[0]);
-				} else {
-					result = "That is not a command I recognize";
 				}
+	
 			}
-		}
-		// deals with LIGHT command - done I think
-		if (action[0].equals("light")) {
-			if (action[1].equals("torch")) {
-				if (pModel.getMatches() > 0) {
-					pModel.setMatches(pModel.getMatches() - 1);
-					pModel.setLit(true);
-					result = "You take out your pack of matches and strike one, lighting the torch and throwing out the now-burnt match.";
-					pController.upScore(action[0]);
+	
+			// deals with PLACE command
+			if (action[0].equals("place")) {
+				if (currentR.isDark() && !pModel.isLit()) {
+					result = "It's too dark to see where to place anything";
 					if (currentR.hasMonster()) {
-						result += " As the room fills with the light of torch, you see a "
-								+ currentR.getMonster().getNameTag().getName()
-								+ " drooling as it stares at you. Gross!";
+						result += ", but you hear a strange hissing come from directly in front of you.  You should light your torch fast!";
 					}
 				} else {
-					result = "Uh oh, you are out of matches";
+					if (pController.contains(action[1])) {
+						result = pController.placeItem(action[1], currentR);
+						pController.upScore(action[0]);
+					} else {
+						result = "You don't have any " + action[1];
+					}
 				}
-			} else {
-				result = "You are unable to light " + action[1] + " on fire";
+				// check if place is valid + update inventory
+				// most code is contained within controller(s)
 			}
-		}
-
-		// deals with OPEN command - almost done [NEED WIN SCREEN]
-		if (action[0].equals("open")) {
-			if (currentR.isDark() && !pModel.isLit()) {
-				result = "It's too dark to see anything";
-				if (currentR.hasMonster()) {
-					result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
+	
+			// deals with USE command
+			if (action[0].equals("use")) {
+				if (currentR.isDark() && !pModel.isLit()) {
+					result = "It's too dark to try to grab anything from your pack";
+					if (currentR.hasMonster()) {
+						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
+					}
+				} else {
+					if (pController.contains(action[1])) {
+						result = pController.useItem(action[1], currentR);
+						errorMessage = "Current health == " + pModel.getHP();
+						pController.upScore(action[0]);
+						//
+						//
+						// UPDATE DB - HEALTH && SCORE
+						//
+						//
+					} else {
+						result = "You don't have any " + action[1];
+					}
 				}
-			} else {
-				if (action[1].equals("chest")) {
-					if (currentR.hasChest()) {
-						if (pController.contains("key")) {
-							// CREATE WIN SCREEN HERE
+			}
+	
+			// deals with INSPECT command
+			if (action[0].equals("inspect")) {
+				if (currentR.isDark() && !pModel.isLit()) {
+					result = "It's too dark to inspect anything";
+					if (currentR.hasMonster()) {
+						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
+					}
+				} else {
+					if (action[1].equals(null)) {
+						result = "Inspect what?";
+					} else if (action[1].equals("room")) {
+						String s = " the room contains: ";
+						for (int i = 0; i < currentR.getInven().length; i++) {
+							if (currentR.getInven()[i] != null) {
+								s += currentR.getInven()[i].getTag().getName() + " and ";
+							}
+						}
+						if (currentR.hasMonster()) {
+							s += currentR.getMonster().getNameTag().getName() + " and ";
+						}
+						if (s.toLowerCase().compareTo(" the room contains: ") == 0) {
+							result = currentR.getTag().getDesc();
 						} else {
-							result = "You don't have a key, how did you plan on opening it - brute strength?";
+							s += "that's all";
+							result = currentR.getTag().getDesc() + s;
 						}
+					} else if (action[1].equals("inventory")) {
+						String s = "You rifle through your pack and find: ";
+						int r = 0;
+						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
+							if (pModel.getInvenFULL()[i] != null) {
+								s += pModel.getInvenFULL()[i].getTag().getName() + ", ";
+								r++;
+							}
+						}
+						if (r == 0) {
+							s += "it's empty.";
+						}
+						result = s;
+						pController.upScore(action[0]);
 					} else {
-						result = "There is no chest in this room, you should get your eyes checked";
+						result = "That is not a command I recognize";
 					}
 				}
-
-				else {
-					result = "You fail to open " + action[1];
+			}
+			// deals with LIGHT command - done I think
+			if (action[0].equals("light")) {
+				if (action[1].equals("torch")) {
+					if (pModel.getMatches() > 0) {
+						pModel.setMatches(pModel.getMatches() - 1);
+						pModel.setLit(true);
+						result = "You take out your pack of matches and strike one, lighting the torch and throwing out the now-burnt match.";
+						pController.upScore(action[0]);
+						if (currentR.hasMonster()) {
+							result += " As the room fills with the light of torch, you see a "
+									+ currentR.getMonster().getName()
+									+ " drooling as it stares at you. Gross!";
+						}
+					} else {
+						result = "Uh oh, you are out of matches";
+					}
+				} else {
+					result = "You are unable to light " + action[1] + " on fire";
+				}
+			}
+	
+			// deals with OPEN command - almost done [NEED WIN SCREEN]
+			if (action[0].equals("open")) {
+				if (currentR.isDark() && !pModel.isLit()) {
+					result = "It's too dark to see anything";
+					if (currentR.hasMonster()) {
+						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
+					}
+				} else {
+					if (action[1].equals("chest")) {
+						if (currentR.hasChest()) {
+							if (pController.contains("key")) {
+								
+								pModel.incrementScore(1000);
+								
+								//Checks if the player has all the gems, if they do they get another 1000 points
+								if(pController.contains("Onyx") && pController.contains("Emerald") && pController.contains("Sapphire")
+										&& pController.contains("Diamond") && pController.contains("Ruby")) 
+								{
+									pModel.incrementScore(1000);
+								}
+								req.getSession().setAttribute("score", pModel.getScore());
+								
+								req.getRequestDispatcher("/_view/win.jsp").forward(req, resp);
+							} else {
+								result = "You don't have a key, how did you plan on opening it - brute strength?";
+							}
+						} else {
+							result = "There is no chest in this room, you should get your eyes checked";
+						}
+					}
+					else if(action[1].equals("crate"))
+					{
+						if(currentR.searchObject(true, "Crate"))
+						{
+							Random rand = new Random();
+							int upperBound = 3;
+							int crateChance = rand.nextInt(upperBound);
+							if(crateChance == 0) 
+							{
+								pModel.setMatches(pModel.getMatches() + 1);
+								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = null;
+								result = "You smash open the crate and find a match. You now have "+pModel.getMatches()+" matches.";
+							}
+							if(crateChance == 1)
+							{
+								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = new ObjectModel(new NameTag("banana", "a yellow banana you found in a box. "
+										+ "You don't know where it's been but beggers can't be choosers."), 5,false);
+								result = "You smash open the crate and find a banana inside.";
+							}
+							if(crateChance > 1)
+							{
+								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = null;
+								result = "You smash open the crate and find nothing.";
+							}	
+						}
+					}
+	
+					else {
+						result = "You fail to open " + action[1];
+					}
 				}
 			}
 		}
@@ -402,5 +527,28 @@ public class ConsoleServlet2 extends HttpServlet {
 
 		// Forward to view to render the result HTML document
 		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
+	
 	}
+	public void UpdatePlayerModel(int health, int xLoc, int yLoc, int score, int matches, HttpServletRequest req) {
+		DBController DBController = new DBController(); // Database controller
+		HttpSession session = req.getSession(false); // get current session
+		session.setAttribute("playerModel", pModel);
+		Player player = (Player) session.getAttribute("player"); // get player from session
+		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
+		DBController.InsertNewPlayerModel(player.getPlayerId(), health, xLoc, yLoc, score, matches); //added suppress warning
+		System.out.println("PlayerModel updated with : health = " + health + " x = " + xLoc + " y = " + yLoc + " score = " + score + " matches = " + matches);
+	}
+//	private void UpdatePlayerInven(String insert, HttpServletRequest req) {
+//		DBController DBController = new DBController(); // Database controller
+//		HttpSession session = req.getSession(false); // get current session
+//		session.setAttribute("playerModel", pModel);
+//		Player player = (Player) session.getAttribute("player"); // get player from session
+//		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
+//		DBController.UpdatePlayerInven(player.getPlayerId(), insert); //added suppress warning
+//		System.out.println("PlayerInventory updated with: " + insert);
+//	}
+	private void UpdateRoomInven(int xLoc, int yLoc, String thing) {
+		//update ROOMINVEN with XLOC, YLOC, and String
+	}
+
 }
