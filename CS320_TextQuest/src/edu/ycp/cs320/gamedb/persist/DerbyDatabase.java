@@ -153,7 +153,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 									"	health integer, " +									
 									"	xloc integer,"
 									+ "yloc integer,"
-									+ "score integer"
+									+ "score integer,"
 									+ "matches integer"+
 									")"
 									);
@@ -168,8 +168,8 @@ public class DerbyDatabase implements IDatabase { //FIX
 					stmt5.executeUpdate();
 					//ROOMINVEN TABLE
 					stmt6 = conn.prepareStatement(
-							"create table playerinven (" +
-									"	playerId integer constraint playerId3 references players,  " +
+							"create table roominven (" +
+									"	playerId integer constraint playerId4 references players,  " +
 									"	inven varchar(70) " +
 									")"
 									);
@@ -575,22 +575,84 @@ public class DerbyDatabase implements IDatabase { //FIX
 				return found;
 			} finally {
 				DBUtil.closeQuietly(insertPlayerModel);
-			}
+				}
 			}
 		});
 	}
 
 	@Override
-	public Boolean UpdatePlayerInven() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean UpdatePlayerInven(final int playerId, final String inven) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement updatePlayerInven = null;
+			int resultSet = -1;
+			
+			try {
+				updatePlayerInven = conn.prepareStatement("insert into playerinven (playerId, inven) values (?)");
+				
+				updatePlayerInven.setInt(1, playerId);
+				updatePlayerInven.setString(2, inven);
+
+				resultSet = updatePlayerInven.executeUpdate();
+				
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be inserted into the playerinven table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(updatePlayerInven);
+				}
+			}
+		});
 	}
 
 	@Override
-	public Boolean UpdateRoomInven() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean UpdateRoomInven(final int playerId, final int xLoc, final int yLoc, final String inven) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement updateRoomInven = null;
+			int resultSet = -1;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				updateRoomInven = conn.prepareStatement("insert into playerinven (playerId, xLoc, yLoc, inven) values (?,?,?,?)");
+				
+				updateRoomInven.setInt(1, playerId);
+				updateRoomInven.setInt(2, xLoc);
+				updateRoomInven.setInt(3, yLoc);
+				updateRoomInven.setString(2, inven);
+
+				resultSet = updateRoomInven.executeUpdate();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be inserted into the playerinven table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(updateRoomInven);
+				}
+			}
+		});
 	}
-	
 	
 }

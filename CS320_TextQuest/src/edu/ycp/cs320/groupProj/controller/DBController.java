@@ -92,6 +92,22 @@ public class DBController {
 		
 		return playerModel;	
 	}
+	
+	public Boolean UpdatePlayerInven(int playerId, String inven) {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		
+		IDatabase db = DatabaseProvider.getInstance();
+		Boolean playerInven = db.UpdatePlayerInven(playerId, inven);
+		return playerInven;
+	}
 
+	public Boolean UpdateRoomInven(int playerId, int xLoc, int yLoc, String inven) {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		
+		IDatabase db = DatabaseProvider.getInstance();
+		Boolean roomInven = db.UpdateRoomInven(playerId, xLoc, yLoc, inven);
+		return roomInven;
+	}
+	
 	//Don't I want a single query that updates game with map, score, and health instead of individual ones?
 }

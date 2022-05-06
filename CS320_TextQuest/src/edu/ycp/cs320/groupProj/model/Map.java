@@ -39,8 +39,7 @@ public class Map {
 		this.map[1][5] = new Room(true, new NameTag("Hallway", "a hideous room misisng some of the wood panels, revealing stone underneath, and marble floors covered in so many stains you don't think it could ever be saved. There's a broken door leading west and an unscathed golden door with fancy arches leading east."), new ObjectModel[10], false, false);
 		this.map[1][6] = new Room(true, new NameTag("Chest Room!", "an extravagent room with marble flooring, polished wood panel walls, and a gilded chest sitting in the middle."), new ObjectModel[10], false, false);
 		// [1][7] is a wall
-		this.map[1][8] = new Room(true, new NameTag("Monster/Red Gem", "a large steel chamber covered in an inconvievable amount of blood and with so many scratch marks your at risk of cutting yourself on the walls. It smells of death and HIV."), new ObjectModel[10], true,
-				true);
+		this.map[1][8] = new Room(true, new NameTag("Monster/Red Gem", "a large steel chamber covered in an inconvievable amount of blood and with so many scratch marks your at risk of cutting yourself on the walls. It smells of death and HIV."), new ObjectModel[10], true, true);
 		// [1][9] is outside the dungeon
 
 		// [2][0] is outside of dungeon
@@ -66,8 +65,7 @@ public class Map {
 		// [3][9] is outside of dungeon
 
 		this.map[4][1] = new Room(true, new NameTag("Open", "a fancy room"), new ObjectModel[10], false, false);
-		this.map[4][2] = new Room(true, new NameTag("Key Room", "a fancy room"), new ObjectModel[10], false,
-				false);
+		this.map[4][2] = new Room(true, new NameTag("Key Room", "a fancy room"), new ObjectModel[10], false, false);
 		// [4][3] is a wall
 		this.map[4][4] = new Room(true, new NameTag("Yellow Gem", "a steel room"), new ObjectModel[10], false, false);
 		this.map[4][5] = new Room(true, new NameTag("Open", "a steel room"), new ObjectModel[10], false, false);
@@ -83,10 +81,8 @@ public class Map {
 		this.map[5][4] = new Room(true, new NameTag("Open", "a steel room"), new ObjectModel[10], false, false);
 		this.map[5][5] = new Room(true, new NameTag("Open", "a steel room"), new ObjectModel[10], false, false);
 		// [5][6] is a wall
-		this.map[5][7] = new Room(true, new NameTag("Dark/Black Gem", "a stone room enveloped in so much fog the torch is just barley able to help. Atleast you think it's stone, your really just going off of how it feels."), new ObjectModel[10], false,
-				false);
-		this.map[5][8] = new Room(true, new NameTag("Dark", "a stone room completely enveloped in a thick layer of dark fog. You think you can only go south but you can't really tell. What you can tell is that the floor is scratched to shit."), new ObjectModel[10], true,
-				true);
+		this.map[5][7] = new Room(true, new NameTag("Dark/Black Gem", "a stone room enveloped in so much fog the torch is just barley able to help. Atleast you think it's stone, your really just going off of how it feels."), new ObjectModel[10], false, false);
+		this.map[5][8] = new Room(true, new NameTag("Dark", "a stone room completely enveloped in a thick layer of dark fog. You think you can only go south but you can't really tell. What you can tell is that the floor is scratched to shit."), new ObjectModel[10], true, true);
 		// [5][9] is outside of dungeon
 
 		this.map[6][1] = new Room(true, new NameTag("Stone Tunnel", "a narrow stone tunnel leading north and south. The south path leads to more stone but the northern path seems to lead to something else."), new ObjectModel[10], false, false);
@@ -101,8 +97,7 @@ public class Map {
 		// [7][0] is outside of dungeon
 		this.map[7][1] = new Room(true, new NameTag("Threeway Stone Tunnel", "a narrow stone tunnel that splits into three paths, leading north, south , and west. You notice a blood stain on the wall of the southern path."), new ObjectModel[10], false, false);
 		this.map[7][2] = new Room(true, new NameTag("Green Gem", "a stone corridor with an opening to the east, west, and south."), new ObjectModel[10], false, true);
-		this.map[7][3] = new Room(true, new NameTag("Starting Area", "a great stone chamber with an opening to the west and the south."), new ObjectModel[10], false,
-				false);
+		this.map[7][3] = new Room(true, new NameTag("Starting Area", "a great stone chamber with an opening to the west and the south."), new ObjectModel[10], false, false);
 		// [7][4] is a wall
 		this.map[7][5] = new Room(true, new NameTag("Misty/Stone/Metal crossroad", "a stone corridor with an opening to the north, south, and east. The northern path looks metallic. The eastern side of the room has been enveloped in a layer of mist."), new ObjectModel[10], true, true);
 		this.map[7][6] = new Room(true, new NameTag("Misty", "a stone corridor enveloped in fog. You manage to make out three openings to the south, east, and west."), new ObjectModel[10], false, true);
