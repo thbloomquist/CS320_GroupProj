@@ -589,7 +589,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 			int resultSet = -1;
 			
 			try {
-				updatePlayerInven = conn.prepareStatement("insert into playerinven (playerId, inven) values (?)");
+				updatePlayerInven = conn.prepareStatement("insert into playerinven (playerId, inven) values (?,?)");
 				
 				updatePlayerInven.setInt(1, playerId);
 				updatePlayerInven.setString(2, inven);
@@ -630,7 +630,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 				updateRoomInven.setInt(1, playerId);
 				updateRoomInven.setInt(2, xLoc);
 				updateRoomInven.setInt(3, yLoc);
-				updateRoomInven.setString(2, inven);
+				updateRoomInven.setString(4, inven);
 
 				resultSet = updateRoomInven.executeUpdate();
 				
