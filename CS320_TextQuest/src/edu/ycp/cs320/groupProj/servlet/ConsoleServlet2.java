@@ -1,6 +1,7 @@
 package edu.ycp.cs320.groupProj.servlet;
 
 import java.io.IOException;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -148,32 +149,48 @@ public class ConsoleServlet2 extends HttpServlet {
 					if (action[1].equals("north")) {
 						if (map.getRoom(pModel.getUp() - 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() - 1); // updates player location
-							result = "You moved " + action[1];
+							result = "You moved " + action[1]+ ".";
 							did = true;
+							if(currentR.getDiscovered() == false)
+							{
+								currentR.setDiscovered(pModel);
+							}
 						} else {
 							result = "The path is blocked.";// isn't traversable- no change
 						}
 					} else if (action[1].equals("south")) {
 						if (map.getRoom(pModel.getUp() + 1, pModel.getSide()).getEnter()) {
 							pModel.setUpLoc(pModel.getUp() + 1); // updates player location
-							result = "You moved " + action[1];
+							result = "You moved " + action[1]+ ".";
 							did = true;
+							if(currentR.getDiscovered() == false)
+							{
+								currentR.setDiscovered(pModel);
+							}
 						} else {
 							result = "The path is blocked";// isn't traversable- no change
 						}
 					} else if (action[1].equals("east")) {
 						if (map.getRoom(pModel.getUp(), pModel.getSide() + 1).getEnter()) {
 							pModel.setSideLoc(pModel.getSide() + 1); // updates player location
-							result = "You moved " + action[1];
+							result = "You moved " + action[1]+ ".";
 							did = true;
+							if(currentR.getDiscovered() == false)
+							{
+								currentR.setDiscovered(pModel);
+							}
 						} else {
 							result = "The path is blocked"; // isn't traversable- no change
 						}
 					} else if (action[1].equals("west")) {
 						if (map.getRoom(pModel.getUp(), pModel.getSide() - 1).getEnter()) {
 							pModel.setSideLoc(pModel.getSide() - 1);
-							result = "You moved " + action[1]; // updates player location
+							result = "You moved " + action[1]+ "."; // updates player location
 							did = true;
+							if(currentR.getDiscovered() == false)
+							{
+								currentR.setDiscovered(pModel);
+							}
 						} else {
 							result = "The path is blocked"; // isn't traversable- no change
 						}
@@ -378,7 +395,7 @@ public class ConsoleServlet2 extends HttpServlet {
 						pController.upScore(action[0]);
 						if (currentR.hasMonster()) {
 							result += " As the room fills with the light of torch, you see a "
-									+ currentR.getMonster().getNameTag().getName()
+									+ currentR.getMonster().getName()
 									+ " drooling as it stares at you. Gross!";
 						}
 					} else {
@@ -400,12 +417,49 @@ public class ConsoleServlet2 extends HttpServlet {
 					if (action[1].equals("chest")) {
 						if (currentR.hasChest()) {
 							if (pController.contains("key")) {
-								// CREATE WIN SCREEN HERE
+								
+								pModel.incrementScore(1000);
+								
+								//Checks if the player has all the gems, if they do they get another 1000 points
+								if(pController.contains("Black Gem") && pController.contains("Green Gem") && pController.contains("Blue Gem")
+										&& pController.contains("Yellow Gem") && pController.contains("Red Gem")) 
+								{
+									pModel.incrementScore(1000);
+								}
+								req.getSession().setAttribute("score", pModel.getScore());
+								
+								req.getRequestDispatcher("/_view/win.jsp").forward(req, resp);
 							} else {
 								result = "You don't have a key, how did you plan on opening it - brute strength?";
 							}
 						} else {
 							result = "There is no chest in this room, you should get your eyes checked";
+						}
+					}
+					else if(action[1].equals("crate"))
+					{
+						if(currentR.searchObject(true, "Crate"))
+						{
+							Random rand = new Random();
+							int upperBound = 3;
+							int crateChance = rand.nextInt(upperBound);
+							if(crateChance == 0) 
+							{
+								pModel.setMatches(pModel.getMatches() + 1);
+								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = null;
+								result = "You smash open the crate and find a match. You now have "+pModel.getMatches()+" matches.";
+							}
+							if(crateChance == 1)
+							{
+								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = new ObjectModel(new NameTag("banana", "a yellow banana you found in a box. "
+										+ "You don't know where it's been but beggers can't be choosers."), 5,false);
+								result = "You smash open the crate and find a banana inside.";
+							}
+							if(crateChance > 1)
+							{
+								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = null;
+								result = "You smash open the crate and find nothing.";
+							}	
 						}
 					}
 	

@@ -576,37 +576,29 @@ public class ConsoleServlet extends HttpServlet {
 						result = "You are unable to light the " + secondW + " on fire";
 					}
 				//Open Chest
-				} else if (firstW.compareTo("open") == 0) {
-					if (secondW.compareTo("chest") == 0) {
-						Boolean tempr = false;
-						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-							if (pModel.getInventory(i) != null) {
-								if (pModel.getInventory(i).getKey()) {
-									tempr = true;
-								}
-							}
-						}
-						if (tempr) {
-							if (currentR.hasChest()) {
+				} else if (firstW.compareTo("open") == 0) 
+				{
+					if (secondW.compareTo("chest") == 0) 
+					{
+						if(pModel.searchObject(true, "Key") == true && currentR.hasChest() == true)
+						{
+							pModel.incrementScore(1000);
+							
+							//Checks if the player has all the gems, if they do they get another 1000 points
+							if(pController.contains("Black Gem") && pController.contains("Green Gem") && pController.contains("Blue Gem")
+									&& pController.contains("Yellow Gem") && pController.contains("Red Gem")) 
+							{
 								pModel.incrementScore(1000);
-								//Checks if the player collected every Gem, gives them bonus points if they do.
-								if(pModel.searchObject(true, "Black Gem") == true && pModel.searchObject(true, "Blue Gem") == true
-										&& pModel.searchObject(true, "Red Gem") == true && pModel.searchObject(true, "Green Gem") == true
-										&& pModel.searchObject(true, "Yellow Gem") == true) 
-								{
-									pModel.incrementScore(1000);
-								}
-								// !!!!!!!!!!!!!!!!!!
-								//
-								// IMPLEMENT RE-ROUTE TO WIN SCREEN & RESET MODELS
-								//
-								//
-								// !!!!!!!!!!!!!!!!!1
-							} else {
-								result = "There's no chest in this room, you should get your eyes checked.";
 							}
-						} else {
-							result = "You don't have a key, how did you plan on opening it- brute strength?";
+							req.getRequestDispatcher("/_view/win.jsp").forward(req, resp);
+						}
+						if(currentR.hasChest() == false)
+						{
+							result = "There's no chest in this room, you should get your eyes checked.";
+						}
+						if(pModel.searchObject(true, "Key") == false && currentR.hasChest() == true)
+						{
+							result = "You don't have a key, how did you plan on opening it- brute strength";
 						}
 					} else {
 						result = "You fail to open " + secondW;
