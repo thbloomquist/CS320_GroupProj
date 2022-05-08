@@ -17,6 +17,6 @@ public interface IDatabase {
 	public Game LoadGame(int playerId, int i);
 	public PlayerModel LoadPlayerModel(int playerId);
 	public Boolean InsertNewPlayerModel(int playerId, int health, int x, int y, int score, int matches);
-	public Boolean UpdatePlayerInven();
-	public Boolean UpdateRoomInven(); //idk what im doing here
+	public Boolean UpdatePlayerInven(int playerId, String inven);
+	public Boolean UpdateRoomInven(int playerId, int xLoc, int yLoc, String inven); //idk what im doing here
 }

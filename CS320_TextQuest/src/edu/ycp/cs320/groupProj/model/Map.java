@@ -65,7 +65,7 @@ public class Map {
 		this.map[3][8] = new Room(true, new NameTag("Turn in Hallway", "It's a dimly lit steel hall that smells awful. The door out is to the west and the hallway continues north."), new ObjectModel[10], false, false);
 		// [3][9] is outside of dungeon
 
-		this.map[4][1] = new Room(true, new NameTag("Open", "Its an oppulent room with wooden walls and marble flooring. There's three doors leading north, south, and east, but the arrangement of the marble tiles seem to be pointing you east."), new ObjectModel[10], false, false);
+		this.map[4][1] = new Room(true, new NameTag("Open", "It's an oppulent room with wooden walls and marble flooring. There's three doors leading north, south, and east, but the arrangement of the marble tiles seem to be pointing you east."), new ObjectModel[10], false, false);
 		this.map[4][2] = new Room(true, new NameTag("Key Room", "It's a magnificent chamber with the usual marble floors, wooden walls, but now there are steps in the middle of the room leading up to a raised portion. There's also three doors leading north, south, and west."), new ObjectModel[10], false,
 				false);
 		// [4][3] is a wall
