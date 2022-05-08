@@ -23,17 +23,9 @@ import edu.ycp.cs320.groupProj.controller.RoomController;
 import edu.ycp.cs320.groupProj.controller.PlayerController;
 
 public class ConsoleServlet2 extends HttpServlet {
-	Boolean movement = false;
 	private static final long serialVersionUID = 1L;
-	SystemModel model = new SystemModel();
-	PlayerModel pModel = new PlayerModel();
-	ObjectModel oModel = new ObjectModel();
-	ObjectModel currentObj = null;
-	Map map = new Map();
-	String errorMessage = "Current health == " + pModel.getHP();
-	String firstW = null;
-	String secondW = null;
-
+	PlayerModel pModel = null;
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -61,6 +53,26 @@ public class ConsoleServlet2 extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		
+
+		DBController DBController = new DBController(); // Database controller
+		HttpSession session = req.getSession(false); // get current session
+		session.setAttribute("playerModel", pModel);
+		Player player = (Player) session.getAttribute("player"); // get player from session
+		
+		pModel = DBController.LoadPlayerModel(player.getPlayerId());
+		
+		System.out.println("Up: " + pModel.getUp() + " Side: " + pModel.getSide());
+		
+		Boolean movement = false;
+		SystemModel model = new SystemModel();
+		ObjectModel oModel = new ObjectModel();
+		ObjectModel currentObj = null;
+		Map map = (Map) session.getAttribute("map");
+		String errorMessage = "Current health == " + pModel.getHP();
+		String firstW = null;
+		String secondW = null;
 
 		System.out.println("Console Servlet: doPost");
 		SystemController controller = new SystemController();
@@ -86,6 +98,22 @@ public class ConsoleServlet2 extends HttpServlet {
 		int matches = pModel.getMatches();
 		
 		rController.setModel(currentR);
+		
+		// set the player and room inventory from DB
+		///////////////////////LOADING FROM DATABASE//////////////////////////
+		pModel.setInventory(DBController.getPlayerInventory(player.getPlayerId()));
+		currentR.setInventory(DBController.getRoomInventory(player.getPlayerId(), xLoc, yLoc));
+		//////////////////////LOADING FROM DATABASE///////////////////////////
+		
+		
+		//Needed to remove null elements from the room inventory
+		for(int i = 0; i < currentR.getInven().size(); i++) {
+			if(currentR.getInven().get(i).getName().equals("REMOVE")) {
+				currentR.getInven().remove(i);
+				System.out.println("\tRemoving null elements from room");
+			}
+		}
+		
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
 		// TO DO
@@ -99,18 +127,29 @@ public class ConsoleServlet2 extends HttpServlet {
 //					 System.out.print(" [X] "); 
 //			 } System.out.println(); 
 //		 }
+		
+//		for (int y = 1; y < 9; y++) {
+//			for (int x = 1; x < 9; x++) {
+//				String insert = "";
+//				if (map.getRoom(y, x).getEnter()) {
+//					for (int i = 0; i < map.getRoom(y, x).getInven().length; i++) {
+//						if (currentR.getInven()[i] != null) {
+//							insert += map.getRoom(y, x).getInven()[i].getTag().getName() + " ";
+//						}
+//						InsertIntoRoomInven(x, y, insert, req);
+//					}
+//				}
+//			}
+//		}
 
 		// splits input into a two String array
 		
-//		//////// Move for DB ////////
-//		DBController DBController = new DBController(); // Database controller
-//		HttpSession session = req.getSession(false); // get current session
-//		session.setAttribute("playerModel", pModel);
-//		Player player = (Player) session.getAttribute("player"); // get player from session
-//		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
-//		DBController.InsertNewMove(player.getPlayerId(), 1, userInput);
-//		System.out.println("Player entered : " + action);
-//		//////// Move for DB ////////
+	
+		//////// Move for DB ////////
+		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
+		DBController.InsertNewMove(player.getPlayerId(), 1, userInput);
+		System.out.println("Player entered : " + action);
+		//////// Move for DB ////////
 		
 		for (int i = 0; i < 2; i++) {
 			action = userInput.split(" ");
@@ -207,7 +246,7 @@ public class ConsoleServlet2 extends HttpServlet {
 				}
 				if (did) {
 					pController.upScore(action[0]);
-					UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
+					UpdatePlayerModel(health, pModel.getSide(), pModel.getUp(), score, matches, req); //sends updated info to db
 				}
 			}
 	
@@ -277,7 +316,9 @@ public class ConsoleServlet2 extends HttpServlet {
 	
 			// deals with GRAB command - update ROOMINVEN and PLAYERINVEN
 			if (action[0].equals("grab")) {
-				if (pModel.getiNum() == 9) {
+				currentR = map.getRoom(pModel.getUp(), pModel.getSide());
+				if(currentR.getInven().size() >= 1)
+				if (pModel.getInventory().size() == 9) {
 					result = "Your inventory is full.";
 				} else if (currentR.isDark() && !pModel.isLit()) {
 					result = "It's too dark to try to grab anything";
@@ -287,35 +328,34 @@ public class ConsoleServlet2 extends HttpServlet {
 				} else if (currentR.hasMonster()) {
 					result = "The " + currentR.getMonster().getNameTag().getName() + " blocks your way, you'll have to fight it before you can loot the room.";
 				} else {
-					if (rController.contains(action[1])) {
-						Boolean thing = pController.grabItem(action[1].toString(), currentR); // good function great function
+					if (rController.contains(action[1].toString())) {
+						// thing = item was picked up and placed in player inventory
+						Boolean thing = pController.grabItem(action[1].toString().toLowerCase(), currentR); // good function great function
 						if (thing) {
 							result = "You grab the " + action[1];
-							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
-							pModel.setiNum(NEWINUM);
-							currentR.checkEmpty();
-							//PLAYERINVEN DB STUFF
 							String inven = "";
-							for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-								if (pModel.getInventory(i) != null) {
-									inven += pModel.getInvenFULL()[i].getTag().getName() + " ";
+							for(ObjectModel items: pModel.getInventory()) {
+								inven += items.getName() + " ";
+							}
+							
+							DBController.UpdatePlayerInven(player.getPlayerId(), inven);
+							
+							currentR.checkEmpty();
+						
+							DBController.UpdatePlayerInven(player.getPlayerId(), inven);
+							//PLAYERINVEN DB STUFF
+							inven = currentR.getInven().toString();
+							DBController.UpdateRoomInven(player.getPlayerId(), pModel.getSide(), pModel.getUp(), inven);
+							inven = "";
+//							//ROOMINVEN DB STUFF							
+							for (int i = 0; i < currentR.getInven().size(); i++) {
+								if (currentR.getInven().get(i) != null) {
+									inven += currentR.getInven().get(i).getName().toLowerCase() + " ";
 								}
 							}
-							System.out.println("PlayerInven : " + inven);
-							InsertIntoPlayerInven(inven, req);
-							//PLAYERINVEN DB STUFF
-//							inven = currentR.getInven().toString();
-//							InsertIntoRoomInven(pModel.getSide(), pModel.getUp(), inven, req);
 							
-//							//ROOMINVEN DB STUFF
-//							for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-//								if (currentR.getInven()[i] != null) {
-//									inven += pModel.getInvenFULL()[i].getTag().getName() + " ";
-//								}
-//							}
-//							System.out.println("PlayerInven : " + inven);
-//							InsertIntoRoomInven(inven, req);
-//							//ROOMINVEN DB STUFF 
+							DBController.UpdateRoomInven(player.getPlayerId(), pModel.getSide(), pModel.getUp(), inven);
+							//ROOMINVEN DB STUFF
 							
 							// if the last item in the room is taken room.isEmpty = true
 							// isEmpty matters for the look command tho its not important for this one
@@ -338,19 +378,20 @@ public class ConsoleServlet2 extends HttpServlet {
 					}
 				} else {
 					if (pController.contains(action[1])) {
-						result = pController.placeItem(action[1], currentR);
+						result = action[1] + " has been placed into the room";
 						pController.upScore(action[0]);
 						//PLAYERINVEN DB STUFF
 						String inven = "";
-						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-							if (pModel.getInventory(i) != null) {
-								inven += pModel.getInvenFULL()[i].getTag().getName() + " ";
-							}
+						
+						// places the object from players inventory into room inventory
+						Boolean insertRoom = DBController.UpdateRoomInven(player.getPlayerId(), xLoc, yLoc, pModel.removeItem(action[1]).getName());
+						
+						for(ObjectModel items: pModel.getInventory()) {
+							inven += items.getName() + " ";
 						}
-						InsertIntoPlayerInven(inven, req);
-						//PLAYERINVEN DB STUFF
-//						inven = currentR.getInven().toString();
-//						InsertIntoRoomInven(pModel.getSide(), pModel.getUp(), inven, req);
+						// removes item from players inventory
+						DBController.UpdatePlayerInven(player.getPlayerId(), inven);
+						
 						UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
 					} else {
 						result = "You don't have any " + action[1];
@@ -368,22 +409,19 @@ public class ConsoleServlet2 extends HttpServlet {
 						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 					}
 				} else {
-					if (pController.contains(action[1])) {
-						result = pController.useItem(action[1], currentR);
-						errorMessage = "Current health == " + health;
-						pController.upScore(action[0]);
-						UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
-						//PLAYERINVEN DB STUFF
-						String inven = "";
-						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-							if (pModel.getInventory(i) != null) {
-								inven += pModel.getInvenFULL()[i].getTag().getName() + " ";
-							}
+					if(action[1].toString().equals("crate")) {
+						if (pController.contains(action[1])) {
+	//						result = pController.useItem(action[1], currentR);
+							errorMessage = "Current health == " + health;
+							pController.upScore(action[0]);
+							UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
+							//PLAYERINVEN DB STUFF
+							String inven = "";
+							DBController.UpdatePlayerInven(player.getPlayerId(), inven);
+							//PLAYERINVEN DB STUFF
+						} else {
+							result = "You don't have any " + action[1];
 						}
-						InsertIntoPlayerInven(inven, req);
-						//PLAYERINVEN DB STUFF
-					} else {
-						result = "You don't have any " + action[1];
 					}
 				}
 			}
@@ -400,10 +438,10 @@ public class ConsoleServlet2 extends HttpServlet {
 						result = "Inspect what?";
 					} else if (action[1].equals("room")) {
 						String s = " the room contains: ";
-						for (int i = 0; i < currentR.getInven().length; i++) {
-							if (currentR.getInven()[i] != null) {
-								s += currentR.getInven()[i].getTag().getName() + " and ";
-							}
+						
+						System.out.println(currentR.getInven().size());
+						for(ObjectModel items : currentR.getInven()) {
+							s += items.getName() + " and ";
 						}
 						if (currentR.hasMonster()) {
 							s += currentR.getMonster().getNameTag().getName() + " and ";
@@ -416,16 +454,16 @@ public class ConsoleServlet2 extends HttpServlet {
 						}
 					} else if (action[1].equals("inventory")) {
 						String s = "You rifle through your pack and find: ";
-						int r = 0;
-						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-							if (pModel.getInvenFULL()[i] != null) {
-								s += pModel.getInvenFULL()[i].getTag().getName() + ", ";
-								r++;
-							}
+						int r = 0; // check if inventory is empty
+						for(ObjectModel items : pModel.getInventory()) {
+							if(items != null && !items.equals("REMOVE"))
+								s += items.getName() + ", ";
+							r++;
 						}
 						if (r == 0) {
 							s += "it's empty.";
 						}
+						System.out.println(s);
 						result = s;
 						pController.upScore(action[0]);
 					} else {
@@ -484,29 +522,34 @@ public class ConsoleServlet2 extends HttpServlet {
 						} else {
 							result = "There is no chest in this room, you should get your eyes checked";
 						}
-					}
-					else if(action[1].equals("crate"))
-					{
-						if(currentR.searchObject(true, "Crate"))
+					}else if(action[1].equals("crate")){
+						// if player has a crate in their inventory
+						System.out.println("CRATES!");
+						if(pModel.getItemFromInventory(action[1].toString().toLowerCase()).getName().equals("crate"))
 						{
 							Random rand = new Random();
 							int upperBound = 3;
 							int crateChance = rand.nextInt(upperBound);
-							if(crateChance == 0) 
-							{
-								pModel.setMatches(pModel.getMatches() + 1);
-								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = null;
-								result = "You smash open the crate and find a match. You now have "+pModel.getMatches()+" matches.";
-							}
+							
+							String inven = "";
+							
+							
+							
 							if(crateChance == 1)
 							{
-								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = new ObjectModel(new NameTag("banana", "a yellow banana you found in a box. "
-										+ "You don't know where it's been but beggers can't be choosers."), 5,false);
+								pModel.removeItem("crate");
+								// load in players inventory (with item removed)
+								for(ObjectModel items: pModel.getInventory()) {
+									inven += items.getName() + " ";
+								}
+								inven += "banana";
+								DBController.UpdatePlayerInven(player.getPlayerId(), inven);
+								pModel.addItemToInventory(new ObjectModel(new NameTag("banana", "a yellow banana you found in a box. " + "You don't know where it's been but beggers can't be choosers."),false));
 								result = "You smash open the crate and find a banana inside.";
-							}
-							if(crateChance > 1)
+								System.out.println("GETTING BANANA");
+							}else 
 							{
-								currentR.getInven()[currentR.getObjectIndex(true, "Crate")] = null;
+								pModel.removeItem("crate");
 								result = "You smash open the crate and find nothing.";
 							}	
 						}
@@ -538,26 +581,8 @@ public class ConsoleServlet2 extends HttpServlet {
 		session.setAttribute("playerModel", pModel);
 		Player player = (Player) session.getAttribute("player"); // get player from session
 		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
-		DBController.InsertNewPlayerModel(player.getPlayerId(), health, xLoc, yLoc, score, matches);
+		DBController.UpdatePlayerModel(player.getPlayerId(), health, xLoc, yLoc, score, matches);
 		System.out.println("PlayerModel updated with : health = " + health + " x = " + xLoc + " y = " + yLoc + " score = " + score + " matches = " + matches);
 	}
-	private void InsertIntoPlayerInven(String insert, HttpServletRequest req) {
-		DBController DBController = new DBController(); // Database controller
-		HttpSession session = req.getSession(false); // get current session
-		session.setAttribute("playerModel", pModel);
-		Player player = (Player) session.getAttribute("player"); // get player from session
-		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
-		DBController.UpdatePlayerInven(player.getPlayerId(), insert); 
-		System.out.println("PlayerInventory updated with: " + insert);
-	}
-	private void InsertIntoRoomInven(int xLoc, int yLoc, String thing, HttpServletRequest req) {
-		DBController DBController = new DBController(); // Database controller
-		HttpSession session = req.getSession(false); // get current session
-		session.setAttribute("playerModel", pModel);
-		Player player = (Player) session.getAttribute("player"); // get player from session
-		DBController.getPlayerByUsernameAndPassword(player.getUsername(), player.getPassword()); // get current player model
-		DBController.UpdateRoomInven(player.getPlayerId(), xLoc, yLoc, thing); 
-		System.out.println("PlayerInventory updated with: " + thing);
-		}
 
 }

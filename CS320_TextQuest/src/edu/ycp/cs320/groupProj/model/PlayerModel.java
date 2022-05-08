@@ -1,5 +1,6 @@
 package edu.ycp.cs320.groupProj.model;
 
+import java.util.ArrayList;
 
 // model class for TextQuest
 // keeps track of the moves, totaling North-South and East-West
@@ -9,7 +10,7 @@ public class PlayerModel {
 	private int hp;
 	private int upLoc;
 	private int sideLoc;
-	private ObjectModel[] inventory;
+	private ArrayList<ObjectModel> inventory; // arraylist for dynamically allocated size
 	private int invenIndex;
 	private Room currentRoom;
 	private int score;
@@ -26,7 +27,7 @@ public class PlayerModel {
 		hp = 100;
 		upLoc = 7; // replace these with intial values in 2d Array
 		sideLoc = 3;
-		inventory = new ObjectModel[10];
+		inventory = new ArrayList<ObjectModel>(); 
 		invenIndex = 0;
 		score = 0;
 		matches = 10;
@@ -61,28 +62,73 @@ public class PlayerModel {
 	public int getSide() {
 		return sideLoc;
 	}
-	public void addInventory(ObjectModel thing) {
-		inventory[invenIndex] = thing;
-		invenIndex++;
-		// adds an item to the players inventory
+	
+	/**
+	 * Adds an item to player inventory
+	 * @param thing		Item to add to inventory
+	 */
+	public void addItemToInventory(ObjectModel thing) {
+		inventory.add(thing);
 	}
-	public void removeItem(int n) {
-		inventory[n] = null;
-		// removes an item, given the index in which it resides
+	
+	/**
+	 * Removes an item at index 
+	 * @param item		name of them to remove
+	 * @return			item
+	 */
+	public ObjectModel removeItem(String item) {
+		for(int i = 0; i < inventory.size(); i++) {
+			if(inventory.get(i).getName().equals(item.toLowerCase())) {
+				System.out.println("ITEM BEING REMOVED: " + inventory.get(i).getName());
+				return inventory.remove(i);
+			}
+		}
+		return null;
 	}
-	public int getiNum() {
-		return invenIndex;
+	
+	/**
+	 * get Item from inventory based on name
+	 * @param item
+	 * @return
+	 */
+	public ObjectModel getItemFromInventory(String item) {
+		for(int i = 0; i < inventory.size(); i++) {
+			if(inventory.get(i).getName().equals(item.toLowerCase())) {
+				System.out.println("ITEM BEING REMOVED: " + inventory.get(i).getName());
+				return inventory.get(i);
+			}
+		}
+		return null;
 	}
-	public void setiNum(int n) {
-		invenIndex = n;
+	
+	
+//	public int getiNum() {
+//		return invenIndex;
+//	}
+//	public void setiNum(int n) {
+//		invenIndex = n;
+//	}
+	
+	/**
+	 * Gets an item at index
+	 * @param index		Value of item
+	 * @return			Item at index
+	 */
+	public ObjectModel getItemFromInventory(int index) {
+		return inventory.get(index);
 	}
-	public ObjectModel getInventory(int n) {
-		return inventory[n];
-		// returns a reference to a single ObjectModel within the players inventory
-	}
-	public ObjectModel[] getInvenFULL() {
+	
+	/**
+	 * Returns players inventory
+	 * @return		Arraylist of objects in inventory
+	 */
+	public ArrayList<ObjectModel> getInventory() {
 		return inventory;
 		// returns a reference to the players entire inventory
+	}
+	
+	public void setInventory(ArrayList<ObjectModel> inventory) {
+		this.inventory = inventory;
 	}
 	public void setRoom(Room r) {
 		currentRoom = r;
@@ -104,12 +150,12 @@ public class PlayerModel {
 	}
 	public void createTorch() {
 		NameTag n = new NameTag("torch", "It's a piece of wood with oil-covered cloth wrapped on the tip.");
-		ObjectModel torch = new ObjectModel(n, -1, false);
-		addInventory(torch);
+		ObjectModel torch = new ObjectModel(n, false);
+		addItemToInventory(torch);
 	}
-	public void setInvenFULL(ObjectModel[] temporary) {
-		inventory = temporary;
-	}
+//	public void setInvenFULL(ObjectModel[] temporary) {
+//		inventory = temporary;
+//	}
 	public int getScore() {
 		return score;
 	}
@@ -134,20 +180,21 @@ public class PlayerModel {
 	}
 	//Checks if a specific item is in the player's inventory
 	//Set isName to true to search by name, and isName to false to search by description.
-	public Boolean searchObject(boolean isName, String string)
-	{
-		for(int i = 0; i < inventory.length; i++) {
-			if(inventory[i] != null) {
-				if(inventory[i].getName() == string && isName) {
-					return true;
-				}
-				if(inventory[i].getDesc() == string && isName == false) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+//	public Boolean searchObject(boolean isName, String string)
+//	{
+//		for(int i = 0; i < inventory.length; i++) {
+//			if(inventory[i] != null) {
+//				if(inventory[i].getName() == string && isName) {
+//					return true;
+//				}
+//				if(inventory[i].getDesc() == string && isName == false) {
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
+	
 	public Boolean getHardy()
 	{
 		return hardyMode;

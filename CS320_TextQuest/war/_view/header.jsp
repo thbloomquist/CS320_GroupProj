@@ -6,7 +6,7 @@
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <a class="nav-item nav-link active" href="/TextQuest/">Home</a>
-      <a class="nav-item nav-link" href="/TextQuest/main">Start New Game</a>
+      <a class="nav-item nav-link" href="/TextQuest/new.game">Start New Game</a>
       <a class="nav-item nav-link" href="/TextQuest/continue">Continue Game</a>
       <a class="nav-item nav-link" href = "/TextQuest/about">About</a>
       </div>

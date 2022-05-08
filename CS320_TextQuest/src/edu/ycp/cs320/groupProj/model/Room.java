@@ -1,9 +1,11 @@
 package edu.ycp.cs320.groupProj.model;
 
+import java.util.ArrayList;
+
 public class Room {
 	private boolean canEnter;
 	private NameTag roomDesc;
-	private ObjectModel[] contents = new ObjectModel[10];
+	private ArrayList<ObjectModel> contents = new ArrayList<ObjectModel>();
 	private Boolean hasMonster;
 	private Monster m;
 	private Boolean hasChest;
@@ -15,7 +17,7 @@ public class Room {
 	//The boolean value refers to whether or not this room can be entered or not.
 	//If it's true, you can enter this room
 	//If it's false, you cannot enter this room
-	public Room(boolean canEnter, NameTag room, ObjectModel[] contents) {
+	public Room(boolean canEnter, NameTag room, ArrayList<ObjectModel> contents) {
 		this.canEnter = canEnter;
 		roomDesc = room;
 		this.contents = contents;
@@ -23,7 +25,7 @@ public class Room {
 	
 	//Second boolean is if room has monsters
 	//Third boolean is if room has items
-	public Room(boolean canEnter, NameTag room, ObjectModel[] contents, Boolean t, Boolean f) {
+	public Room(boolean canEnter, NameTag room, ArrayList<ObjectModel> contents, Boolean t, Boolean f) {
 		this.canEnter = canEnter;
 		roomDesc = room;
 		this.contents = contents;
@@ -33,6 +35,7 @@ public class Room {
 		}
 		if(f) {
 			createContents1();
+			System.out.println(contents.get(0).getName());
 		}
 		// if f, room has items in it
 		hasChest = false;
@@ -67,14 +70,41 @@ public class Room {
 	public NameTag getTag() {
 		return roomDesc;
 	}
-	//Returns the room's inventory
-	public ObjectModel[] getInven() {
+	/**
+	 * Get ArrayList of Inventory
+	 * @return	rooms inventory
+	 */
+	public ArrayList<ObjectModel> getInven() {
 		return contents;
 	}
+	/**
+	 * Sets the contents of the room
+	 * @param contents
+	 */
+	public void setInventory(ArrayList<ObjectModel> contents) {
+		this.contents = contents;
+	}
+	
+	/**
+	 * retrieves an item from the inventory if its there
+	 * @param item	The item you're searching for
+	 * @return
+	 */
+	public ObjectModel getItemFromInventory(String item) {
+		for(int i = 0; i < contents.size(); i++) {
+			if(contents.get(i).getName().equals(item.toLowerCase())) {
+				return contents.get(i);
+			}
+		}
+		return null;
+	}
+	
+	
+	
 	public String printInven() {
 		String s = "";
-		for(int i = 0; i < contents.length; i++) {
-			if(contents[i] != null) {
+		for(int i = 0; i < contents.size(); i++) {
+			if(contents.get(i) != null) {
 				s += contents.toString() + ", ";
 			}
 		}
@@ -85,17 +115,19 @@ public class Room {
 	}
 	
 	public void createContents1() {
-		NameTag n = new NameTag("Crate", "an old wooden crate");
-		for(int i = 0; i < contents.length; i++) {
-			if(contents[i] == null) {
-				contents[i] = new ObjectModel(n, 5, false);
-				i = contents.length + 1;
-			}
-		}
+		NameTag n = new NameTag("crate", "an old wooden crate");
+		contents.add(new ObjectModel(n, false));
+		
+//		for(int i = 0; i < contents.size(); i++) {
+//			if(contents.get(i) == null) {
+//				contents.set(i, new ObjectModel(n, 5, false)); 
+//				i = contents.size() + 1;
+//			}
+//		}
 	}
 	public boolean checkEmpty() {
-		for(int i = 0; i < contents.length; i++) {
-			if(contents[i] != null) {
+		for(int i = 0; i < contents.size(); i++) {
+			if(contents.get(i) != null) {
 				return false;
 			}
 		}
@@ -115,8 +147,8 @@ public class Room {
 	}
 	public void createKey() {
 		NameTag tempr = new NameTag("Key", "It's a shiny golden key, damn it's sparkly.");
-		ObjectModel thing = new ObjectModel(tempr, -1, true);
-		contents[7] = thing;
+		ObjectModel thing = new ObjectModel(tempr, true);
+		contents.set(7, thing);
 	}
 	public void setCel(String thing) {
 		ceiling = thing;
@@ -151,12 +183,12 @@ public class Room {
 	//Set isName to true to search by name, and isName to false to search by description.
 	public Boolean searchObject(boolean isName, String string)
 	{
-		for(int i = 0; i < contents.length; i++) {
-			if(contents[i] != null) {
-				if(contents[i].getName() == string && isName) {
+		for(int i = 0; i < contents.size(); i++) {
+			if(contents.get(i) != null) {
+				if(contents.get(i).getName() == string && isName) {
 					return true;
 				}
-				if(contents[i].getDesc() == string && isName == false) {
+				if(contents.get(i).getDesc() == string && isName == false) {
 					return true;
 				}
 			}
@@ -165,12 +197,12 @@ public class Room {
 	}
 	public int getObjectIndex(boolean isName, String string)
 	{
-		for(int i = 0; i < contents.length; i++) {
-			if(contents[i] != null) {
-				if(contents[i].getName() == string && isName) {
+		for(int i = 0; i < contents.size(); i++) {
+			if(contents.get(i) != null) {
+				if(contents.get(i).getName() == string && isName) {
 					return i;
 				}
-				if(contents[i].getDesc() == string && isName == false) {
+				if(contents.get(i).getDesc() == string && isName == false) {
 					return i;
 				}
 			}

@@ -28,10 +28,10 @@ public class ObjectControllerTest {
 		assertTrue(n.getName().equals("Banana"));
 		assertTrue(n.getDesc().equals("It's a yellow banana"));
 	}
-	@Test
-	public void testInt() {
-		assertTrue(banana.getThing() == 5);
-	}
+//	@Test
+//	public void testInt() {
+//		assertTrue(banana.getThing() == 5);
+//	}
 	@Test
 	public void testisKey() {
 		assertFalse(banana.getKey());

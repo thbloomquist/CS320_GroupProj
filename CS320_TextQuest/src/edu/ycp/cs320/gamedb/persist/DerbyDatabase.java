@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ycp.cs320.gamedb.model.Player;
+import edu.ycp.cs320.groupProj.model.NameTag;
+import edu.ycp.cs320.groupProj.model.ObjectModel;
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 import edu.ycp.cs320.gamedb.model.Game;
 import edu.ycp.cs320.gamedb.model.Pair;
@@ -94,7 +96,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 		game.setPlayerId(resultSet.getInt(index++));
 		game.setMove(resultSet.getString(index++));
 		game.setScore(resultSet.getInt(index++));
-		game.setHealth(resultSet.getInt(index++));		
+		game.setHealth(resultSet.getInt(index++));	
 	}
 	
 	private void loadPlayerModel(PlayerModel playerModel, ResultSet resultSet, int index) throws SQLException {
@@ -102,6 +104,32 @@ public class DerbyDatabase implements IDatabase { //FIX
 		playerModel.setSideLoc(resultSet.getInt(index++));
 		playerModel.setUpLoc(resultSet.getInt(index++));		
 		playerModel.setScore(resultSet.getInt(index++));
+	}
+	
+	private void loadPlayerInventory(ArrayList<ObjectModel> items2, ResultSet resultSet, int index) throws SQLException {
+		System.out.println("Loading  Inventory");
+		String itemNames = resultSet.getString(index++);
+		String[] items = null;
+		// splits the items in invintory into multiple strings because they're all seperate
+		for (int i = 0; i < 2; i++) {
+			items = itemNames.split(" ");
+		}
+		
+		for(String item : items) {
+			NameTag name = null;
+			if(item.toLowerCase().equals("crate")) {
+				name = new NameTag(item, "an old wooden crate");
+			} else if(item.toLowerCase().equals("key")) {
+				name = new NameTag(item, "It's a shiny golden key, damn it's sparkly.");
+			} else if(item.toLowerCase().equals("torch")) {
+				name = new NameTag(item, "It's a piece of wood with oil-covered cloth wrapped on the tip.");
+			} else if(item.toLowerCase().equals("banana")) {
+					name = new NameTag(item, "a yellow banana you found in a box. " + "You don't know where it's been but beggers can't be choosers.");
+				}else {
+				name = new NameTag("REMOVE", "REMOVE");
+			}
+			items2.add(new ObjectModel(name, false));
+		}
 	}
 
 	public void createTables() {
@@ -162,7 +190,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 					stmt5 = conn.prepareStatement(
 							"create table playerinven (" +
 									"	playerId integer constraint playerId3 references players,  " +
-									"	inven varchar(70) " +
+									"	inven varchar(100) " +
 									")"
 									);
 					stmt5.executeUpdate();
@@ -170,6 +198,8 @@ public class DerbyDatabase implements IDatabase { //FIX
 					stmt6 = conn.prepareStatement(
 							"create table roominven (" +
 									"	playerId integer constraint playerId4 references players,  " +
+									"   xloc integer," + 
+									"   yloc integer," +
 									"	inven varchar(70) " +
 									")"
 									);
@@ -264,17 +294,30 @@ public class DerbyDatabase implements IDatabase { //FIX
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 			PreparedStatement insertPlayer = null;
+			PreparedStatement getPlayer = null;
+			PreparedStatement insertPlayerInven = null;
+			
 			int resultSet = -1;
+			ResultSet resultSet1 = null;
 			
 			try {
-				// retreive all attributes from both Books and Authors tables
+
 				insertPlayer = conn.prepareStatement("insert into players (username, password) values (?, ?)");
-				
 				insertPlayer.setString(1, username);
 				insertPlayer.setString(2, password);
 				
 				resultSet = insertPlayer.executeUpdate();
 				
+				getPlayer = conn.prepareStatement("select playerid from players where username = ?");
+				getPlayer.setString(1,  username);
+				resultSet1 = getPlayer.executeQuery();
+				
+				if (resultSet1.next())
+				{
+					insertPlayerInven = conn.prepareStatement("insert into playerinven (playerId, inven) values (?, 'torch')");
+					insertPlayerInven.setInt(1, resultSet1.getInt(1));
+					resultSet = insertPlayerInven.executeUpdate();
+				}
 				// for testing that a result was returned
 				Boolean found = false;
 				
@@ -291,6 +334,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 				return found;
 			} finally {
 				DBUtil.closeQuietly(insertPlayer);
+				DBUtil.closeQuietly(insertPlayerInven);
 			}
 			}
 		});
@@ -340,14 +384,13 @@ public class DerbyDatabase implements IDatabase { //FIX
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 			PreparedStatement insertGame = null;
+			
 			int resultSet = -1;
 			
 			try {
 				// retreive all attributes from both Books and Authors tables
 				insertGame = conn.prepareStatement("insert into game (gameId, playerId, move, score, health) values (1, ?, ' ', 0, 100)");
-				
 				insertGame.setInt(1, playerId);
-
 				resultSet = insertGame.executeUpdate();
 				
 				// for testing that a result was returned
@@ -366,6 +409,8 @@ public class DerbyDatabase implements IDatabase { //FIX
 				return found;
 			} finally {
 				DBUtil.closeQuietly(insertGame);
+				
+
 			}
 			}
 		});
@@ -520,7 +565,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 					// create new Student object
 					// retrieve attributes from resultSet starting with index 1
 					PlayerModel playerModel = new PlayerModel();
-					loadPlayerModel(playerModel, resultSet, 3);
+					loadPlayerModel(playerModel, resultSet, 2);
 					return playerModel;
 				}
 				
@@ -580,6 +625,47 @@ public class DerbyDatabase implements IDatabase { //FIX
 		});
 	}
 
+	public Boolean UpdatePlayerModel(final int playerId, final int health, final int x, final int y, final int score, final int matches) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement updatePlayerModel = null;
+			int resultSet = -1;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				updatePlayerModel = conn.prepareStatement("update playermodel set health = ?, xloc = ?, yloc = ?, score = ?, matches = ? where playerId = ?");
+				
+				updatePlayerModel.setInt(6, playerId);
+				updatePlayerModel.setInt(1, health);
+				updatePlayerModel.setInt(2, x);
+				updatePlayerModel.setInt(3, y);
+				updatePlayerModel.setInt(4, score);
+				updatePlayerModel.setInt(5, matches);
+
+				resultSet = updatePlayerModel.executeUpdate();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be inserted into the playermodel table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(updatePlayerModel);
+				}
+			}
+		});
+	}
+	
 	@Override
 	public Boolean UpdatePlayerInven(final int playerId, final String inven) {
 		return executeTransaction(new Transaction<Boolean>() {
@@ -589,10 +675,10 @@ public class DerbyDatabase implements IDatabase { //FIX
 			int resultSet = -1;
 			
 			try {
-				updatePlayerInven = conn.prepareStatement("insert into playerinven (playerId, inven) values (?,?)");
+				updatePlayerInven = conn.prepareStatement("update playerinven set inven = ? where playerId = ?");
 				
-				updatePlayerInven.setInt(1, playerId);
-				updatePlayerInven.setString(2, inven);
+				updatePlayerInven.setString(1, inven);
+				updatePlayerInven.setInt(2, playerId);
 
 				resultSet = updatePlayerInven.executeUpdate();
 				
@@ -616,6 +702,44 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 
 	@Override
+	public Boolean InsertRoomInven(final int playerId, final int xLoc, final int yLoc, final String inven) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+			PreparedStatement insertRoomInven = null;
+			int resultSet = -1;
+			
+			try {
+				
+				insertRoomInven = conn.prepareStatement("insert into roominven (playerId, xloc, yloc, inven) values (?,?,?,?)");
+				
+				insertRoomInven.setInt(1, playerId);
+				insertRoomInven.setInt(2, xLoc);
+				insertRoomInven.setInt(3, yLoc);
+				insertRoomInven.setString(4, inven);
+
+				resultSet = insertRoomInven.executeUpdate();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				
+				if (resultSet != -1) {
+					found = true;
+					return found;
+				}
+				
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be inserted into the playerinven table");
+				}
+				
+				return found;
+			} finally {
+				DBUtil.closeQuietly(insertRoomInven);
+				}
+			}
+		});
+	}
+	
 	public Boolean UpdateRoomInven(final int playerId, final int xLoc, final int yLoc, final String inven) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
@@ -625,13 +749,13 @@ public class DerbyDatabase implements IDatabase { //FIX
 			
 			try {
 				// retreive all attributes from both Books and Authors tables
-				updateRoomInven = conn.prepareStatement("insert into playerinven (playerId, xLoc, yLoc, inven) values (?,?,?,?)");
+				updateRoomInven = conn.prepareStatement("update roominven set inven = ? where playerId = ? AND xloc = ? AND yloc = ?");
 				
-				updateRoomInven.setInt(1, playerId);
-				updateRoomInven.setInt(2, xLoc);
-				updateRoomInven.setInt(3, yLoc);
-				updateRoomInven.setString(4, inven);
-
+				updateRoomInven.setInt(2, playerId);
+				updateRoomInven.setInt(3, xLoc);
+				updateRoomInven.setInt(4, yLoc);
+				updateRoomInven.setString(1, inven);
+				
 				resultSet = updateRoomInven.executeUpdate();
 				
 				// for testing that a result was returned
@@ -650,6 +774,78 @@ public class DerbyDatabase implements IDatabase { //FIX
 				return found;
 			} finally {
 				DBUtil.closeQuietly(updateRoomInven);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public ArrayList<ObjectModel> getPlayerInventory(final int playerId) {
+		return executeTransaction(new Transaction<ArrayList<ObjectModel>>() {
+			@Override
+			public ArrayList<ObjectModel> execute(Connection conn) throws SQLException {
+			PreparedStatement getPlayerInven = null;
+			ResultSet resultSet = null;
+			
+			try {
+				getPlayerInven = conn.prepareStatement("select * from playerinven where playerId = ?");
+				
+				getPlayerInven.setInt(1, playerId);
+
+				resultSet = getPlayerInven.executeQuery();
+				ArrayList<ObjectModel> items = new ArrayList<ObjectModel>();
+				
+				Boolean found = false;
+				
+				if (resultSet.next()) {
+					loadPlayerInventory(items, resultSet, 2);
+					found = true;
+				}
+				
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be found in the playerinven table");
+				}
+				
+				return items;
+			} finally {
+				DBUtil.closeQuietly(getPlayerInven);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public ArrayList<ObjectModel> getRoomInventory(final int playerId, final int xLoc, final int yLoc) {
+		return executeTransaction(new Transaction<ArrayList<ObjectModel>>() {
+			@Override
+			public ArrayList<ObjectModel> execute(Connection conn) throws SQLException {
+			PreparedStatement getPlayerInven = null;
+			ResultSet resultSet = null;
+			
+			try {
+				getPlayerInven = conn.prepareStatement("select * from roominven where playerId = ? and xloc = ? and yloc = ?");
+				
+				getPlayerInven.setInt(1, playerId);
+				getPlayerInven.setInt(2, xLoc);
+				getPlayerInven.setInt(3, yLoc);
+
+				resultSet = getPlayerInven.executeQuery();
+				ArrayList<ObjectModel> items = new ArrayList<ObjectModel>();
+				
+				Boolean found = false;
+				
+				if (resultSet.next()) {
+					loadPlayerInventory(items, resultSet, 4);
+					found = true;
+				}
+				
+				if (!found) {
+					System.out.println("<" + playerId + "> could not be found in the roominven table");
+				}
+				
+				return items;
+			} finally {
+				DBUtil.closeQuietly(getPlayerInven);
 				}
 			}
 		});

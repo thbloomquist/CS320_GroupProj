@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		System.out.println("Sign Up Servlet: doGet");	
+		System.out.println("Login Up Servlet: doGet");	
 		// call JSP to generate empty form
 		req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
 	}
@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		System.out.println("Sign Up Servlet: doPost");
+		System.out.println("Login Up Servlet: doPost");
 		DBController controller = new DBController();
 		
 		String username = req.getParameter("username");

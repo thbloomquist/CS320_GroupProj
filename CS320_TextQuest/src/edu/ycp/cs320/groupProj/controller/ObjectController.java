@@ -11,14 +11,14 @@ public class ObjectController {
 	}
 	public void setAtt(String d, int num, Boolean f) {
 		model.setDesc(d);
-		model.setThing(num);
+//		model.setThing(num);
 		model.setKey(f);
 	}
 	public ObjectModel banana() {
 		NameTag n = new NameTag("Banana", "It's a yellow banana");
 		int num = 5;
 		boolean f = false;
-		ObjectModel thing = new ObjectModel(n, num, f);
+		ObjectModel thing = new ObjectModel(n, f);
 		return thing;
 	}
 	public ObjectModel getThis() {
@@ -28,7 +28,7 @@ public class ObjectController {
 		NameTag n = new NameTag("Key", "It's a shiny golden key");
 		int num = -1;
 		boolean f = true;
-		ObjectModel key = new ObjectModel(n, num, f);
+		ObjectModel key = new ObjectModel(n, f);
 		this.model = key;
 	}
 }

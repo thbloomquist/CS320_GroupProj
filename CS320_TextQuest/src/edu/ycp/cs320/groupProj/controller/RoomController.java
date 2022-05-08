@@ -13,13 +13,18 @@ public class RoomController {
 
 	public Boolean contains(String item) {
 		Boolean thing = false;
-		for (int i = 0; i < currentRoom.getInven().length; i++) {
-			if (currentRoom.getInven()[i] != null) {
-				if (currentRoom.getInven()[i].getTag().getName().toLowerCase().equals(item.toLowerCase())) {
-					thing = true;
-				}
+		for(int i = 0; i < currentRoom.getInven().size(); i++) {
+			if(currentRoom.getInven().get(i).getName().toLowerCase().equals(item)) {
+				thing = true;
 			}
 		}
+//		for (int i = 0; i < currentRoom.getInven().size(); i++) {
+//			if (currentRoom.getInven().get(i) != null) {
+//				if (currentRoom.getInven().get(i).getTag().getName().toLowerCase().equals(item.toLowerCase())) {
+//					thing = true;
+//				}
+//			}
+//		}
 		return thing;
 	}
 	public void setRoomType(int rNum) {
@@ -55,13 +60,13 @@ public class RoomController {
 		obj.Key();
 		int te = 0;
 		Boolean first1 = true;
-		for(int i = 0; i < currentRoom.getInven().length; i++) {
-			if(currentRoom.getInven()[i] == null && first1) {
+		for(int i = 0; i < currentRoom.getInven().size(); i++) {
+			if(currentRoom.getInven().get(i) == null && first1) {
 				te = i;
 				first1 = false;
 			}
 		}
-		currentRoom.getInven()[te] = temp;
+		currentRoom.getInven().set(te, temp);
 	}
 
 }

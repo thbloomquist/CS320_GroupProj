@@ -18,8 +18,8 @@ public class RoomTest {
 	public void setUp() {
 		NameTag n = new NameTag("test room", "The white paint on the walls is peeling off");
 		ObjectModel[] obj = new ObjectModel[10];
-		room1 = new Room(false, n, obj, true, true);
-		room2 = new Room(true, n, obj, false, false);
+//		room1 = new Room(false, n, obj, true, true);
+//		room2 = new Room(true, n, obj, false, false);
 		
 	}
 	

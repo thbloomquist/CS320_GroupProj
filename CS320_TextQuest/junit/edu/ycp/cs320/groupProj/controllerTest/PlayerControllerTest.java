@@ -36,11 +36,11 @@ public class PlayerControllerTest {
 		temp = cTemp.getThis();
 		// need item to add to players inventory so ^^^
 		
-		model.addInventory(temp);
-		assertTrue(controller.sortInven(model.getInvenFULL()) == 2); 
-		// iNum should be set to 2 as 0 index is the torch and 1 index is now the banana
-		
-		assertTrue(model.getInventory(model.getiNum()-1).equals(temp));
+//		model.addItemToInventory(temp);
+//		assertTrue(controller.sortInven(model.getInventory()) == 2); 
+//		// iNum should be set to 2 as 0 index is the torch and 1 index is now the banana
+//		
+//		assertTrue(model.getItemFromInventory(model.getiNum()-1).equals(temp));
 		// the banana should also have been sorted into the first index (one less than the current iNum)
 		
 	}

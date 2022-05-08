@@ -1,5 +1,6 @@
 package edu.ycp.cs320.groupProj.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,6 +10,7 @@ import edu.ycp.cs320.gamedb.model.Player;
 import edu.ycp.cs320.gamedb.persist.DatabaseProvider;
 import edu.ycp.cs320.gamedb.persist.DerbyDatabase;
 import edu.ycp.cs320.gamedb.persist.IDatabase;
+import edu.ycp.cs320.groupProj.model.ObjectModel;
 import edu.ycp.cs320.groupProj.model.PlayerModel;
 
 public class DBController {
@@ -78,7 +80,7 @@ public class DBController {
 		// get the DB instance and execute transaction
 		IDatabase db = DatabaseProvider.getInstance();
 		PlayerModel playerModel =  db.LoadPlayerModel(playerId);
-		
+
 		return playerModel;	
 	}
 	
@@ -89,7 +91,9 @@ public class DBController {
 		// get the DB instance and execute transaction
 		IDatabase db = DatabaseProvider.getInstance();
 		Boolean playerModel =  db.InsertNewPlayerModel(playerId, health, x, y, score, matches);
-		
+		if(playerModel == false) {
+			return null;
+		}
 		return playerModel;	
 	}
 	
@@ -107,6 +111,44 @@ public class DBController {
 		IDatabase db = DatabaseProvider.getInstance();
 		Boolean roomInven = db.UpdateRoomInven(playerId, xLoc, yLoc, inven);
 		return roomInven;
+	}
+
+	public Boolean InsertRoomInven(int playerId, int xLoc, int yLoc, String thing) {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		
+		IDatabase db = DatabaseProvider.getInstance();
+		Boolean roomInven = db.InsertRoomInven(playerId, xLoc, yLoc, thing);
+		return roomInven;
+		
+	}
+
+	public Boolean UpdatePlayerModel(int playerId, int health, int xLoc, int yLoc, int score, int matches) {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		
+		IDatabase db = DatabaseProvider.getInstance();
+		Boolean playerModel = db.UpdatePlayerModel(playerId, health, xLoc, yLoc, score, matches);
+		return playerModel;
+		
+	}
+
+	public ArrayList<ObjectModel> getPlayerInventory(int playerId) {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		
+		IDatabase db = DatabaseProvider.getInstance();
+		ArrayList<ObjectModel> playerInventory = db.getPlayerInventory(playerId);
+		return playerInventory;
+	}
+
+	public ArrayList<ObjectModel> getRoomInventory(int playerId, int x, int y) {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		
+		IDatabase db = DatabaseProvider.getInstance();
+		ArrayList<ObjectModel> roomInventory = db.getRoomInventory(playerId, x, y);
+		
+		if(roomInventory.size() > 0) {
+			return roomInventory;
+		}else
+			return null;
 	}
 	
 	//Don't I want a single query that updates game with map, score, and health instead of individual ones?
