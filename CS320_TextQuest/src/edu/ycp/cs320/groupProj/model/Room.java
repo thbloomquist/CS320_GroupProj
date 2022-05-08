@@ -136,7 +136,7 @@ public class Room {
 	}
 	public String getDesc()
 	{
-		return this.getTag().getName();
+		return this.getTag().getDesc();
 	}
 	public boolean getDiscovered()
 	{

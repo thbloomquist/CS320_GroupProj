@@ -112,7 +112,7 @@ public class ConsoleServlet2 extends HttpServlet {
 		if (action.length == 0) {
 			result = "Please enter a command! Don't know what to enter? Press the \"stuck\" button for hints!";
 		} else if (action.length == 1) {
-			if(action[0].equals("fight") && currentR.hasMonster()) {
+			if(action[0].equals("fight") && currentR.hasMonster() && !pModel.getHardy()) {
 				//FIGHT
 				result = "The " + currentR.getMonster().getName() + " manages to claw you before you fell the beast.";
 				pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
@@ -121,6 +121,28 @@ public class ConsoleServlet2 extends HttpServlet {
 					result += " During the scuffle your torch went out.";
 					pModel.setLit(false);
 				} 
+				else if(action[0].equals("fight") && currentR.hasMonster() && pModel.getHardy()) {
+					//FIGHT WITH HARDY MODE ENABLED
+					Random rand = new Random();
+					int upperBound = 4 ;
+					int hardyChance = rand.nextInt(upperBound);
+					if(hardyChance >= 3)
+					{
+						result = "You go to attack the " + currentR.getMonster().getName() + ", but Hardy shoves you towards the creature and you miss."
+								+ "The monster manages to get you with its claws.";
+						pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
+					}
+					else
+					{
+						result = "The " + currentR.getMonster().getName() + " manages to claw you before you fell the beast.";
+						pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
+						currentR.deadMonster();
+						if(pModel.isLit()) {
+							result += " During the scuffle your torch went out.";
+							pModel.setLit(false);
+						} 
+					}
+				}
 			} else if(action[0].equals("fight") && !currentR.hasMonster() && !pModel.getHardy()) {
 				result = "There's no monster here, unless you're counting yourself.";
 			} 
@@ -155,10 +177,22 @@ public class ConsoleServlet2 extends HttpServlet {
 							if(pModel.getHardy())
 							{
 								result = "You and Hardy moved " + action[1]+ ".";
+								Random rand = new Random();
+								int upperBound = 4 ;
+								int hardyChance = rand.nextInt(upperBound);
+								if(hardyChance == 4 && pModel.isLit())
+								{
+									result += " Hardy sneezed on the torch and it went out.";
+									pModel.setLit(false);
+								}
 							}
 							else
 							{
 								result = "You moved " + action[1]+ ".";
+								if(map.getRoom(7, 3).searchObject(true, "totem"))
+								{
+									map.getRoom(7, 3).getInven()[map.getRoom(7, 3).getObjectIndex(true, "totem")] = null;
+								}
 							}
 							did = true;
 							if(currentR.getDiscovered() == false)
@@ -174,10 +208,22 @@ public class ConsoleServlet2 extends HttpServlet {
 							if(pModel.getHardy())
 							{
 								result = "You and Hardy moved " + action[1]+ ".";
+								Random rand = new Random();
+								int upperBound = 4 ;
+								int hardyChance = rand.nextInt(upperBound);
+								if(hardyChance == 4 && pModel.isLit())
+								{
+									result += " Hardy sneezed on the torch and it went out.";
+									pModel.setLit(false);
+								}
 							}
 							else
 							{
 								result = "You moved " + action[1]+ ".";
+								if(map.getRoom(7, 3).searchObject(true, "totem"))
+								{
+									map.getRoom(7, 3).getInven()[map.getRoom(7, 3).getObjectIndex(true, "totem")] = null;
+								}
 							}
 							did = true;
 							if(currentR.getDiscovered() == false)
@@ -193,10 +239,22 @@ public class ConsoleServlet2 extends HttpServlet {
 							if(pModel.getHardy())
 							{
 								result = "You and Hardy moved " + action[1]+ ".";
+								Random rand = new Random();
+								int upperBound = 4 ;
+								int hardyChance = rand.nextInt(upperBound);
+								if(hardyChance == 4 && pModel.isLit())
+								{
+									result += " Hardy sneezed on the torch and it went out.";
+									pModel.setLit(false);
+								}
 							}
 							else
 							{
 								result = "You moved " + action[1]+ ".";
+								if(map.getRoom(7, 3).searchObject(true, "totem"))
+								{
+									map.getRoom(7, 3).getInven()[map.getRoom(7, 3).getObjectIndex(true, "totem")] = null;
+								}
 							}
 							did = true;
 							if(currentR.getDiscovered() == false)
@@ -212,10 +270,22 @@ public class ConsoleServlet2 extends HttpServlet {
 							if(pModel.getHardy())
 							{
 								result = "You and Hardy moved " + action[1]+ ".";
+								Random rand = new Random();
+								int upperBound = 4 ;
+								int hardyChance = rand.nextInt(upperBound);
+								if(hardyChance == 4 && pModel.isLit())
+								{
+									result += " Hardy sneezed on the torch and it went out.";
+									pModel.setLit(false);
+								}
 							}
 							else
 							{
 								result = "You moved " + action[1]+ ".";
+								if(map.getRoom(7, 3).searchObject(true, "totem"))
+								{
+									map.getRoom(7, 3).getInven()[map.getRoom(7, 3).getObjectIndex(true, "totem")] = null;
+								}
 							}
 							did = true;
 							if(currentR.getDiscovered() == false)
@@ -300,9 +370,14 @@ public class ConsoleServlet2 extends HttpServlet {
 	
 			// deals with GRAB command
 			if (action[0].equals("grab")) {
-				if (pModel.getiNum() == 9) {
+				if (pModel.getiNum() == 9 && !pModel.getHardy()) {
 					result = "Your inventory is full.";
-				} else if (currentR.isDark() && !pModel.isLit()) {
+				}
+				else if(pModel.getiNum() == 9 && pModel.getHardy())
+				{
+					result = "Your inventory is full and Hardy refuses to carry anything.";
+				}
+				else if (currentR.isDark() && !pModel.isLit()) {
 					result = "It's too dark to try to grab anything";
 					if (currentR.hasMonster()) {
 						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
@@ -310,17 +385,17 @@ public class ConsoleServlet2 extends HttpServlet {
 				} else if (currentR.hasMonster()) {
 					result = "The " + currentR.getMonster().getName() + " blocks your way.";
 				} else {
-					if (rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate")) {
+					if (rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate") && action[1] != ("totem")) {
 						Boolean thing = pController.grabItem(action[1], currentR); // good function great function
 						if (thing) {
 							result = "You grab the " + action[1];
 							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
 							pModel.setiNum(NEWINUM);
 						}
-						if(rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate"))
+						if(rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate") && action[1] != ("totem"))
 						{
 							Random rand = new Random();
-							int upperBound = 5 ;
+							int upperBound = 4;
 							int hardyChance = rand.nextInt(upperBound);
 							Boolean thing1 = pController.grabItem(action[1], currentR);
 							if(hardyChance > 4 && thing1 || action[1]=="key" && thing1)
@@ -400,11 +475,11 @@ public class ConsoleServlet2 extends HttpServlet {
 						String s = " the room contains: ";
 						for (int i = 0; i < currentR.getInven().length; i++) {
 							if (currentR.getInven()[i] != null) {
-								s += currentR.getInven()[i].getTag().getName() + " and ";
+								s += currentR.getInven()[i].getName() + " and ";
 							}
 						}
 						if (currentR.hasMonster()) {
-							s += currentR.getMonster().getNameTag().getName() + " and ";
+							s += currentR.getMonster().getName() + " and ";
 						}
 						if (s.toLowerCase().compareTo(" the room contains: ") == 0) {
 							result = currentR.getTag().getDesc();
@@ -507,8 +582,24 @@ public class ConsoleServlet2 extends HttpServlet {
 								result = "You smash open the crate and find nothing.";
 							}	
 						}
+						else
+						{
+							result = "There is no crate in this room";
+						}
 					}
-	
+					else if(action[1].equals("totem"))
+					{
+						if(currentR.searchObject(true, "Totem"))
+						{
+							currentR.getInven()[currentR.getObjectIndex(true, "Totem")] = null;
+							pModel.setHardy(true);
+							result = "You touch the totem and it crumbles into dust. You feel a presence in the room. You turn around and see a man in the room with you, and that man's name is Hardy.";
+						}
+						else
+						{
+							result = "There is no totem in this room";
+						}
+					}
 					else {
 						result = "You fail to open " + action[1];
 					}

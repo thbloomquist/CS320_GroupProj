@@ -15,7 +15,7 @@ public class RoomController {
 		Boolean thing = false;
 		for (int i = 0; i < currentRoom.getInven().length; i++) {
 			if (currentRoom.getInven()[i] != null) {
-				if (currentRoom.getInven()[i].getTag().getName().toLowerCase().equals(item.toLowerCase())) {
+				if (currentRoom.getInven()[i].getName().toLowerCase().equals(item.toLowerCase())) {
 					thing = true;
 				}
 			}
