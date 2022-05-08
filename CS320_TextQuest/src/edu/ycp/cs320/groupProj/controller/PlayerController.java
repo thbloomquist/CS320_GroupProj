@@ -39,31 +39,7 @@ public class PlayerController {
 		}
 		return thing;
 	}
-//		Boolean t  = false;
-//		for(int i = 0; i < model.getInvenFULL().length; i++) {
-//			if(model.getInvenFULL()[i] != null) {
-//				if(model.getInvenFULL()[i].getTag().getName().toLowerCase().equals(item.toLowerCase())) {
-//					t = true;
-//				}
-//			}
-//		}
-//		return t;
-//	}
-//	public int sortInven(ObjectModel[] inven) {
-//		// this function serves two purposes - returning the new iNum & sorting the players inventory so the iNum is accurate.
-//		int num = 0; 
-//		ObjectModel[] tempr = new ObjectModel[inven.length];
-//		for(int i = 0; i < inven.length; i++) {
-//			if(inven[i] != null) {
-//				tempr[num] = inven[i];
-//				num++;
-//			}
-//		}
-//		model.setInvenFULL(tempr);
-//		
-//		return num;
-//		
-//	}
+
 	
 	/**
 	 * Grabs an item from the room and adds it to player inventory
@@ -79,84 +55,8 @@ public class PlayerController {
 			}
 		}
 		return false;
-//		int num = 0;
-//		for (int i = 0; i < currentR.getInven().length; i++) {
-//			if (currentR.getInven()[i] != null) {
-//				temp[num] = currentR.getInven()[i];
-//				num++;
-//			}
-//		}
-//		Boolean only1 = true;
-//		for (int i = 0; i < num; i++) {
-//			if (secondW.toLowerCase().compareTo(temp[i].getTag().getName().toLowerCase()) == 0 && only1) {
-//				model.addInventory(temp[i]);
-//				t = true;
-//				temp[i] = null;
-//				only1 = false;
-//			}
-//		}
-//		for (int i = 0; i < currentR.getInven().length; i++) {
-//			currentR.getInven()[i] = temp[i];
-//		}
-//		return t;
 	}
 	
-//	public String placeItem(String secondW, Room currentR) {
-//		String retSult = "";
-//		ObjectModel tempr = null;
-//		Boolean only1 = true;
-//		for (int l = 0; l < model.getInventory().length; l++) {
-//			if (model.getItemFromInventory(l) != null) {
-//				if (model.getItemFromInventory(l).getName().toLowerCase()
-//						.equals(secondW) && only1) {
-//					tempr = model.getItemFromInventory(l);
-//					only1 = false;
-//					model.getInventory()[l] = null;
-//					// this should return a reference to the first index of an item that contains
-//					// the same name as the input
-//				}
-//			}
-//		}
-//		int temp = -1;
-//		Boolean firstI = true;
-//		for (int i = 0; i < currentR.getInven().size(); i++) {
-//			if (currentR.getInven().get(i) == null && firstI) {
-//				temp = i;
-//				firstI = false;
-//				// this should return the first index that is "open" for an item input
-//			}
-//		}
-//		if (temp == -1) {
-//			retSult = "The room is full.";
-//		} else {
-//			currentR.getInven().set(temp, tempr);
-////			int NEWINUM = sortInven(model.getInvenFULL());
-////			model.setiNum(NEWINUM);
-//			retSult = "You placed the " + secondW + " on the floor.";
-//		}
-//		return retSult;
-//	}
-//	public String useItem(String secondW, Room CurrentR) {
-//		String result = "";
-//		Boolean j1 = true;
-//		ObjectModel temp = null;
-//		for (int i = 0; i < model.getInventory().length; i++) {
-//			if (model.getInventory()[i] != null) {
-//				if (model.getItemFromInventory(i).getTag().getName().toLowerCase()
-//						.equals(secondW) && j1) {
-//					temp = model.getItemFromInventory(i);
-//					model.removeItem(i);
-//					j1 = false;
-//					//UPDATE DATABASE HERE - REMOVE ITEM FROM DB
-//				}
-//			}
-//		}
-//		int NEWINUM = sortInven(model.getInvenFULL());
-//		model.setiNum(NEWINUM);
-//		model.setHP(model.getHP() + temp.getThing());
-//		result = "You used the " + temp.getTag().getName();
-//		return result;
-//	}
 	public void upScore(String thing) {
 		thing = thing.toLowerCase();
 		Random rand = new Random();

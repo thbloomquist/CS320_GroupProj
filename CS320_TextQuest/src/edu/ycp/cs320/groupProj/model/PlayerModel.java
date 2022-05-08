@@ -101,14 +101,6 @@ public class PlayerModel {
 		return null;
 	}
 	
-	
-//	public int getiNum() {
-//		return invenIndex;
-//	}
-//	public void setiNum(int n) {
-//		invenIndex = n;
-//	}
-	
 	/**
 	 * Gets an item at index
 	 * @param index		Value of item
@@ -153,9 +145,6 @@ public class PlayerModel {
 		ObjectModel torch = new ObjectModel(n, false);
 		addItemToInventory(torch);
 	}
-//	public void setInvenFULL(ObjectModel[] temporary) {
-//		inventory = temporary;
-//	}
 	public int getScore() {
 		return score;
 	}
@@ -178,22 +167,7 @@ public class PlayerModel {
 	public void setHasKey(Boolean hasKey) {
 		this.hasKey = hasKey;
 	}
-	//Checks if a specific item is in the player's inventory
-	//Set isName to true to search by name, and isName to false to search by description.
-//	public Boolean searchObject(boolean isName, String string)
-//	{
-//		for(int i = 0; i < inventory.length; i++) {
-//			if(inventory[i] != null) {
-//				if(inventory[i].getName() == string && isName) {
-//					return true;
-//				}
-//				if(inventory[i].getDesc() == string && isName == false) {
-//					return true;
-//				}
-//			}
-//		}
-//		return false;
-//	}
+
 	
 	public Boolean getHardy()
 	{

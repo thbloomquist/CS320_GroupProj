@@ -7,7 +7,7 @@
     <div class="navbar-nav">
       <a class="nav-item nav-link active" href="/TextQuest/">Home</a>
       <a class="nav-item nav-link" href="/TextQuest/new.game">Start New Game</a>
-      <a class="nav-item nav-link" href="/TextQuest/continue">Continue Game</a>
+      <a class="nav-item nav-link" href="/TextQuest/continue.game">Continue Game</a>
       <a class="nav-item nav-link" href = "/TextQuest/about">About</a>
       </div>
       </div>

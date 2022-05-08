@@ -112,18 +112,7 @@ public class NewGameServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		System.out.println("Log Out Servlet: doPost");
-		
-		HttpSession session = req.getSession(false);
-		
-		if(session == null) {
-			System.out.println("No session active, redirecting to login");
-		}else {
-			System.out.println("Deleting current session");
-			session.invalidate();
-		}
-		
-		req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
+		doGet(req, resp);
 	}
 	
 }

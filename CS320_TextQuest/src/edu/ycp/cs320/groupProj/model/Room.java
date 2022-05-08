@@ -117,13 +117,6 @@ public class Room {
 	public void createContents1() {
 		NameTag n = new NameTag("crate", "an old wooden crate");
 		contents.add(new ObjectModel(n, false));
-		
-//		for(int i = 0; i < contents.size(); i++) {
-//			if(contents.get(i) == null) {
-//				contents.set(i, new ObjectModel(n, 5, false)); 
-//				i = contents.size() + 1;
-//			}
-//		}
 	}
 	public boolean checkEmpty() {
 		for(int i = 0; i < contents.size(); i++) {

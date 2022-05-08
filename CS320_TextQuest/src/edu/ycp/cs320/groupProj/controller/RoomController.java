@@ -18,13 +18,6 @@ public class RoomController {
 				thing = true;
 			}
 		}
-//		for (int i = 0; i < currentRoom.getInven().size(); i++) {
-//			if (currentRoom.getInven().get(i) != null) {
-//				if (currentRoom.getInven().get(i).getTag().getName().toLowerCase().equals(item.toLowerCase())) {
-//					thing = true;
-//				}
-//			}
-//		}
 		return thing;
 	}
 	public void setRoomType(int rNum) {

@@ -409,14 +409,20 @@ public class ConsoleServlet2 extends HttpServlet {
 						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 					}
 				} else {
-					if(action[1].toString().equals("crate")) {
+					if(action[1].toString().equals("banana")) {
 						if (pController.contains(action[1])) {
-	//						result = pController.useItem(action[1], currentR);
-							errorMessage = "Current health == " + health;
+							result = "You eat a banana, and instantly feel better";
+							errorMessage = "Current health == " + health+10;
 							pController.upScore(action[0]);
-							UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
+							UpdatePlayerModel(health + 10, xLoc, yLoc, score, matches, req); //sends updated info to db
 							//PLAYERINVEN DB STUFF
+							pModel.removeItem(action[1].toString().toLowerCase());
 							String inven = "";
+							
+							for(ObjectModel items: pModel.getInventory()) {
+								inven += items.getName() + " ";
+							}
+							
 							DBController.UpdatePlayerInven(player.getPlayerId(), inven);
 							//PLAYERINVEN DB STUFF
 						} else {
@@ -531,11 +537,24 @@ public class ConsoleServlet2 extends HttpServlet {
 							int upperBound = 3;
 							int crateChance = rand.nextInt(upperBound);
 							
+							for(int i = 0; i < 20; i++) {
+								System.out.println(rand.nextInt(upperBound));
+							}
+							
 							String inven = "";
 							
-							
+							System.out.println(crateChance);
 							
 							if(crateChance == 1)
+							{
+								pModel.removeItem("crate");
+								// load in players invintory with crate removed
+								for(ObjectModel items: pModel.getInventory()) {
+									inven += items.getName() + " ";
+								}
+								DBController.UpdatePlayerInven(player.getPlayerId(), inven);
+								result = "You smash open the crate and find nothing.";
+							}else 
 							{
 								pModel.removeItem("crate");
 								// load in players inventory (with item removed)
@@ -547,10 +566,6 @@ public class ConsoleServlet2 extends HttpServlet {
 								pModel.addItemToInventory(new ObjectModel(new NameTag("banana", "a yellow banana you found in a box. " + "You don't know where it's been but beggers can't be choosers."),false));
 								result = "You smash open the crate and find a banana inside.";
 								System.out.println("GETTING BANANA");
-							}else 
-							{
-								pModel.removeItem("crate");
-								result = "You smash open the crate and find nothing.";
 							}	
 						}
 					}

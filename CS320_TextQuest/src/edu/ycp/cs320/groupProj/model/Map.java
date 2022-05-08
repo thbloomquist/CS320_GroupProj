@@ -24,6 +24,10 @@ public class Map {
 	public Room getRoom(int up, int side) {
 		return map[up][side];
 	}
+	
+	public void setRoomInventory(int up, int side, ArrayList<ObjectModel> room) {
+		map[up][side].setInventory(room);
+	}
 
 	public void reset() {
 		map = new Room[10][10];
