@@ -86,6 +86,9 @@ public class ConsoleServlet2 extends HttpServlet {
 		int matches = pModel.getMatches();
 		
 		rController.setModel(currentR);
+		// TO DO
+		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
+		// TO DO
 
 		// prints map - for testing purposes
 //		 for (int i = 0; i < 10; i++) { 
@@ -120,39 +123,37 @@ public class ConsoleServlet2 extends HttpServlet {
 		} else if (action.length == 1) {
 			if(action[0].equals("fight") && currentR.hasMonster() && !pModel.getHardy()) {
 				//FIGHT
-				result = "The " + currentR.getMonster().getName() + " manages to claw you before you fell the beast.";
-				pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
+				result = "The " + currentR.getMonster().getNameTag().getName() + " manages to claw you before you fell the beast.";
+				pModel.setHP(health-currentR.getMonster().getDMG());
 				UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
 				currentR.deadMonster();
 				if(pModel.isLit()) {
 					result += " During the scuffle your torch went out.";
 					pModel.setLit(false);
 				} 
-				else if(action[0].equals("fight") && currentR.hasMonster() && pModel.getHardy()) {
-					//FIGHT WITH HARDY MODE ENABLED
-					Random rand = new Random();
-					int upperBound = 4 ;
-					int hardyChance = rand.nextInt(upperBound);
-					if(hardyChance >= 3)
-					{
-						result = "You go to attack the " + currentR.getMonster().getName() + ", but Hardy shoves you towards the creature and you miss."
-								+ "The monster manages to get you with its claws.";
-						pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
-						UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
-					}
-					else
-					{
-						result = "The " + currentR.getMonster().getName() + " manages to claw you before you fell the beast.";
-						pModel.setHP(pModel.getHP()-currentR.getMonster().getDMG());
-						UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
-						currentR.deadMonster();
-						if(pModel.isLit()) {
-							result += " During the scuffle your torch went out.";
-							pModel.setLit(false);
-						} 
-					}
+			} else if(action[0].equals("fight") && currentR.hasMonster() && pModel.getHardy()) {
+				//FIGHT WITH HARDY MODE
+				Random rand = new Random();
+				int upperBound = 3 ;
+				int hardyChance = rand.nextInt(upperBound);
+				if(hardyChance == 3)
+				{
+					result = "You prepared to attack the " + currentR.getMonster().getName() + ", but Hardy shoved you towards the creature and it swiped you with its claws.";
+					pModel.setHP(health-currentR.getMonster().getDMG());
+					UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
 				}
-			} else if(action[0].equals("fight") && !currentR.hasMonster() && !pModel.getHardy()) {
+				else {
+					result = "The " + currentR.getMonster().getNameTag().getName() + " manages to claw you before you fell the beast.";
+					pModel.setHP(health-currentR.getMonster().getDMG());
+					UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); //sends updated info to db
+					currentR.deadMonster();
+				}
+				if(pModel.isLit()) {
+					result += " During the scuffle your torch went out.";
+					pModel.setLit(false);
+				} 
+			}
+			else if(action[0].equals("fight") && !currentR.hasMonster() && !pModel.getHardy()) {
 				result = "There's no monster here, unless you're counting yourself.";
 			} 
 			else if(action[0].equals("fight") && !currentR.hasMonster() && pModel.getHardy())
@@ -186,22 +187,18 @@ public class ConsoleServlet2 extends HttpServlet {
 							if(pModel.getHardy())
 							{
 								result = "You and Hardy moved " + action[1]+ ".";
-								Random rand = new Random();
-								int upperBound = 4 ;
-								int hardyChance = rand.nextInt(upperBound);
-								if(hardyChance == 4 && pModel.isLit())
-								{
-									result += " Hardy sneezed on the torch and it went out.";
-									pModel.setLit(false);
-								}
+							}
+							Random rand = new Random();
+							int upperBound = 4 ;
+							int hardyChance = rand.nextInt(upperBound);
+							if(hardyChance == 4 && pModel.isLit())
+							{
+								result += " Hardy sneezed on the torch and it went out.";
+								pModel.setLit(false);
 							}
 							else
 							{
 								result = "You moved " + action[1]+ ".";
-								if(map.getRoom(7, 3).searchObject(true, "totem"))
-								{
-									map.getRoom(7, 3).getInven()[map.getRoom(7, 3).getObjectIndex(true, "totem")] = null;
-								}
 							}
 							did = true;
 							if(currentR.getDiscovered() == false)
@@ -217,22 +214,18 @@ public class ConsoleServlet2 extends HttpServlet {
 							if(pModel.getHardy())
 							{
 								result = "You and Hardy moved " + action[1]+ ".";
-								Random rand = new Random();
-								int upperBound = 4 ;
-								int hardyChance = rand.nextInt(upperBound);
-								if(hardyChance == 4 && pModel.isLit())
-								{
-									result += " Hardy sneezed on the torch and it went out.";
-									pModel.setLit(false);
-								}
+							}
+							Random rand = new Random();
+							int upperBound = 4 ;
+							int hardyChance = rand.nextInt(upperBound);
+							if(hardyChance == 4 && pModel.isLit())
+							{
+								result += " Hardy sneezed on the torch and it went out.";
+								pModel.setLit(false);
 							}
 							else
 							{
 								result = "You moved " + action[1]+ ".";
-								if(map.getRoom(7, 3).searchObject(true, "totem"))
-								{
-									map.getRoom(7, 3).getInven()[map.getRoom(7, 3).getObjectIndex(true, "totem")] = null;
-								}
 							}
 							did = true;
 							if(currentR.getDiscovered() == false)
@@ -248,22 +241,18 @@ public class ConsoleServlet2 extends HttpServlet {
 							if(pModel.getHardy())
 							{
 								result = "You and Hardy moved " + action[1]+ ".";
-								Random rand = new Random();
-								int upperBound = 4 ;
-								int hardyChance = rand.nextInt(upperBound);
-								if(hardyChance == 4 && pModel.isLit())
-								{
-									result += " Hardy sneezed on the torch and it went out.";
-									pModel.setLit(false);
-								}
+							}
+							Random rand = new Random();
+							int upperBound = 4 ;
+							int hardyChance = rand.nextInt(upperBound);
+							if(hardyChance == 4 && pModel.isLit())
+							{
+								result += " Hardy sneezed on the torch and it went out.";
+								pModel.setLit(false);
 							}
 							else
 							{
 								result = "You moved " + action[1]+ ".";
-								if(map.getRoom(7, 3).searchObject(true, "totem"))
-								{
-									map.getRoom(7, 3).getInven()[map.getRoom(7, 3).getObjectIndex(true, "totem")] = null;
-								}
 							}
 							did = true;
 							if(currentR.getDiscovered() == false)
@@ -279,22 +268,18 @@ public class ConsoleServlet2 extends HttpServlet {
 							if(pModel.getHardy())
 							{
 								result = "You and Hardy moved " + action[1]+ ".";
-								Random rand = new Random();
-								int upperBound = 4 ;
-								int hardyChance = rand.nextInt(upperBound);
-								if(hardyChance == 4 && pModel.isLit())
-								{
-									result += " Hardy sneezed on the torch and it went out.";
-									pModel.setLit(false);
-								}
+							}
+							Random rand = new Random();
+							int upperBound = 4 ;
+							int hardyChance = rand.nextInt(upperBound);
+							if(hardyChance == 4 && pModel.isLit())
+							{
+								result += " Hardy sneezed on the torch and it went out.";
+								pModel.setLit(false);
 							}
 							else
 							{
 								result = "You moved " + action[1]+ ".";
-								if(map.getRoom(7, 3).searchObject(true, "totem"))
-								{
-									map.getRoom(7, 3).getInven()[map.getRoom(7, 3).getObjectIndex(true, "totem")] = null;
-								}
 							}
 							did = true;
 							if(currentR.getDiscovered() == false)
@@ -378,14 +363,15 @@ public class ConsoleServlet2 extends HttpServlet {
 				pController.upScore(action[0]);
 			}
 	
-			// deals with GRAB command
+			// deals with GRAB command - update ROOMINVEN and PLAYERINVEN
 			if (action[0].equals("grab")) {
-				if (pModel.getiNum() == 9 && !pModel.getHardy()) {
-					result = "Your inventory is full.";
-				}
-				else if(pModel.getiNum() == 9 && pModel.getHardy())
+				if (pModel.getiNum() == 9 && !pModel.getHardy()) 
 				{
-					result = "Your inventory is full and Hardy refuses to help you carry anything.";
+					result = "Your inventory is full.";
+				} 
+				else if (pModel.getiNum() == 9 && pModel.getHardy()) 
+				{
+					result = "Your inventory is full and Hardy isn't willing to help carry anything.";
 				}
 				else if (currentR.isDark() && !pModel.isLit()) {
 					result = "It's too dark to try to grab anything";
@@ -393,57 +379,22 @@ public class ConsoleServlet2 extends HttpServlet {
 						result += ", but you hear a strange hissing coming from directly in front of you. You should light your torch fast!";
 					}
 				} else if (currentR.hasMonster()) {
-					result = "The " + currentR.getMonster().getName() + " blocks your way.";
+					result = "The " + currentR.getMonster().getName() + " blocks your way, you'll have to fight it before you can loot the room.";
 				} else {
-					if (rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate") && action[1] != ("totem")) 
-					{
+					if (rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate") && action[1] != ("totem")) {
 						Boolean thing = pController.grabItem(action[1].toString(), currentR); // good function great function
-						if (thing) 
-						{
+						if (thing) {
 							result = "You grab the " + action[1];
 							int NEWINUM = pController.sortInven(pModel.getInvenFULL());
 							pModel.setiNum(NEWINUM);
+							currentR.checkEmpty();
 							//PLAYERINVEN DB STUFF
-							//inven = currentR.getInven().toString();
-//							InsertIntoRoomInven(pModel.getSide(), pModel.getUp(), inven, req);
-							
-//							//ROOMINVEN DB STUFF
-//							for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-//								if (currentR.getInven()[i] != null) {
-//									inven += pModel.getInvenFULL()[i].getTag().getName() + " ";
-//								}
-//							}
-//							System.out.println("PlayerInven : " + inven);
-//							InsertIntoRoomInven(inven, req);
-//							//ROOMINVEN DB STUFF 
 							String inven = "";
-							for (int i = 0; i < pModel.getInvenFULL().length; i++) 
-							{
-								if (pModel.getInventory(i) != null) 
-								{
-									inven += pModel.getInvenFULL()[i].getName() + " ";
-								}	
-							}
-						}
-						if(rController.contains(action[1]) && !pModel.getHardy() && action[1] != ("crate") && action[1] != ("totem"))
-						{
-							Random rand = new Random();
-							int upperBound = 4;
-							int hardyChance = rand.nextInt(upperBound);
-							Boolean thing1 = pController.grabItem(action[1], currentR);
-							if(hardyChance > 4 && thing1 || action[1]=="key" && thing1)
-							{
-								result = "You grab the " + action[1];
-								int NEWINUM = pController.sortInven(pModel.getInvenFULL());
-								pModel.setiNum(NEWINUM);
-								String inven = "";
-								for (int i = 0; i < pModel.getInvenFULL().length; i++) 
-								{
-									if (pModel.getInventory(i) != null) 
-									{
-										inven += pModel.getInvenFULL()[i].getName() + " ";
-									}
+							for (int i = 0; i < pModel.getInvenFULL().length; i++) {
+								if (pModel.getInventory(i) != null) {
+									inven += pModel.getInvenFULL()[i].getTag().getName() + " ";
 								}
+							}
 							System.out.println("PlayerInven : " + inven);
 							InsertIntoPlayerInven(inven, req);
 							//PLAYERINVEN DB STUFF
@@ -459,43 +410,17 @@ public class ConsoleServlet2 extends HttpServlet {
 //							System.out.println("PlayerInven : " + inven);
 //							InsertIntoRoomInven(inven, req);
 //							//ROOMINVEN DB STUFF 
-							
-							}
-							else if(thing1 && hardyChance == 4)
-							{
-								result = "You go to grab the " + action[1] +", but Hardy takes it first";
-								pController.useItem(action[1], currentR);
-							}
-						}
-						else 
-						{
+						} else {
 							result = "Your hand slips grabbing the " + action[1] + " and it falls back onto the floor.";
-					
 						}
-					}
-					else if (action[1].equals("inventory")) {
-						String s = "You rifle through your pack and find: ";
-						int r = 0;
-						for (int i = 0; i < pModel.getInvenFULL().length; i++) {
-							if (pModel.getInvenFULL()[i] != null) {
-								s += pModel.getInvenFULL()[i].getTag().getName() + ", ";
-								r++;
-							}
-						}
-						if (r == 0) {
-							s += "it's empty.";
-						}
-						result = s;
-						pController.upScore(action[0]);
-					} 
-					}
-			}
-					else 
-					{
+					} else {
 						result = "There's no " + action[1] + " around.";
-					}	
+					}
+				}
 	
-			// deals with PLACE command
+			}
+	
+			// deals with PLACE command - update ROOMINVEN and PLAYERINVEN
 			if (action[0].equals("place")) {
 				if (currentR.isDark() && !pModel.isLit()) {
 					result = "It's too dark to see where to place anything";
@@ -568,17 +493,17 @@ public class ConsoleServlet2 extends HttpServlet {
 						String s = " the room contains: ";
 						for (int i = 0; i < currentR.getInven().length; i++) {
 							if (currentR.getInven()[i] != null) {
-								s += currentR.getInven()[i].getName() + " and ";
+								s += currentR.getInven()[i].getTag().getName() + " and ";
 							}
 						}
 						if (currentR.hasMonster()) {
-							s += currentR.getMonster().getName() + " and ";
+							s += currentR.getMonster().getNameTag().getName() + " and ";
 						}
 						if (s.toLowerCase().compareTo(" the room contains: ") == 0) {
-							result = currentR.getDesc();
+							result = currentR.getTag().getDesc();
 						} else {
 							s += "that's all";
-							result = currentR.getDesc() + s;
+							result = currentR.getTag().getDesc() + s;
 						}
 					} else if (action[1].equals("inventory")) {
 						String s = "You rifle through your pack and find: ";
@@ -741,4 +666,5 @@ public class ConsoleServlet2 extends HttpServlet {
 		DBController.UpdateRoomInven(player.getPlayerId(), xLoc, yLoc, thing); 
 		System.out.println("PlayerInventory updated with: " + thing);
 		}
+
 }

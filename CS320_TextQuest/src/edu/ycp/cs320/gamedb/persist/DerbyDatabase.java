@@ -654,17 +654,5 @@ public class DerbyDatabase implements IDatabase { //FIX
 			}
 		});
 	}
-
-	@Override
-	public Boolean UpdatePlayerInven() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean UpdateRoomInven() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 }
