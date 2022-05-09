@@ -116,6 +116,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 		}
 		
 		for(String item : items) {
+			System.out.println(item);
 			NameTag name = null;
 			if(item.toLowerCase().equals("crate")) {
 				name = new NameTag(item, "an old wooden crate");
@@ -124,8 +125,10 @@ public class DerbyDatabase implements IDatabase { //FIX
 			} else if(item.toLowerCase().equals("torch")) {
 				name = new NameTag(item, "It's a piece of wood with oil-covered cloth wrapped on the tip.");
 			} else if(item.toLowerCase().equals("banana")) {
-					name = new NameTag(item, "a yellow banana you found in a box. " + "You don't know where it's been but beggers can't be choosers.");
-				}else {
+					name = new NameTag(item, "a yellow banana you found in a box. You don't know where it's been but beggers can't be choosers.");
+			}else if(item.toLowerCase().equals("gem")) {
+				name = new NameTag(item, "as blue as the ocean over by the beach that I work at over the summer.");
+			}else {
 				name = new NameTag("REMOVE", "REMOVE");
 			}
 			items2.add(new ObjectModel(name, false));

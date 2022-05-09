@@ -150,11 +150,11 @@ public class Map {
 		//Gems
 		//When you grab a gem for the first time you get 500 points and the number updates so that you can't get more
 		//You also get more points at the end if you pick up every gem
-		this.map[2][1].getInven().add(new ObjectModel(new NameTag(("Blue Gem"), ("as blue as the ocean over by the beach that I work at over the summer.")), false));
-		this.map[1][8].getInven().add(new ObjectModel(new NameTag(("Red Gem"), ("as red as a box of candy on valentines day.")), false));
-		this.map[7][2].getInven().add(new ObjectModel(new NameTag(("Green Gem"), ("as green as a well maintained suburban lawn.")), false));
-		this.map[4][4].getInven().add(new ObjectModel(new NameTag(("Yellow Gem"), ("as yellow as one of those cool ass smiley face cookies they got down by this local bakery near where I work over the summer.")), false));
-		this.map[5][7].getInven().add(new ObjectModel(new NameTag(("Black Gem"), ("as dark as the room you found it in.")), false));
+		this.map[2][1].getInven().add(new ObjectModel(new NameTag(("Gem"), ("as blue as the ocean over by the beach that I work at over the summer.")), false));
+		this.map[1][8].getInven().add(new ObjectModel(new NameTag(("Gem"), ("as red as a box of candy on valentines day.")), false));
+		this.map[7][2].getInven().add(new ObjectModel(new NameTag(("Gem"), ("as green as a well maintained suburban lawn.")), false));
+		this.map[4][4].getInven().add(new ObjectModel(new NameTag(("Gem"), ("as yellow as one of those cool ass smiley face cookies they got down by this local bakery near where I work over the summer.")), false));
+		this.map[5][7].getInven().add(new ObjectModel(new NameTag(("Gem"), ("as dark as the room you found it in.")), false));
 
 		RoomController rC = new RoomController();
 		Random rand = new Random();

@@ -113,6 +113,12 @@ public class ConsoleServlet2 extends HttpServlet {
 				System.out.println("\tRemoving null elements from room");
 			}
 		}
+		for(int i = 0; i < pModel.getInventory().size(); i++) {
+			if(pModel.getInventory().get(i).getName().equals("REMOVE")) {
+				pModel.getInventory().remove(i);
+				System.out.println("\tRemoving null elements from room");
+			}
+		}
 		
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
