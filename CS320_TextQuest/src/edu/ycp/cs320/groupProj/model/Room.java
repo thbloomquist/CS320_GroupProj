@@ -139,9 +139,9 @@ public class Room {
 		isDark = t;
 	}
 	public void createKey() {
-		NameTag tempr = new NameTag("Key", "It's a shiny golden key, damn it's sparkly.");
+		NameTag tempr = new NameTag("key", "It's a shiny golden key, damn it's sparkly.");
 		ObjectModel thing = new ObjectModel(tempr, true);
-		contents.set(7, thing);
+		contents.add(thing);
 	}
 	public void setCel(String thing) {
 		ceiling = thing;

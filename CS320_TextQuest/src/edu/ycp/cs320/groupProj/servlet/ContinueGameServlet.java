@@ -35,6 +35,14 @@ public class ContinueGameServlet extends HttpServlet {
 		
 		Player player = (Player) session.getAttribute("player"); // get player from session
 		
+		if(player == null) {
+			System.out.println("No session active, redirecting to login");
+			LoginServlet loginServlet = new LoginServlet();
+			loginServlet.doGet(req, resp);
+			return;
+		}
+		
+		
 		PlayerModel pModel = null;
 		DBController DBController = new DBController(); // Database controller
 		
