@@ -110,7 +110,7 @@ public class DerbyDatabase implements IDatabase { //FIX
 		System.out.println("Loading  Inventory");
 		String itemNames = resultSet.getString(index++);
 		String[] items = null;
-		// splits the items in invintory into multiple strings because they're all seperate
+		// splits the items in inventory into multiple strings because they're all seperate
 		for (int i = 0; i < 2; i++) {
 			items = itemNames.split(" ");
 		}
@@ -126,8 +126,16 @@ public class DerbyDatabase implements IDatabase { //FIX
 				name = new NameTag(item, "It's a piece of wood with oil-covered cloth wrapped on the tip.");
 			} else if(item.toLowerCase().equals("banana")) {
 					name = new NameTag(item, "a yellow banana you found in a box. You don't know where it's been but beggers can't be choosers.");
-			}else if(item.toLowerCase().equals("gem")) {
+			}else if(item.toLowerCase().equals("sapphire")) {
 				name = new NameTag(item, "as blue as the ocean over by the beach that I work at over the summer.");
+			}else if(item.toLowerCase().equals("ruby")) {
+				name = new NameTag(item, "as red as a box of candy on valentines day.");
+			}else if(item.toLowerCase().equals("emerald")) {
+				name = new NameTag(item, "as green as a well maintained suburban lawn.");
+			}else if(item.toLowerCase().equals("diamond")) {
+				name = new NameTag(item, "as yellow as one of those cool ass smiley face cookies they got down by this local bakery near where I work over the summer.");
+			}else if(item.toLowerCase().equals("onyx")) {
+				name = new NameTag(item, "as dark as the room you found it in.");
 			}else {
 				name = new NameTag("REMOVE", "REMOVE");
 			}

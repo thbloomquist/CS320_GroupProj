@@ -520,8 +520,8 @@ public class ConsoleServlet2 extends HttpServlet {
 								pModel.incrementScore(1000);
 								
 								//Checks if the player has all the gems, if they do they get another 1000 points
-								if(pController.contains("Black Gem") && pController.contains("Green Gem") && pController.contains("Blue Gem")
-										&& pController.contains("Yellow Gem") && pController.contains("Red Gem")) 
+								if(pController.contains("Onyx") && pController.contains("Emerald") && pController.contains("Sapphire")
+										&& pController.contains("Diamond") && pController.contains("Ruby")) 
 								{
 									pModel.incrementScore(1000);
 								}
