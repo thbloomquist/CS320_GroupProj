@@ -111,6 +111,13 @@ public class ConsoleServlet2 extends HttpServlet {
 				System.out.println("\tRemoving null elements from room");
 			}
 		}
+		
+		for(int i = 0; i < pModel.getInventory().size(); i++) {
+			if (pModel.getInventory().get(i).getName().equals("REMOVE")) {
+				pModel.getInventory().remove(i);
+				System.out.println("Removing nulls from inven");
+			}
+		}
 
 		// TO DO
 		// IMPLEMENT GRABBING AND PLACING ITEMS, ALONG WITH THEIR USES!!!!!!!
@@ -382,6 +389,9 @@ public class ConsoleServlet2 extends HttpServlet {
 					}
 				} else {
 					if (pController.contains(action[1])) {
+						if(action[1].equalsIgnoreCase("torch")) {
+							pLit = false;
+						}
 						result = action[1] + " has been placed into the room";
 						pController.upScore(action[0]);
 						// PLAYERINVEN DB STUFF
