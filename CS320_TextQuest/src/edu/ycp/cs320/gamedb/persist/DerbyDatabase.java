@@ -107,7 +107,6 @@ public class DerbyDatabase implements IDatabase { //FIX
 	}
 	
 	private void loadPlayerInventory(ArrayList<ObjectModel> items2, ResultSet resultSet, int index) throws SQLException {
-		System.out.println("Loading  Inventory");
 		String itemNames = resultSet.getString(index++);
 		String[] items = null;
 		// splits the items in inventory into multiple strings because they're all seperate

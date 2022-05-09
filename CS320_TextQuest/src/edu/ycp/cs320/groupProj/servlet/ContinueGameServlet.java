@@ -22,7 +22,7 @@ public class ContinueGameServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		System.out.println("New Game Servlet: doPost");
+		System.out.println("Continue Game Servlet: doGet");
 		
 		HttpSession session = req.getSession(false);
 		
@@ -55,7 +55,7 @@ public class ContinueGameServlet extends HttpServlet {
 					map.setRoomInventory(x, y, DBController.getRoomInventory(player.getPlayerId(),x,y));
 			}
 		}
-		
+		req.setAttribute("welcome", false);
 		session.setAttribute("map", map);
 		
 		ConsoleServlet2 console = new ConsoleServlet2();

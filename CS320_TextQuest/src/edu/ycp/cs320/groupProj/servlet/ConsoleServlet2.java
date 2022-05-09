@@ -43,8 +43,6 @@ public class ConsoleServlet2 extends HttpServlet {
 		System.out.println(session);
 
 		Player player = (Player) session.getAttribute("player");
-
-//		req.setAttribute("welcome", false);
 		
 		DBController controller = new DBController();
 		controller.InsertNewGame(player.getPlayerId());
