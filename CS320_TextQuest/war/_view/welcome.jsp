@@ -23,6 +23,7 @@
 	</head>
 
 	<body>
+		<center>
 		<h1> Text Quest! </h1>
 		<h2>Enter! If you dare</h2>
 		<p>You're on the hunt for a treasure chest filled with unimaginable riches</p>
@@ -34,5 +35,6 @@
 			<button type="submit" class="btn btn-success">Begin Game</button>
 			<input name="action" id="action" type="hidden" value="welcome" />
 		</form>
+		</center>
 	</body>
 </html>
