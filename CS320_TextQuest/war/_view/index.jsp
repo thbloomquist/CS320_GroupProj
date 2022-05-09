@@ -16,12 +16,6 @@
 			<h1 align = "center">Welcome ${player.username}!</h1>
 		</c:if>
 		
-		<br>
-		<a href = "instructions">
-		<button> Instructions </button>
-		</a>
-		<br>
-		
 		
 	</body>
 </html>

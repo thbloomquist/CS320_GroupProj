@@ -22,8 +22,5 @@
 		<h1> You found the treasure! All the riches in the world are yours! </h1>
 		<h2 style="color:gold"> You win! </h2>
 		<h2 style="color:gold"> Your final score was: ${score}</h2>
-		<a href = "/TextQuest/main">
-		<button> Play Again? </button>
-		</a>
 	</body>
 </html>
