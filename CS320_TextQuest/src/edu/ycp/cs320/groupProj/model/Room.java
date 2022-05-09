@@ -35,7 +35,6 @@ public class Room {
 		}
 		if(f) {
 			createContents1();
-			System.out.println(contents.get(0).getName());
 		}
 		// if f, room has items in it
 		hasChest = false;
