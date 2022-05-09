@@ -33,11 +33,18 @@ public class NewGameServlet extends HttpServlet {
 			return;
 		}
 		
+		System.out.println(session);
+		
 		Player player = (Player) session.getAttribute("player"); // get player from session
 		
 		PlayerModel pModel = null;
 		DBController DBController = new DBController(); // Database controller
-		
+		if(player == null) {
+			System.out.println("No session active, redirecting to login");
+			LoginServlet loginServlet = new LoginServlet();
+			loginServlet.doGet(req, resp);
+			return;
+		}
 		pModel = DBController.LoadPlayerModel(player.getPlayerId());
 		
 		

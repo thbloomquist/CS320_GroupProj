@@ -139,7 +139,7 @@ public class Room {
 		isDark = t;
 	}
 	public void createKey() {
-		NameTag tempr = new NameTag("Key", "It's a shiny golden key, damn it's sparkly.");
+		NameTag tempr = new NameTag("key", "It's a shiny golden key, damn it's sparkly.");
 		ObjectModel thing = new ObjectModel(tempr, true);
 		contents.add(thing);
 	}
