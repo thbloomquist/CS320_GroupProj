@@ -15,6 +15,7 @@ import edu.ycp.cs320.groupProj.controller.DBController;
 
 @WebServlet(urlPatterns = "/login") //instead of xml
 public class LoginServlet extends HttpServlet {
+	String errorMessage = "";
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -43,9 +44,13 @@ public class LoginServlet extends HttpServlet {
 		}
 		else {
 			System.out.println("Account not found");
+			errorMessage = "Invalid username or password.";
+			req.setAttribute("errorMessage", errorMessage);
 			doGet(req, resp);
 			return;
 		}
+		
+		req.setAttribute("errorMessage", errorMessage);
 			
 		req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
 	}
