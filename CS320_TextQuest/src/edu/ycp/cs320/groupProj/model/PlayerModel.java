@@ -140,6 +140,9 @@ public class PlayerModel {
 	public void setLit(Boolean t) {
 		isLit = t;
 	}
+	public void setLit2() {
+		isLit = true;
+	}
 	public void createTorch() {
 		NameTag n = new NameTag("torch", "It's a piece of wood with oil-covered cloth wrapped on the tip.");
 		ObjectModel torch = new ObjectModel(n, false);
