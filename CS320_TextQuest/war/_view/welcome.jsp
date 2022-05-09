@@ -31,6 +31,7 @@
 		<p>You find yourself in a dungeon, it's dark and spooky and you're not quite sure which direction to go...</p>
 		<p>You hear a lot of growls and snarls coming from the depths of the hallways</p>
 		<p>To find the treasure, navigate your way through the maze, fight off the monsters, and use the items you find to your advantage to find the key and open the chest!</p>
+		<p> You grab your trusty torch and set out to score unimaginable riches. </p>
 		<form action="${pageContext.servletContext.contextPath}/main" method="post">
 			<button type="submit" class="btn btn-success">Begin Game</button>
 			<input name="action" id="action" type="hidden" value="welcome" />

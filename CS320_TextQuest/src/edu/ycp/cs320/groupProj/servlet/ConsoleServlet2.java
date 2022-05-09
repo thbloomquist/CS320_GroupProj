@@ -181,6 +181,7 @@ public class ConsoleServlet2 extends HttpServlet {
 				pModel.setScore(pModel.getScore() + 100);
 				UpdatePlayerModel(pModel.getHP(), xLoc, yLoc, pModel.getScore(), matches, req); // sends updated info to db
 				currentR.deadMonster();
+				health = pModel.getHP();
 				if (pLit) {
 					result += " During the scuffle your torch went out.";
 					pModel.setLit(false);
@@ -331,7 +332,6 @@ public class ConsoleServlet2 extends HttpServlet {
 			// deals with GRAB command - update ROOMINVEN and PLAYERINVEN
 			if (action[0].equals("grab")) {
 				currentR = map.getRoom(pModel.getUp(), pModel.getSide());
-				if (currentR.getInven().size() >= 1)
 					if (pModel.getInventory().size() == 9) {
 						result = "Your inventory is full.";
 					} else if (currentR.isDark() && !pLit) {
@@ -354,7 +354,7 @@ public class ConsoleServlet2 extends HttpServlet {
 								String inven = "";
 								for (ObjectModel items : pModel.getInventory()) {
 									inven += items.getName() + " ";
-								}
+								} 
 
 								DBController.UpdatePlayerInven(player.getPlayerId(), inven);
 
@@ -387,7 +387,6 @@ public class ConsoleServlet2 extends HttpServlet {
 							result = "There's no " + action[1] + " around.";
 						}
 					}
-
 			}
 
 			// deals with PLACE command - update ROOMINVEN and PLAYERINVEN
@@ -439,6 +438,7 @@ public class ConsoleServlet2 extends HttpServlet {
 							System.out.println("Current HP==" + pModel.getHP());
 							result = "You eat a banana, and instantly feel better";
 							pModel.setHP(pModel.getHP() + 10);
+							health = pModel.getHP();
 							pController.upScore(action[0]);
 							System.out.println("New HP == " + pModel.getHP());
 							errorMessage = "Current health == " + pModel.getHP();
