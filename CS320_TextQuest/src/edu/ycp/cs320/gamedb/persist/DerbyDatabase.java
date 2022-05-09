@@ -860,4 +860,45 @@ public class DerbyDatabase implements IDatabase { //FIX
 		});
 	}
 	
+	@Override
+	public ArrayList<PlayerModel> getAllPlayersFromPlayerModel() {
+		return executeTransaction(new Transaction<ArrayList<PlayerModel>>() {
+			@Override
+			public ArrayList<PlayerModel> execute(Connection conn) throws SQLException {
+			PreparedStatement getPlayers = null;
+			ResultSet resultSet = null;
+			
+			try {
+				// retreive all attributes from both Books and Authors tables
+				getPlayers = conn.prepareStatement("select * from playermodel order by score desc");
+				
+				resultSet = getPlayers.executeQuery();
+				
+				// for testing that a result was returned
+				Boolean found = false;
+				ArrayList<PlayerModel> players= new ArrayList<PlayerModel>();
+				while (resultSet.next()) {
+					found = true;
+					
+					// create new Student object
+					// retrieve attributes from resultSet starting with index 1
+					PlayerModel playerModel = new PlayerModel();
+					loadPlayerModel(playerModel, resultSet, 2);
+					players.add(playerModel);
+				}
+				
+				// check if the title was found
+				if (!found) {
+					System.out.println("players could not be found in the playermodel table");
+				}
+				
+				return players;
+			} finally {
+				DBUtil.closeQuietly(getPlayers);
+				DBUtil.closeQuietly(resultSet);
+			}
+			}
+		});
+	}
+	
 }

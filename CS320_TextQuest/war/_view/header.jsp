@@ -9,6 +9,7 @@
       <a class="nav-item nav-link" href="/TextQuest/new.game">Start New Game</a>
       <a class="nav-item nav-link" href="/TextQuest/continue.game">Continue Game</a>
       <a class="nav-item nav-link" href = "/TextQuest/about">About</a>
+      <a class="nav-item nav-link" href = "/TextQuest/leaderboard">Leaderboard</a>
       </div>
       </div>
       <ul class="nav justify-content-end">

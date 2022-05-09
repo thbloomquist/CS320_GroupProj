@@ -151,5 +151,15 @@ public class DBController {
 			return null;
 	}
 	
-	//Don't I want a single query that updates game with map, score, and health instead of individual ones?
+	public ArrayList<PlayerModel> getLeaderboard(){
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		
+		IDatabase db = DatabaseProvider.getInstance();
+		ArrayList<PlayerModel> players = db.getAllPlayersFromPlayerModel();
+		
+		if(players.size() > 0) {
+			return players;
+		}else
+			return null;
+	}
 }
