@@ -24,23 +24,23 @@ public class RoomController {
 		switch(rNum) {
 		case 0:
 			// 1 is slime type
-			currentRoom.setCel("Write a description about a slimy ceiling here.");
-			currentRoom.setFloor("Write a description about a slimy floor here.");
+			currentRoom.setCel("A strange green slime is leaking through a crack in the ceiling");
+			currentRoom.setFloor("The floor has patches of a weird green gooey substance, it reminds you of toxic waste");
 			break;
 		case 1:
 			//2 is fire type
-			currentRoom.setCel("Write a description about a firey ceiling here.");
-			currentRoom.setFloor("Write a description about a firey floor here.");
+			currentRoom.setCel("The ceiling is composed of entirely igneous rock from hardened magma");
+			currentRoom.setFloor("Below you is a floor comprised entirely of lava rock- you break into sweat as you feel the heat rising");
 			break;
 		case 2:
-			currentRoom.setCel("Write a description about an icey ceiling here.");
-			currentRoom.setFloor("Write a description about an icey floor here.");
+			currentRoom.setCel("The ceiling is encased in ice, a few icicles hang directly above you");
+			currentRoom.setFloor("The floor is comprised entirely of ice, better watch your step!");
 			//ice type
 			break;
 			
 		case 3:
-			currentRoom.setCel("Write a description about a candy ceiling here.");
-			currentRoom.setFloor("Write a description about a candy floor here.");
+			currentRoom.setCel("The ceiling has a big red and white spiral extending from the middle of it, it looks like a big candy cane");
+			currentRoom.setFloor("Below you is a neon bright floor containing almost every color of the rainbow, it's suspiciously pretty");
 			//candy type
 			break;
 		}

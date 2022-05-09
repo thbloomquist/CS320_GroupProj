@@ -43,7 +43,7 @@ public class ConsoleServlet2 extends HttpServlet {
 		System.out.println(session);
 
 		Player player = (Player) session.getAttribute("player");
-		
+
 		DBController controller = new DBController();
 		controller.InsertNewGame(player.getPlayerId());
 		System.out.println("New game created");
@@ -80,6 +80,7 @@ public class ConsoleServlet2 extends HttpServlet {
 		String errorMessage = "Current health == " + pModel.getHP();
 		String firstW = null;
 		String secondW = null;
+		// some of these are from older ConsoleServlets & are no longer useful
 
 		System.out.println("Console Servlet: doPost");
 		SystemController controller = new SystemController();
@@ -331,7 +332,18 @@ public class ConsoleServlet2 extends HttpServlet {
 
 			// deals with GRAB command - update ROOMINVEN and PLAYERINVEN
 			if (action[0].equals("grab")) {
+				System.out.println("Grab command.");
 				currentR = map.getRoom(pModel.getUp(), pModel.getSide());
+				if(action[1].equalsIgnoreCase("chest") && currentR.hasChest()) {
+					// unique interaction that makes chest ungrabbable
+					pModel.setHP(pModel.getHP()-10);
+					health = pModel.getHP();
+					UpdatePlayerModel(pModel.getHP(), xLoc, yLoc, pModel.getScore(), matches, req);
+					// update DB with new health value
+					System.out.println("Updated database.");
+					result = "You try to lift the chest and hurt your back.";
+					// grabbing the chest is a no-no
+				} else {
 					if (pModel.getInventory().size() == 9) {
 						result = "Your inventory is full.";
 					} else if (currentR.isDark() && !pLit) {
@@ -354,6 +366,7 @@ public class ConsoleServlet2 extends HttpServlet {
 								String inven = "";
 								for (ObjectModel items : pModel.getInventory()) {
 									inven += items.getName() + " ";
+									// inven used for DB
 								} 
 
 								DBController.UpdatePlayerInven(player.getPlayerId(), inven);
@@ -384,9 +397,17 @@ public class ConsoleServlet2 extends HttpServlet {
 										+ " and it falls back onto the floor.";
 							}
 						} else {
+							// de-bugging statements
+							if(action[1].equalsIgnoreCase("chest")) {
+								System.out.println("Player tried to grab chest.");
+								if(currentR.hasChest()) {
+									System.out.println("Room has chest");
+								}
+							}
 							result = "There's no " + action[1] + " around.";
 						}
 					}
+				}
 			}
 
 			// deals with PLACE command - update ROOMINVEN and PLAYERINVEN
@@ -442,7 +463,7 @@ public class ConsoleServlet2 extends HttpServlet {
 							pController.upScore(action[0]);
 							System.out.println("New HP == " + pModel.getHP());
 							errorMessage = "Current health == " + pModel.getHP();
-							UpdatePlayerModel(health + 10, xLoc, yLoc, score, matches, req); // sends updated info to db
+							UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); // sends updated info to db
 							// PLAYERINVEN DB STUFF
 							pModel.removeItem(action[1].toString().toLowerCase());
 							String inven = "";
