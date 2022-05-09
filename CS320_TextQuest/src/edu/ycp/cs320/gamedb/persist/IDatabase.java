@@ -43,5 +43,6 @@ public interface IDatabase {
 	 * @param yLoc		Y Location of Room
 	 * @return			Contents of rooms inventory
 	 */
-	ArrayList<ObjectModel> getRoomInventory(int playerId, int xLoc, int yLoc);
+	public ArrayList<ObjectModel> getRoomInventory(int playerId, int xLoc, int yLoc);
+	public ArrayList<PlayerModel> getAllPlayersFromPlayerModel();
 }
