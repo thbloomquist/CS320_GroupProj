@@ -93,19 +93,20 @@ public class NewGameServlet extends HttpServlet {
 					for (int i = 0; i < map.getRoom(y, x).getInven().size(); i++) {
 						if (map.getRoom(y, x).getInven().get(i) != null) {
 							insert += map.getRoom(y, x).getInven().get(i).getTag().getName() + " ";
-							
 						}
-						
 					}
-					System.out.println("Map inventory: " +insert);
 					DBController.InsertRoomInven(player.getPlayerId(), x, y, insert);
 				}
 			}
 		}
 		}
 		
+		req.setAttribute("welcome", true);
+		
 		ConsoleServlet2 console = new ConsoleServlet2();
 		console.doGet(req, resp);
+		
+		
 		return;
 	}
 	

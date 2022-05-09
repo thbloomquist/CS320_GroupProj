@@ -13,17 +13,16 @@
       </div>
       <ul class="nav justify-content-end">
 		  <li class="nav-item">
-		    <a class="nav-link active btn btn-success" href = "/TextQuest/login">Login</a>
+		    <button type="button" onclick="window.location='${pageContext.request.contextPath}/login'" class="btn btn-success" data-dismiss="modal">Login</button>
 		  </li>
 		  <li class="nav-item">
-		    <a class="nav-link btn btn-primary" href = "/TextQuest/signup">Sign-Up</a>
+		    <button type="button" onclick="window.location='${pageContext.request.contextPath}/signup'" class="btn btn-secondary">SignUp</button>
 		  </li>
 		  <li class="nav-item">
-		  	<form action="${pageContext.servletContext.contextPath}/logout" method="post">
-		    <input class="btn btn-warning" style="margin-right: 0%; ;" type="Submit" name="Logout" value="Logout">
+		 	<form action="${pageContext.servletContext.contextPath}/logout" method="post">
+		    	<button type="submit" onclick="window.location='${pageContext.request.contextPath}/logout'" class="btn btn-danger">Logout</button>
 		    </form>
 		  </li>
-		  
 	  </ul>
   
 </nav>

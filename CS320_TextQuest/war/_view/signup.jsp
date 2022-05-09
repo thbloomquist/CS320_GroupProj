@@ -22,6 +22,9 @@
 		<form action="${pageContext.servletContext.contextPath}/signup" method="post">
 			<!-- List of instructions -->
 			<div id="instructions">   
+				<center>
+					<h3>Sign Up</h3>
+				</center>
 				<!-- Sign Up Table-->
 				<table class="table">
 					<tbody>

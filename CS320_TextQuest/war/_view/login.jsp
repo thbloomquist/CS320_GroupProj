@@ -23,6 +23,9 @@
 			<!-- List of instructions -->
 			<div id="instructions">   
 				<!-- Sign Up Table-->
+				<center>
+				<h3>Login</h3>
+				</center>
 				<table class="table">
 					<tbody>
 						<!-- User Username -->

@@ -43,6 +43,8 @@ public class ConsoleServlet2 extends HttpServlet {
 
 		Player player = (Player) session.getAttribute("player");
 
+//		req.setAttribute("welcome", false);
+		
 		DBController controller = new DBController();
 		controller.InsertNewGame(player.getPlayerId());
 		System.out.println("New game created");
@@ -58,6 +60,14 @@ public class ConsoleServlet2 extends HttpServlet {
 
 		DBController DBController = new DBController(); // Database controller
 		HttpSession session = req.getSession(false); // get current session
+
+		if(session == null) {
+			System.out.println("No session active, redirecting to login");
+			LoginServlet loginServlet = new LoginServlet();
+			loginServlet.doGet(req, resp);
+			return;
+		}
+		
 		session.setAttribute("playerModel", pModel);
 		Player player = (Player) session.getAttribute("player"); // get player from session
 		
@@ -83,6 +93,7 @@ public class ConsoleServlet2 extends HttpServlet {
 		controller.setModel(model);
 		oController.setModel(oModel);
 		String userInput = req.getParameter("action").toLowerCase();
+		req.setAttribute("welcome", false);
 		String[] action = null;
 		String result = "";
 		Room currentR = map.getRoom(pModel.getUp(), pModel.getSide());

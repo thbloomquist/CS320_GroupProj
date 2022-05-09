@@ -28,5 +28,6 @@
 		<p align="center">Find the hidden treasure before it's too late!</p>
 		<p align="center">Don't worry too much about getting stuck, there's hints if you need them</p>
 		<p align="center">Have fun on your quest!</p>
+		<a class="nav-item nav-link" href="/TextQuest/new.game">Start New Game</a>
 	</body> 
 </html>

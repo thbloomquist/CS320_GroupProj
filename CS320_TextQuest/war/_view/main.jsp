@@ -21,8 +21,13 @@
 	</head>
 
 	<body>
+		<c:if test="${ welcome == false}">
 		<c:if test="${! empty errorMessage}">
 			<div class="error">${errorMessage}</div>
+		</c:if>
+		
+		<c:if test="${empty player }">
+			<% response.sendRedirect(request.getContextPath() + "/_view/login.jsp"); %>
 		</c:if>
 	
 		<form action="${pageContext.servletContext.contextPath}/main" method="post">
@@ -55,14 +60,17 @@
 		    	<li>Place - place a following object on the floor wherever you are (followed by object)</li>
 		    	<li>Fight - fight the Purple People Eaters (just the word fight)</li>
 		    	<li>Light torch - lights torch and allows you to see what ever room you are in (careful not to run out of matches)</li>
+		    	<li>Where - gives you the up and side place of your map (the higher the UP number the further south you are)</li>
+		    	<li>Open - use to open crates and the chest (followed by crate or chest)</li>
 		    	
 		    </ul>
 		  </div>
 		</div>
 		
 		<a href = "/TextQuest/start"><button type="button" class="btn btn-outline-danger">Back to Main Menu</button></a>
-		
-		Up Value: ${playerModel.up } Side Value: ${playerModel.side }
-		
+		</c:if>
+		<c:if test="${ welcome == true}">
+			<%@ include file="welcome.jsp" %>
+		</c:if>
 	</body>
 </html>

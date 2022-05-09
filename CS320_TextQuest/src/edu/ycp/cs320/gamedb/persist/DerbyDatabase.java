@@ -116,7 +116,6 @@ public class DerbyDatabase implements IDatabase { //FIX
 		}
 		
 		for(String item : items) {
-			System.out.println(item);
 			NameTag name = null;
 			if(item.toLowerCase().equals("crate")) {
 				name = new NameTag(item, "an old wooden crate");
