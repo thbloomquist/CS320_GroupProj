@@ -111,8 +111,8 @@ public class ConsoleServlet2 extends HttpServlet {
 				System.out.println("\tRemoving null elements from room");
 			}
 		}
-		
-		for(int i = 0; i < pModel.getInventory().size(); i++) {
+
+		for (int i = 0; i < pModel.getInventory().size(); i++) {
 			if (pModel.getInventory().get(i).getName().equals("REMOVE")) {
 				pModel.getInventory().remove(i);
 				System.out.println("Removing nulls from inven");
@@ -389,7 +389,7 @@ public class ConsoleServlet2 extends HttpServlet {
 					}
 				} else {
 					if (pController.contains(action[1])) {
-						if(action[1].equalsIgnoreCase("torch")) {
+						if (action[1].equalsIgnoreCase("torch")) {
 							pLit = false;
 						}
 						result = action[1] + " has been placed into the room";
@@ -543,9 +543,9 @@ public class ConsoleServlet2 extends HttpServlet {
 
 								// Checks if the player has all the gems, if they do they get another 1000
 								// points
-								if (pController.contains("Black Gem") && pController.contains("Green Gem")
-										&& pController.contains("Blue Gem") && pController.contains("Yellow Gem")
-										&& pController.contains("Red Gem")) {
+								if (pController.contains("Onyx") && pController.contains("Emerald")
+										&& pController.contains("Sapphire") && pController.contains("Diamond")
+										&& pController.contains("Ruby")) {
 									pModel.incrementScore(1000);
 								}
 								req.getSession().setAttribute("score", pModel.getScore());

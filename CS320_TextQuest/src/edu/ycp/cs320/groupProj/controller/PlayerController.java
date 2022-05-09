@@ -22,8 +22,8 @@ public class PlayerController {
 	public void grab(ObjectModel thing) {
 		model.addItemToInventory(thing);
 		//Checks if the item is one of the gems
-		if(thing.getName() == "Black Gem" || thing.getName() == "Green Gem" || thing.getName() == "Yellow Gem" 
-				|| thing.getName() == "Red Gem" || thing.getName() == "Blue Gem" )
+		if(thing.getName() == "Onyx" || thing.getName() == "Emerald" || thing.getName() == "Diamond" 
+				|| thing.getName() == "Ruby" || thing.getName() == "Sapphire" )
 		{
 			//player gets score equal to the gem's "thing" value, and then that value is set to 0
 //			model.incrementScore(thing.getThing());
