@@ -594,10 +594,6 @@ public class ConsoleServlet2 extends HttpServlet {
 								int upperBound = 3;
 								int crateChance = rand.nextInt(upperBound);
 
-								for (int i = 0; i < 20; i++) {
-									System.out.println(rand.nextInt(upperBound));
-								}
-
 								String inven = "";
 
 								if (crateChance == 1) {

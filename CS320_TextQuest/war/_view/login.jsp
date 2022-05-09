@@ -8,6 +8,7 @@
 		<style type="text/css">
 		.error {
 			color: red;
+			font-size: 24px;
 		}
 		
 		td.label {
@@ -25,6 +26,9 @@
 				<!-- Sign Up Table-->
 				<center>
 				<h3>Login</h3>
+				<c:if test="${! empty errorMessage}">
+					<div class="error">${errorMessage}</div>
+				</c:if>
 				</center>
 				<table class="table">
 					<tbody>
