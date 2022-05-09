@@ -180,7 +180,8 @@ public class ConsoleServlet2 extends HttpServlet {
 				result = "The " + currentR.getMonster().getNameTag().getName()
 						+ " manages to claw you before you fell the beast.";
 				pModel.setHP(health - currentR.getMonster().getDMG());
-				UpdatePlayerModel(health, xLoc, yLoc, score, matches, req); // sends updated info to db
+				pModel.setScore(pModel.getScore() + 100);
+				UpdatePlayerModel(pModel.getHP(), xLoc, yLoc, pModel.getScore(), matches, req); // sends updated info to db
 				currentR.deadMonster();
 				if (pLit) {
 					result += " During the scuffle your torch went out.";
@@ -551,16 +552,31 @@ public class ConsoleServlet2 extends HttpServlet {
 							if (pController.contains("key")) {
 
 								pModel.incrementScore(1000);
-
+								System.out.println("Score after key: " + pModel.getScore());
 								// Checks if the player has all the gems, if they do they get another 1000
 								// points
-								if (pController.contains("Onyx") && pController.contains("Emerald")
-										&& pController.contains("Sapphire") && pController.contains("Diamond")
-										&& pController.contains("Ruby")) {
+								if (pController.contains("onyx")){
 									pModel.incrementScore(1000);
+									System.out.println("Score after onyx: " + pModel.getScore());
+								}
+								if (pController.contains("emerald")){
+									pModel.incrementScore(1000);
+									System.out.println("Score after emerald: " + pModel.getScore());
+								}
+								if (pController.contains("sapphire")){
+									pModel.incrementScore(1000);
+									System.out.println("Score after sapphire: " + pModel.getScore());
+								} 
+								if (pController.contains("diamond")){
+									pModel.incrementScore(1000);
+									System.out.println("Score after diamond: " + pModel.getScore());
+								}
+								if (pController.contains("ruby")) {
+									pModel.incrementScore(1000);
+									System.out.println("Score after ruby: " + pModel.getScore());
 								}
 								req.getSession().setAttribute("score", pModel.getScore());
-
+								UpdatePlayerModel(pModel.getHP(), xLoc, yLoc, pModel.getScore(), pModel.getMatches(), req);
 								req.getRequestDispatcher("/_view/win.jsp").forward(req, resp);
 							} else {
 								result = "You don't have a key, how did you plan on opening it - brute strength?";
