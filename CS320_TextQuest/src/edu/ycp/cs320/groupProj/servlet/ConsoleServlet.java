@@ -51,6 +51,20 @@
 //		req.getRequestDispatcher("/_view/main.jsp").forward(req, resp);
 //	}
 //
+
+
+/**
+ * 
+ * Old ConsoleServlet- renovated into ConsoleServlet2 to make
+ * handling database simpler
+ * ran versions 0.1 & 0.2, no longer used.
+ * 
+ * 
+ */
+
+
+
+
 //	@Override
 //	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //
