@@ -26,10 +26,10 @@ public class RoomControllerTest {
 		r2.setModel(m.getRoom(7, 3));
 	}
 	
-	@Test
-	public void testContains() {
-		assertTrue(r1.contains("banana"));
-		assertFalse(r2.contains("banana"));
+	@Test 
+	public void testAssignKey() {
+		r1.assignKey();
+		assertFalse(m.getRoom(8, 3).checkEmpty());
 	}
 	
 	
